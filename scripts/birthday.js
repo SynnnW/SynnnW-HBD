@@ -1,13 +1,11 @@
-// Birthday page scripts - Edisi Spesial Anggie
-
 window.addEventListener("load", () => {
   Swal.fire({
-    title: "Mau putar musik pengiringnya?",
-    icon: "warning",
+    title: "Putar musik pengiringnya?",
+    icon: "question",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Mau dong",
+    confirmButtonText: "Boleh banget!",
     cancelButtonText: "Nggak usah",
   }).then((result) => {
     if (result.isConfirmed) {
@@ -43,8 +41,6 @@ const animationTimeline = () => {
     .staggerTo(".hbd-chatbox span", 1.5, { visibility: "visible" }, 0.05)
     .to(".fake-btn", 0.1, { backgroundColor: "rgb(127, 206, 248)" }, "+=4")
     .to(".four", 0.5, { scale: 0.2, opacity: 0, y: -150 }, "+=1")
-    
-    // Pesan-pesan awal
     .from(".idea-1", 0.7, ideaTextTrans)
     .to(".idea-1", 0.7, ideaTextTransLeave, "+=2.5")
     .from(".idea-2", 0.7, ideaTextTrans)
@@ -58,26 +54,22 @@ const animationTimeline = () => {
     .to(".idea-5 span", 0.7, { rotation: 90, x: 8 }, "+=1.4")
     .to(".idea-5", 0.7, { scale: 0.2, opacity: 0 }, "+=2")
 
-    // --- ANIMASI GULIR 10 FOTO DIMULAI DI SINI ---
-    // Munculin box fotonya pelan-pelan
-    .to(".film-strip-box", 1.5, { opacity: 1, ease: Expo.easeInOut }, "+=0.5")
-    // Tahan timeline selama 12 detik biar Anggie bisa nonton fotonya naik ke atas
-    .to(".film-strip-box", 1, { opacity: 1 }, "+=12")
-    // Hilangin box fotonya
+    // ANIMASI GULIR 10 FOTO (FILM STRIP)
+    .to(".film-strip-box", 1, { opacity: 1, ease: Expo.easeInOut })
+    .to(".film-strip-box", 12, { opacity: 1 }) 
     .to(".film-strip-box", 1, { opacity: 0, scale: 0.5, ease: Expo.easeInOut })
 
-    // --- BALON & FOTO UTAMA MUNCUL ---
+    // BALON & PROFIL AKHIR
     .staggerFromTo(".ballons img", 2.5, { opacity: 0.9, y: 1400 }, { opacity: 1, y: -1000 }, 0.2)
     .from(".profile-picture", 0.5, { scale: 3.5, opacity: 0, x: 25, y: -25, rotationZ: -45 }, "-=2")
-    
-    // Teks SNBP / UTBK (Biru-Merah)
+    .from(".hat", 0.5, { x: -100, y: 350, rotation: -180, opacity: 0 })
     .staggerFrom(".wish-hbd span", 0.7, { opacity: 0, y: -50, rotation: 150, skewX: "30deg", ease: Elastic.easeOut.config(1, 0.5) }, 0.1)
     .staggerFromTo(".wish-hbd span", 0.7, { scale: 1.4, rotationY: 150 }, { scale: 1, rotationY: 0, color: "#ff69b4", ease: Expo.easeOut }, 0.1, "party")
-    .from(".wish p", 0.5, { opacity: 0, y: 10, skewX: "-15deg" }, "party")
-    
-    // Ornamen penutup
+    .from(".wish-text", 0.5, { opacity: 0, y: 10, skewX: "-15deg" }, "party")
     .staggerTo(".eight svg", 1.5, { visibility: "visible", opacity: 0, scale: 80, repeat: 3, repeatDelay: 1.4 }, 0.3)
     .to(".six", 0.5, { opacity: 0, y: 30, zIndex: "-1" })
     .staggerFrom(".nine p", 1, ideaTextTrans, 1.2)
     .to(".last-smile", 0.5, { rotation: 90 }, "+=1");
+
+  document.getElementById("replay").addEventListener("click", () => { tl.restart(); });
 };
