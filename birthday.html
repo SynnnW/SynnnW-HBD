@@ -1,104 +1,333 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spesial Buat Anggie Sayang</title>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+  <!-- Font Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- Style CSS -->
   <link rel="stylesheet" href="./styles/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>Happy Birthday Anggie!! 🎂</title>
+
   <style>
-    /* Background Animasi */
+    /* ===== ANIMATED GRADIENT BACKGROUND ===== */
     body {
-      margin: 0;
-      overflow-x: hidden;
-      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-      background-size: 400% 400%;
-      animation: gradient 15s ease infinite;
-      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab) !important;
+      background-size: 400% 400% !important;
+      animation: gradientBG 15s ease infinite;
     }
-    @keyframes gradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    @keyframes gradientBG {
+      0%   { background-position: 0%   50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0%   50%; }
     }
-    .full-screen-scroll {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-      display: none; z-index: 100; background: #000;
+
+    /* ===== FULL SCREEN PHOTO SCROLL ===== */
+    #fullscreenScroll {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 9999;
+      overflow: hidden;
+      background: #000;
     }
-    .scroll-track img { width: 100%; height: 100vh; object-fit: cover; }
-    
-    /* Style Tabel Maafan */
-    .stats-container { display: none; text-align: center; padding: 20px; color: white; }
-    .stat-bar { background: rgba(255,255,255,0.2); border-radius: 10px; margin: 10px 0; overflow: hidden; }
-    .bar-fill { height: 20px; background: #ff69b4; width: 0%; }
-    
-    /* Mockup Portal */
-    .portal-scene {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #003366; color: white; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 200; text-align: center; padding: 20px;
+    #scrollTrack {
+      will-change: transform;
     }
-    .portal-blue { background: #003366; } /* SNBP Style */
-    .portal-red { background: #b30000; }  /* UTBK Style */
+    #scrollTrack img {
+      display: block;
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    /* ===== GIFT STORY SECTION ===== */
+    .gift-story {
+      visibility: hidden;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 88%;
+      max-width: 620px;
+      z-index: 10;
+    }
+    .gift-story p {
+      opacity: 0;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #fff;
+      margin: 8px 0;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    }
+    .gift-story strong {
+      color: #ffd700;
+      font-weight: 600;
+    }
+
+    /* ===== MAAFAN STATS SECTION ===== */
+    .stats-container {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 88%;
+      max-width: 520px;
+      text-align: center;
+      color: #fff;
+      z-index: 10;
+    }
+    .stats-container h3 {
+      font-size: 1.15rem;
+      margin-bottom: 24px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .stat-item {
+      margin: 18px 0;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      opacity: 0.9;
+    }
+    .stat-count {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin: 4px 0 8px;
+    }
+    #count-aldo { color: #ff69b4; }
+    #count-gigiek { color: #87ceeb; }
+    .stat-bar {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      height: 22px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 20px;
+      width: 0%;
+    }
+    #bar-aldo {
+      background: linear-gradient(90deg, #ff69b4, #ff1493);
+    }
+    #bar-gigiek {
+      background: linear-gradient(90deg, #87ceeb, #4169e1);
+    }
+    .stats-note {
+      font-style: italic;
+      font-size: 0.85rem;
+      opacity: 0.85;
+      margin-top: 22px;
+      line-height: 1.6;
+    }
   </style>
 </head>
+
 <body>
-  <audio class="song" loop><source src="./music/hbd.mp3"></audio>
+
+  <audio class="song" loop autoplay>
+    <source src="./music/hbd.mp3" />
+    Your browser isn't invited for super fun audio time.
+  </audio>
+
+  <!-- ===== FULL SCREEN PHOTO SCROLL OVERLAY ===== -->
+  <!-- Isi dengan nama file foto kamu di folder img/ (slide1.jpg, slide2.jpg, dst.) -->
+  <div id="fullscreenScroll">
+    <div id="scrollTrack">
+      <img src="img/slide1.jpg"  alt="foto 1"  />
+      <img src="img/slide2.jpg"  alt="foto 2"  />
+      <img src="img/slide3.jpg"  alt="foto 3"  />
+      <img src="img/slide4.jpg"  alt="foto 4"  />
+      <img src="img/slide5.jpg"  alt="foto 5"  />
+      <img src="img/slide6.jpg"  alt="foto 6"  />
+      <img src="img/slide7.jpg"  alt="foto 7"  />
+      <img src="img/slide8.jpg"  alt="foto 8"  />
+      <img src="img/slide9.jpg"  alt="foto 9"  />
+      <img src="img/slide10.jpg" alt="foto 10" />
+    </div>
+  </div>
 
   <div class="container">
+
+    <!-- ===== SECTION 1: GREETING ===== -->
     <div class="one">
-      <h1 class="one">Hai 👋 <span id="name">Anggie</span></h1>
-      <p class="two">Aku suka banget nama kamu, secantik orangnya!</p>
+      <h1 class="one">
+        Hi!👋🏼 <span id="name">Anggie</span>
+      </h1>
+      <p class="two" id="greetingText">Aku suka banget nama kamu, unik dan cantik — persis kayak orangnya!</p>
     </div>
 
-    <div class="gift-story" style="display:none;">
-      <p class="idea-1">Aku kepikiran ngasih kamu Cardigan...</p>
-      <p class="idea-2">Biar kamu ngerasa aku peluk terus, dan punya aku bisa kamu bawa kemana-mana.</p>
-      <p class="idea-3">TWS itu juga buat kamu...</p>
-      <p class="idea-4">Biar kamu bisa dengerin lagu favorit pas lagi pusing belajar, nemenin kamu kapanpun kamu butuh.</p>
+    <!-- ===== SECTION 2: BIRTHDAY ===== -->
+    <div class="three">
+      <p>Hari ini ulang tahun kamu!! 🎂</p>
     </div>
 
-    <div id="portal" class="portal-scene">
-      <h2 id="portal-title">PENGUMUMAN SELEKSI</h2>
-      <p id="portal-msg">Memproses masa depan kita...</p>
-    </div>
-
-    <div class="full-screen-scroll">
-      <div class="scroll-track">
-        <img src="img/slide1.jpg"><img src="img/slide2.jpg"><img src="img/slide3.jpg">
-        <img src="img/slide4.jpg"><img src="img/slide5.jpg"><img src="img/slide6.jpg">
-        <img src="img/slide7.jpg"><img src="img/slide8.jpg"><img src="img/slide9.jpg">
-        <img src="img/slide10.jpg">
+    <!-- ===== SECTION 3: CHAT BOX ===== -->
+    <div class="four">
+      <div class="text-box">
+        <p class="hbd-chatbox">
+          Semoga hari ini jadi hari yang paling indah buat kamu, dan tahun ke depan penuh sama berkah. Semoga semua doa dan harapan kamu dikabulkan sama Allah!
+        </p>
+        <p class="fake-btn">
+          Kirim Doa ✨
+        </p>
       </div>
     </div>
 
+    <!-- ===== SECTION 4: IDEA SEQUENCE ===== -->
+    <div class="five">
+      <p class="idea-1">
+        Aku sempet bingung mau ngasih kamu apa.
+      </p>
+      <p class="idea-2">
+        Tapi aku berhenti sebentar. Aku pikir, <br /> "Kenapa nggak bikin sesuatu yang spesial buat dia?"
+      </p>
+      <p class="idea-3">
+        Aku sadar, aku mau lakuin sesuatu yang beda. <br />
+        <strong>Sesuatu yang bikin kamu senyum dan ngerasa istimewa.</strong>
+      </p>
+      <p class="idea-4">Karena,</p>
+      <p class="idea-5">
+        Kamu istimewa buat aku.
+        <span>😊</span>
+      </p>
+      <p class="idea-6">
+        <span>J</span>
+        <span>A</span>
+        <span>D</span>
+        <span>I</span>
+      </p>
+    </div>
+
+    <!-- ===== SECTION 5: GIFT STORY (BARU) ===== -->
+    <div class="gift-story">
+      <p class="gift-1">Aku ngasih kamu <strong>Cardigan aku</strong> 🧥</p>
+      <p class="gift-2">
+        Bukan beli baru ya — tapi cardigan punya aku sendiri. Karena kamu suka cardigan, aku mau kamu bisa bawa "aku" kemana pun kamu pergi. Biar ngerasa aku selalu ada.
+      </p>
+      <p class="gift-3">Aku juga ngasih kamu <strong>TWS</strong> 🎧</p>
+      <p class="gift-4">
+        Sebenernya aku sempet mau beliin kamu jam tangan, biar jadi pengingat aku terus. Tapi aku milih TWS — biar kamu bisa dengerin lagu favorit kapanpun kamu butuh, terutama pas lagi capek belajar buat UTBK.
+      </p>
+      <p class="gift-5">Dan tentu aja... <strong>Silverqueen &amp; Oreo</strong> 🍫🍪</p>
+      <p class="gift-6">
+        Karena kamu suka yang manis-manis. Persis kayak kamu. 😄
+      </p>
+    </div>
+
+    <!-- ===== SECTION 6: PROFILE + WISH ===== -->
     <div class="six">
-      <img src="./img/ayang.jpg" alt="Ayanggg" class="profile-picture" />
+      <img src="./img/ayang.png" alt="Ayanggg" class="profile-picture" id="imagePath" />
+      <img src="img/hat.svg" alt="Hat" class="hat" />
       <div class="wish">
         <h3 class="wish-hbd">Selamat Ulang Tahun!</h3>
         <h5 class="wish-text">
-          "Semoga hadiah ini kamu terima dengan senang hati ya. Aku cuma mau kamu tau kalau aku bakal selalu support kamu, apa pun jalannya nanti. Tetap jadi Anggie yang aku kenal, semangat terus belajarnya!"
+          "Selamat ulang tahun, Anggie! Semoga semua yang ada di depan kamu selalu lebih indah dari yang sudah. Aku berharap kamu bisa nerima semua hadiah ini dengan hati yang paling senang ya — cardigan aku biar selalu nemenin kamu kemana-mana, TWS biar kamu bisa dengerin lagu favorit dan healing kapanpun kamu mau, Silverqueen sama Oreo buat nemenin hari-hari kamu yang manis. Semoga Allah selalu jagain kamu, kasih kamu kemudahan dan kelancaran di setiap langkah, khususnya di perjuangan UTBK kamu nanti. Apapun jalannya nanti, percaya — Allah pasti kasih yang terbaik buat kamu. Tetap jadi Anggie yang kuat, yang semangat, yang selalu aku kagumi. Selamat ulang tahun, semoga tahun ini jadi tahun terbaik kamu! 🎉"
         </h5>
       </div>
     </div>
 
-    <div class="stats-container">
-      <h3>Statistik Kita (Jun 2025 - Mar 2026)</h3>
-      <p>Aldo Minta Maaf: <span id="count-aldo">0</span></p>
-      <div class="stat-bar"><div id="bar-aldo" class="bar-fill"></div></div>
-      <p>Gigiek Minta Maaf: <span id="count-gigiek">0</span></p>
-      <div class="stat-bar"><div id="bar-gigiek" class="bar-fill"></div></div>
-      <p><i>"Semoga kita terus saling memaafkan dan saling menguatkan ya."</i></p>
+    <!-- ===== SECTION 7: BALLOONS ===== -->
+    <div class="seven">
+      <div class="ballons">
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+        <img src="img/ballon2.svg" alt="Ballon" />
+        <img src="img/ballon1.svg" alt="Ballon" />
+        <img src="img/ballon3.svg" alt="Ballon" />
+      </div>
     </div>
 
+    <!-- ===== SECTION 8: BURST SVG ===== -->
+    <div class="eight">
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+    </div>
+
+    <!-- ===== SECTION 9: MAAFAN STATS (BARU) ===== -->
+    <div class="stats-container">
+      <h3>💌 Catatan Kita (Jun 2025 – Mar 2026)</h3>
+      <div class="stat-item">
+        <p class="stat-label">Aldo Minta Maaf 🥺</p>
+        <p class="stat-count"><span id="count-aldo">0</span>+ kali</p>
+        <div class="stat-bar"><div id="bar-aldo" class="bar-fill"></div></div>
+      </div>
+      <div class="stat-item">
+        <p class="stat-label">Gigiek Minta Maaf 🥹</p>
+        <p class="stat-count">~<span id="count-gigiek">0</span> kali</p>
+        <div class="stat-bar"><div id="bar-gigiek" class="bar-fill"></div></div>
+      </div>
+      <p class="stats-note">
+        "Semoga kita terus saling memaafkan dan saling menguatkan ya. <br />
+        Karena yang kita bangun bareng ini bukan sesuatu yang biasa-biasa aja. 💕"
+      </p>
+    </div>
+
+    <!-- ===== SECTION 10: ENDING ===== -->
     <div class="nine">
-      <p id="replay">Klik buat liat lagi kasih sayang aku.</p>
+      <p>Oke, sekarang balik ke sini dan kasih tau aku kamu suka apa nggak. 😊</p>
+      <p id="replay">
+        Atau klik di sini kalau mau liat lagi dari awal.
+      </p>
       <p class="last-smile">😊</p>
     </div>
+
   </div>
 
+  <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+  <!-- SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="./scripts/birthday.js"></script>
+  <!-- Main JS -->
+  <script type="application/javascript" src="./scripts/birthday.js"></script>
+
 </body>
 </html>
