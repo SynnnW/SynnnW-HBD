@@ -2,67 +2,90 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <title>2048 — Game Rahasia 🎮</title>
+  <title>Misi Buat Anggie 🎮</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ===================== 2048 CORE CSS (FULL VERSION) ===================== */
+    /* ===================== TEMA ESTETIK ANGGUN (DARK BLUE) ===================== */
     * { box-sizing: border-box; }
     body {
-      margin: 0; padding: 0; background: #faf8ef;
-      font-family: 'Poppins', sans-serif; font-size: 18px; color: #776e65;
+      margin: 0; padding: 0; 
+      background: #1a2e45; /* Sesuai dengan tema halaman sandi.html */
+      font-family: 'Poppins', sans-serif; font-size: 18px; color: #fff;
       overflow: hidden; touch-action: none;
     }
+    
+    /* Latar Belakang Bintang-Bintang */
+    body::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 70px 70px, 35px 35px;
+      background-position: 0 0, 17px 17px; pointer-events: none; z-index: -1;
+    }
+
     .container {
       width: 100%; max-width: 500px; margin: 0 auto; padding: 15px; display: none;
     }
+    
     .heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .title { font-size: 3rem; font-weight: bold; margin: 0; color: #776e65; }
+    .title { font-size: 2.2rem; font-weight: bold; margin: 0; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    
+    /* Area Skor & Reset */
+    .controls-container { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
     .scores-container { display: flex; gap: 10px; }
     .score-container {
-      background: #bbada0; padding: 8px 15px; border-radius: 6px;
-      text-align: center; color: #fff; min-width: 70px; font-weight: bold;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      padding: 6px 15px; border-radius: 8px; text-align: center; color: #fff; 
+      min-width: 70px; font-weight: bold; backdrop-filter: blur(5px);
     }
-    .score-container::before { content: "SCORE"; display: block; font-size: 0.7rem; opacity: 0.8; }
+    .score-container::before { content: "SCORE"; display: block; font-size: 0.65rem; opacity: 0.7; letter-spacing: 1px; }
+    
+    .btn-reset {
+      background: linear-gradient(135deg, #e8507a, #c0254e); border: none; border-radius: 6px;
+      color: white; padding: 8px 15px; font-family: 'Poppins', sans-serif; font-weight: 600;
+      font-size: 0.8rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(200, 40, 80, 0.4); transition: transform 0.1s;
+    }
+    .btn-reset:active { transform: scale(0.95); }
 
-    /* GAME BOARD */
+    /* GAME BOARD (GLASMORPHISM) */
     .game-container {
       position: relative; padding: 10px; cursor: default;
-      background: #bbada0; border-radius: 8px;
-      width: 100%; aspect-ratio: 1/1; max-width: 450px; margin: 0 auto;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px; width: 100%; aspect-ratio: 1/1; max-width: 450px; 
+      margin: 0 auto; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     .grid-container {
       display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr);
       gap: 10px; width: 100%; height: 100%;
     }
-    .grid-cell { background: rgba(238,228,218,0.35); border-radius: 4px; width: 100%; height: 100%; }
+    .grid-cell { background: rgba(0,0,0,0.2); border-radius: 8px; width: 100%; height: 100%; }
 
     /* TILE CONTAINER & TILES */
-    .tile-container {
-      position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; z-index: 2;
-    }
+    .tile-container { position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; z-index: 2; }
     .tile {
       position: absolute; display: flex; align-items: center; justify-content: center;
-      border-radius: 4px; font-weight: bold; font-size: 2rem;
+      border-radius: 8px; font-weight: bold; font-size: 2rem; color: #fff;
       transition: 150ms ease-in-out; transition-property: transform, top, left;
       width: calc(25% - 7.5px); height: calc(25% - 7.5px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     
     @media (max-width: 400px) { .tile { font-size: 1.5rem; } }
 
-    /* Tile colors */
-    .tile-2   { background: #eee4da; color: #776e65; }
-    .tile-4   { background: #ede0c8; color: #776e65; }
-    .tile-8   { background: #f2b179; color: #f9f6f2; }
-    .tile-16  { background: #f59563; color: #f9f6f2; }
-    .tile-32  { background: #f67c5f; color: #f9f6f2; }
-    .tile-64  { background: #f65e3b; color: #f9f6f2; }
-    .tile-128 { background: #edcf72; color: #f9f6f2; font-size: 1.6rem; }
-    .tile-256 { background: #edcc61; color: #f9f6f2; font-size: 1.6rem; }
-    .tile-512 { background: #edc850; color: #f9f6f2; font-size: 1.6rem; }
-    .tile-1024{ background: #edc53f; color: #f9f6f2; font-size: 1.2rem; }
-    .tile-2048{ background: #edc22e; color: #f9f6f2; font-size: 1.2rem; box-shadow: 0 0 30px 10px rgba(243,215,116,0.5); }
+    /* WARNA KOTAK (Gradasi Pink & Biru biar matching) */
+    .tile-2   { background: #2a5470; }
+    .tile-4   { background: #1e3c5a; }
+    .tile-8   { background: #e8507a; }
+    .tile-16  { background: #c0254e; }
+    .tile-32  { background: #ff6b8a; }
+    .tile-64  { background: #ff4757; }
+    .tile-128 { background: #9b59b6; font-size: 1.6rem; }
+    .tile-256 { background: #8e44ad; font-size: 1.6rem; }
+    .tile-512 { background: #ffd166; color: #1a2e45; font-size: 1.6rem; box-shadow: 0 0 20px rgba(255, 209, 102, 0.6); }
 
     /* Animations */
     .tile-new { animation: appear 0.2s ease-in-out; animation-fill-mode: backwards; }
@@ -77,74 +100,96 @@
     .htp-left {
       flex: 1; background: linear-gradient(145deg, #2a5470 0%, #1e3c5a 60%, #162e47 100%);
       display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center;
+      position: relative;
+    }
+    .htp-deco {
+      position: absolute; width: 200px; height: 200px; border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, rgba(255, 130, 170, 0.15) 0%, transparent 100%);
+      top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;
     }
     .htp-logo { z-index: 1; color: white;}
-    .htp-logo .logo-emoji { font-size: 4rem; margin-bottom: 10px; display: block;}
+    .htp-logo .logo-emoji { font-size: 4rem; margin-bottom: 10px; display: block; animation: floatEmoji 3s infinite;}
+    @keyframes floatEmoji { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
     .htp-logo h2 { font-size: 1.5rem; margin: 0; letter-spacing: 1px;}
+    
     .htp-right {
       flex: 1; background: #12233a; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px;
     }
     .htp-step {
-      background: rgba(255,255,255,0.06); border-radius: 12px; padding: 15px; margin-bottom: 15px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 15px;
       display: flex; gap: 15px; align-items: center; color: #fff; width: 100%; max-width: 300px;
     }
     .step-icon { font-size: 1.5rem; }
-    .step-text { font-size: 0.85rem; line-height: 1.5; }
+    .step-text { font-size: 0.85rem; line-height: 1.5; color: rgba(255,255,255,0.8); }
+    .step-text strong { color: #ffd166; }
     .btn-mulai {
       width: 100%; max-width: 300px; padding: 15px; background: linear-gradient(135deg, #e8507a, #c0254e);
       border: none; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px;
+      box-shadow: 0 4px 20px rgba(200, 40, 80, 0.4); transition: 0.2s; font-family: 'Poppins'; letter-spacing: 2px;
     }
+    .btn-mulai:active { transform: scale(0.98); }
+    
     @media (max-width: 600px) {
       #howToPlayOverlay { flex-direction: column; }
-      .htp-left { flex: none; padding: 30px; }
+      .htp-left { flex: none; padding: 30px; min-height: 220px; }
       .htp-right { flex: 1; justify-content: flex-start; padding-top: 40px;}
     }
 
-    /* OVERLAY KEMENANGAN */
-    #winScreen {
+    /* OVERLAY KEMENANGAN & KEKALAHAN */
+    .game-overlay {
       display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(237,194,46,0.8); z-index: 100;
-      flex-direction: column; align-items: center; justify-content: center;
-      border-radius: 8px; color: white; text-align: center;
+      z-index: 100; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: 12px; color: white; text-align: center; backdrop-filter: blur(5px);
     }
-    #winScreen h1 { font-size: 3rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-    #winScreen p { font-size: 1.2rem; font-weight: bold; }
+    #winScreen { background: rgba(237, 194, 46, 0.85); }
+    #loseScreen { background: rgba(232, 80, 122, 0.85); }
+    .game-overlay h1 { font-size: 2.5rem; margin: 0 0 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .game-overlay p { font-size: 1.1rem; font-weight: bold; margin: 0 0 20px; }
+    .game-overlay button {
+      background: white; color: #1a2e45; border: none; padding: 10px 20px; border-radius: 8px;
+      font-weight: bold; font-family: 'Poppins'; cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
   <div id="howToPlayOverlay">
     <div class="htp-left">
+      <div class="htp-deco"></div>
       <div class="htp-logo">
-        <span class="logo-emoji">🎮</span>
-        <h2>Level Terakhir</h2>
-        <p style="opacity: 0.7; font-size: 0.9rem;">Satu game lagi buat buka hadiahmu.</p>
+        <span class="logo-emoji">🧩</span>
+        <h2>Misi Terakhir</h2>
+        <p style="opacity: 0.7; font-size: 0.8rem; margin-top:5px; text-transform:uppercase; letter-spacing: 2px;">Spesial Buat Anggie</p>
       </div>
     </div>
     <div class="htp-right">
       <div class="htp-step">
         <span class="step-icon">👆</span>
-        <div class="step-text"><strong>Geser (swipe)</strong> layar untuk memindahkan semua kotak.</div>
+        <div class="step-text"><strong>Geser (swipe)</strong> layar untuk memindahkan semua kotak ke satu arah.</div>
       </div>
       <div class="htp-step">
         <span class="step-icon">🔢</span>
-        <div class="step-text">Angka yang sama akan <strong>bergabung</strong> jadi satu (2+2=4).</div>
+        <div class="step-text">Angka yang sama akan <strong>bergabung</strong> jika bersentuhan (2+2=4).</div>
       </div>
       <div class="htp-step">
         <span class="step-icon">🏆</span>
-        <div class="step-text">Capai angka <strong>2048</strong> untuk membuka halaman rahasia!</div>
+        <div class="step-text">Capai skor <strong>686</strong> atau kotak <strong>512</strong> untuk menang!</div>
       </div>
-      <button class="btn-mulai" onclick="mulaiGame()">Mulai Main! 🚀</button>
+      <button class="btn-mulai" onclick="mulaiGame()">Gass Main! 🚀</button>
     </div>
   </div>
 
   <div class="container" id="gameContainer">
     <div class="heading">
-      <h1 class="title">2048</h1>
-      <div class="scores-container">
-        <div class="score-container" id="scoreValue">0</div>
+      <div class="title">Misi Anggie</div>
+      <div class="controls-container">
+        <div class="scores-container">
+          <div class="score-container" id="scoreValue">0</div>
+        </div>
+        <button class="btn-reset" onclick="resetGame()">Ulangi 🔄</button>
       </div>
     </div>
+
     <div class="game-container">
       <div class="grid-container">
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
@@ -154,19 +199,30 @@
       </div>
       <div class="tile-container" id="tileContainer"></div>
       
-      <div id="winScreen">
+      <div id="winScreen" class="game-overlay">
         <h1>YEAY! 🎉</h1>
-        <p>Memuat hadiah Anggie...</p>
+        <p>Target Selesai!<br>Membuka hadiahmu...</p>
+      </div>
+
+      <div id="loseScreen" class="game-overlay">
+        <h1>Yahh Penuh 😢</h1>
+        <p>Ayo coba lagi, Anggie pasti bisa!</p>
+        <button onclick="resetGame()">Coba Lagi</button>
       </div>
     </div>
   </div>
 
   <script>
-    // FULL ENGINE 2048 JAVASCRIPT
+    // FULL ENGINE 2048 JAVASCRIPT (Anti Error)
     let board = [];
     let score = 0;
     let hasWon = false;
+    let isGameOver = false;
     const size = 4;
+    
+    // TARGET MENANG SUPER GAMPANG (Sesuai request)
+    const targetScore = 686;
+    const targetTile = 512; 
 
     function mulaiGame() {
       document.getElementById('howToPlayOverlay').style.display = 'none';
@@ -174,10 +230,17 @@
       initBoard();
     }
 
+    function resetGame() {
+      document.getElementById('winScreen').style.display = 'none';
+      document.getElementById('loseScreen').style.display = 'none';
+      initBoard();
+    }
+
     function initBoard() {
       board = Array(size).fill().map(() => Array(size).fill(0));
       score = 0;
       hasWon = false;
+      isGameOver = false;
       updateScore();
       addRandomTile();
       addRandomTile();
@@ -194,7 +257,6 @@
       if (emptyCells.length > 0) {
         let randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
         board[randomCell.r][randomCell.c] = Math.random() < 0.9 ? 2 : 4;
-        // Penanda animasi spawn
         board[randomCell.r][randomCell.c] = { value: board[randomCell.r][randomCell.c], isNew: true };
       }
     }
@@ -203,17 +265,19 @@
       const container = document.getElementById('tileContainer');
       container.innerHTML = '';
       
+      let maxTile = 0;
+
       for (let r = 0; r < size; r++) {
         for (let c = 0; c < size; c++) {
           let cell = board[r][c];
           if (cell !== 0) {
             let val = typeof cell === 'object' ? cell.value : cell;
+            if (val > maxTile) maxTile = val;
+
             let tileDiv = document.createElement('div');
             
-            // Logika Posisi Persen biar responsif
             let topPos = (r * 25) + "%";
             let leftPos = (c * 25) + "%";
-            // Koreksi margin gap (karena gap flex/grid susah di-absolute, kita pakai calc)
             tileDiv.style.top = `calc(${topPos} + ${(r * 2.5)}px)`;
             tileDiv.style.left = `calc(${leftPos} + ${(c * 2.5)}px)`;
             
@@ -225,15 +289,16 @@
             tileDiv.textContent = val;
             container.appendChild(tileDiv);
 
-            // Cek Kemenangan
-            if (val >= 2048 && !hasWon) {
-              triggerWin();
-            }
-
-            // Normalisasi data board setelah render animasi
             board[r][c] = val; 
           }
         }
+      }
+
+      // CEK KEMENANGAN (Skor nyentuh 686 atau dapet kotak 512)
+      if ((score >= targetScore || maxTile >= targetTile) && !hasWon) {
+        triggerWin();
+      } else if (checkLose() && !hasWon) {
+        triggerLose();
       }
     }
 
@@ -242,25 +307,38 @@
       document.getElementById('winScreen').style.display = 'flex';
       setTimeout(() => {
         window.location.href = "sandi.html";
-      }, 2500);
+      }, 3000);
+    }
+
+    function triggerLose() {
+      isGameOver = true;
+      document.getElementById('loseScreen').style.display = 'flex';
     }
 
     function updateScore() {
       document.getElementById('scoreValue').textContent = score;
     }
 
-    function move(direction) {
-      if (hasWon) return;
-      let moved = false;
+    function checkLose() {
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (board[r][c] === 0) return false;
+          if (r < size - 1 && board[r][c] === board[r + 1][c]) return false;
+          if (c < size - 1 && board[r][c] === board[r][c + 1]) return false;
+        }
+      }
+      return true;
+    }
 
-      // Putar board biar logic gesernya cukup 1 arah (kiri)
+    function move(direction) {
+      if (hasWon || isGameOver) return;
+      let moved = false;
       let tempBoard = rotateBoard(board, direction);
       
       for (let r = 0; r < size; r++) {
         let row = tempBoard[r];
-        let newRow = row.filter(val => val !== 0); // Buang angka 0
+        let newRow = row.filter(val => val !== 0); 
         
-        // Merge
         for (let i = 0; i < newRow.length - 1; i++) {
           if (newRow[i] !== 0 && newRow[i] === newRow[i + 1]) {
             newRow[i] = { value: newRow[i] * 2, isMerged: true };
@@ -270,21 +348,17 @@
           }
         }
         
-        // Buang 0 lagi setelah merge, lalu isi sisa array dengan 0
         newRow = newRow.filter(val => val !== 0);
         while (newRow.length < size) newRow.push(0);
         
-        // Cek apa ada perubahan posisi
         for (let c = 0; c < size; c++) {
           let oldVal = typeof row[c] === 'object' ? row[c].value : row[c];
           let newVal = typeof newRow[c] === 'object' ? newRow[c].value : newRow[c];
           if (oldVal !== newVal) moved = true;
         }
-        
         tempBoard[r] = newRow;
       }
 
-      // Putar balik ke posisi semula
       board = rotateBoard(tempBoard, (4 - direction) % 4);
 
       if (moved) {
@@ -294,7 +368,6 @@
       }
     }
 
-    // 0: Kiri, 1: Bawah, 2: Kanan, 3: Atas
     function rotateBoard(matrix, times) {
       let result = matrix;
       for (let i = 0; i < times; i++) {
@@ -311,7 +384,7 @@
 
     // KONTROL KEYBOARD
     document.addEventListener('keydown', (e) => {
-      if (hasWon) return;
+      if (hasWon || isGameOver) return;
       switch (e.key) {
         case 'ArrowLeft':  move(0); break;
         case 'ArrowDown':  move(1); break;
@@ -320,7 +393,7 @@
       }
     });
 
-    // KONTROL SWIPE (TOUCH) ANTI BUG
+    // KONTROL SWIPE (TOUCH)
     let touchStartX = 0, touchStartY = 0;
     const gameArea = document.getElementById('gameContainer');
 
@@ -329,28 +402,19 @@
       touchStartY = e.changedTouches[0].screenY;
     }, { passive: false });
 
-    // Matikan scroll saat jari menyentuh kotak game biar lancar
-    gameArea.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-    }, { passive: false });
+    gameArea.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
 
     gameArea.addEventListener('touchend', (e) => {
-      if (hasWon) return;
+      if (hasWon || isGameOver) return;
       let touchEndX = e.changedTouches[0].screenX;
       let touchEndY = e.changedTouches[0].screenY;
-      
       let dx = touchEndX - touchStartX;
       let dy = touchEndY - touchStartY;
       
-      // Deteksi usapan minimal 30px
       if (Math.abs(dx) > Math.abs(dy)) {
-        if (Math.abs(dx) > 30) {
-          dx > 0 ? move(2) : move(0); // Kanan : Kiri
-        }
+        if (Math.abs(dx) > 30) dx > 0 ? move(2) : move(0); 
       } else {
-        if (Math.abs(dy) > 30) {
-          dy > 0 ? move(1) : move(3); // Bawah : Atas
-        }
+        if (Math.abs(dy) > 30) dy > 0 ? move(1) : move(3); 
       }
     });
   </script>
