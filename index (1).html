@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+   <title>Buat Anggie ❤️</title>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+   <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+      html, body { height: 100%; overflow: hidden; background: #1a2e45; }
+
+      .page-wrap { display: flex; height: 100vh; }
+
+      /* PANEL KIRI */
+      .left-panel {
+         flex: 1;
+         background: linear-gradient(145deg, #2a5470 0%, #1e3c5a 60%, #162e47 100%);
+         display: flex; flex-direction: column; align-items: center; justify-content: center;
+         padding: 40px 30px; position: relative; overflow: hidden;
+      }
+      .left-panel::before {
+         content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+         background-image:
+            radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
+            radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+         background-size: 70px 70px, 35px 35px;
+         background-position: 0 0, 17px 17px; pointer-events: none;
+      }
+      .deco-circle-big {
+         position: absolute; width: 260px; height: 260px; border-radius: 50%;
+         background: radial-gradient(circle at 40% 40%, rgba(255,130,170,0.18) 0%, rgba(255,80,130,0.08) 60%, transparent 100%);
+         top: 50%; left: 50%; transform: translate(-50%, -50%);
+      }
+      .deco-circle-sm {
+         position: absolute; width: 130px; height: 130px; border-radius: 50%;
+         background: rgba(255,180,200,0.08); top: 15%; right: -20px;
+      }
+      .left-logo { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+      .left-logo .logo-emoji { font-size: 3.5rem; margin-bottom: 8px; animation: bounce 2s ease-in-out infinite; }
+      @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+      .left-logo h2 { font-size: 1.2rem; font-weight: 700; color: #fff; text-align: center; letter-spacing: 1px; }
+      .left-logo p { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-align: center; margin-top: 4px; letter-spacing: 2px; text-transform: uppercase; }
+
+      .emoji-row { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; max-width: 200px; margin: 10px auto; }
+      .emoji-row span { font-size: 2rem; animation: floatEmoji 3s ease-in-out infinite; }
+      .emoji-row span:nth-child(2) { animation-delay: 0.4s; }
+      .emoji-row span:nth-child(3) { animation-delay: 0.8s; }
+      .emoji-row span:nth-child(4) { animation-delay: 1.2s; }
+      .emoji-row span:nth-child(5) { animation-delay: 1.6s; }
+      @keyframes floatEmoji { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-8px) scale(1.1)} }
+
+      .left-tagline { position: relative; z-index: 1; text-align: center; margin-top: 20px; color: rgba(255,255,255,0.6); font-size: 0.82rem; line-height: 1.7; }
+
+      /* PANEL KANAN */
+      .right-panel {
+         flex: 1; background: #12233a;
+         display: flex; flex-direction: column; align-items: center; justify-content: center;
+         padding: 40px 32px;
+      }
+      .welcome-title { font-size: 1.7rem; font-weight: 700; color: #fff; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; text-align: center; }
+      .welcome-sub { font-size: 0.85rem; color: rgba(255,255,255,0.5); text-align: center; margin-bottom: 28px; line-height: 1.6; }
+
+      .msg-box {
+         width: 100%; max-width: 280px;
+         background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+         border-radius: 14px; padding: 20px; margin-bottom: 28px; text-align: center;
+      }
+      .msg-box .msg-emoji { font-size: 2rem; display: block; margin-bottom: 10px; }
+      .msg-box p { color: rgba(255,255,255,0.75); font-size: 0.85rem; line-height: 1.75; margin: 0; }
+      .msg-box .highlight { color: #ffd166; font-weight: 600; }
+
+      .btn-start {
+         width: 100%; max-width: 280px; padding: 14px;
+         background: linear-gradient(135deg, #e8507a, #c0254e);
+         border: none; border-radius: 10px; color: #fff;
+         font-size: 0.95rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+         cursor: pointer; text-decoration: none; display: block; text-align: center;
+         transition: opacity 0.2s, transform 0.15s;
+         box-shadow: 0 4px 20px rgba(200,40,80,0.4);
+      }
+      .btn-start:active { opacity: 0.85; transform: scale(0.98); }
+
+      .tap-hint { margin-top: 16px; color: rgba(255,255,255,0.3); font-size: 0.72rem; text-align: center; animation: pulse 2s infinite; }
+      @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:0.7} }
+
+      .form-footer { margin-top: 28px; text-align: center; color: rgba(255,255,255,0.2); font-size: 0.72rem; }
+
+      /* MOBILE */
+      @media (max-width: 520px) {
+         .page-wrap { flex-direction: column; overflow-y: auto; }
+         .left-panel { flex: none; padding: 32px 20px 24px; min-height: 200px; }
+         .deco-circle-big { width: 180px; height: 180px; }
+         .emoji-row span { font-size: 1.6rem; }
+         .left-tagline { display: none; }
+         .right-panel { flex: 1; padding: 28px 24px 40px; }
+         .welcome-title { font-size: 1.3rem; }
+      }
+   </style>
+</head>
+<body>
+<div class="page-wrap">
+
+   <div class="left-panel">
+      <div class="deco-circle-big"></div>
+      <div class="deco-circle-sm"></div>
+      <div class="left-logo">
+         <div class="logo-emoji">👋</div>
+         <h2>Halo, Anggie!</h2>
+         <p>Ada sesuatu buat kamu</p>
+      </div>
+      <div class="emoji-row">
+         <span>💕</span><span>🎮</span><span>🎂</span><span>✨</span><span>🎉</span>
+      </div>
+      <div class="left-tagline">
+         Hayoo... ngapain ditempel hp-nya? 😏<br><br>
+         Ada hadiah spesial yang<br>nunggu kamu di dalam. 🎁
+      </div>
+   </div>
+
+   <div class="right-panel">
+      <h1 class="welcome-title">Welcome!</h1>
+      <p class="welcome-sub">Kalau ingin tahu lebih lanjut...</p>
+
+      <div class="msg-box">
+         <span class="msg-emoji">🐦</span>
+         <p>
+            Selesaikan tantangan dari aku ya!<br><br>
+            Dapetin <span class="highlight">20 poin</span> di game Flappy Bird,<br>
+            lalu masukkan kode rahasia,<br>
+            dan hadiahmu siap dibuka! 🎁
+         </p>
+      </div>
+
+      <a class="btn-start" href="flappy.html">Mulai Tantangan 🚀</a>
+      <p class="tap-hint">— tap untuk mulai perjalanan —</p>
+      <div class="form-footer">Dibuat dengan ❤️ oleh Orang Ganteng buat Anggie</div>
+   </div>
+
+</div>
+</body>
+</html>
