@@ -3,7 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-   <title>Halaman Rahasia ❤️</title>
+   <title>Hayooo Tebakk ❤️</title>
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -297,8 +297,8 @@
 
       <div class="left-logo">
          <div class="logo-emoji">🎂</div>
-         <h2>Halaman Rahasia</h2>
-         <p>Khusus buat Anggie</p>
+         <h2>Hayoo Tebak</h2>
+         <p>Khusus buat orang cantik</p>
       </div>
 
       <div class="heart-illustration">
@@ -310,7 +310,7 @@
       </div>
 
       <div class="left-tagline">
-         Selamat! Kamu berhasil melewati<br>tantangan dari aku. 😊<br><br>
+         Selamat! Kamu berhasil mendapatkan<br>Uang 1Jt Rupiah 😊<br><br>
          Masukkan nama &amp; kode rahasiamu<br>untuk membuka hadiah spesial ini.
       </div>
    </div>
@@ -320,7 +320,7 @@
       <h1 class="form-title">Masuk</h1>
 
       <div class="form-group">
-         <label>Nama</label>
+         <label>Username</label>
          <div class="input-wrap">
             <span class="input-icon">👤</span>
             <input type="text" id="inputUsername" placeholder="Nama kamu..." autocomplete="off" />
@@ -335,10 +335,10 @@
          </div>
       </div>
 
-      <button class="btn-login" onclick="doLogin()">Buka ❤️</button>
+      <button class="btn-login" onclick="doLogin()">Jangan Di Pencet ❤️</button>
 
       <p class="error-msg" id="errorMsg">
-         Nama atau kode salah. Coba lagi ya 😅
+         Gimana sih Kok Engga Bisa Buka 😅
       </p>
 
       <div class="form-footer">
@@ -361,10 +361,14 @@
       // Kredensial — case-insensitive untuk nama
       var validUser = "Anggi Dwi Aprilia";
       var validPass = "200408";
+      var validUser = "Aldo Leo Saputra";
+      var validPass = "280708";
+      var validUser = "Alief Hidayat";
+      var validPass = "200408";
 
       if (username.toLowerCase() === validUser.toLowerCase() && password === validPass) {
          // Sukses — redirect ke birthday
-         document.querySelector('.btn-login').textContent = '💕 Membuka...';
+         document.querySelector('.btn-login').textContent = '💕 Sudah Di  Bilang Jangan Di pencet';
          document.querySelector('.btn-login').style.opacity = '0.7';
          setTimeout(function() {
             window.location.href = 'birthday.html';
