@@ -1,374 +1,174 @@
-@-webkit-keyframes animLand {
-   0% { background-position: 0px 0px; }
-   100% { background-position: -335px 0px; }
-}
-@-moz-keyframes animLand {
-   0% { background-position: 0px 0px; }
-   100% { background-position: -335px 0px; }
-}
-@-o-keyframes animLand {
-   0% { background-position: 0px 0px; }
-   100% { background-position: -335px 0px; }
-}
-@keyframes animLand {
-   0% { background-position: 0px 0px; }
-   100% { background-position: -335px 0px; }
-}
+/* CSS MODIFIKASI BY ALDO GANTENG 
+   SUPPORT FULLSCREEN & AUTO-SCALE MOBILE
+*/
 
-@-webkit-keyframes animSky {
-   0% { background-position: 0px 100%; }
-   100% { background-position: -275px 100%; }
-}
-@-moz-keyframes animSky {
-   0% { background-position: 0px 100%; }
-   100% { background-position: -275px 100%; }
-}
-@-o-keyframes animSky {
-   0% { background-position: 0px 100%; }
-   100% { background-position: -275px 100%; }
-}
-@keyframes animSky {
-   0% { background-position: 0px 100%; }
-   100% { background-position: -275px 100%; }
-}
+@-webkit-keyframes animLand { 0% { background-position: 0px 0px; } 100% { background-position: -335px 0px; } }
+@keyframes animLand { 0% { background-position: 0px 0px; } 100% { background-position: -335px 0px; } }
 
-@-webkit-keyframes animBird {
-   from { background-position: 0px 0px; }
-   to { background-position: 0px -96px; }
-}
-@-moz-keyframes animBird {
-   from { background-position: 0px 0px; }
-   to { background-position: 0px -96px; }
-}
-@-o-keyframes animBird {
-   from { background-position: 0px 0px; }
-   to { background-position: 0px -96px; }
-}
-@keyframes animBird {
-   from { background-position: 0px 0px; }
-   to { background-position: 0px -96px; }
-}
+@-webkit-keyframes animSky { 0% { background-position: 0px 100%; } 100% { background-position: -275px 100%; } }
+@keyframes animSky { 0% { background-position: 0px 100%; } 100% { background-position: -275px 100%; } }
 
-@-webkit-keyframes animPipe {
-   0% { left: 900px; }
-   100% { left: -100px; }
-}
-@-moz-keyframes animPipe {
-   0% { left: 900px; }
-   100% { left: -100px; }
-}
-@-o-keyframes animPipe {
-   0% { left: 900px; }
-   100% { left: -100px; }
-}
-@keyframes animPipe {
-   0% { left: 900px; }
-   100% { left: -100px; }
-}
+@-webkit-keyframes animBird { from { background-position: 0px 0px; } to { background-position: 0px -96px; } }
+@keyframes animBird { from { background-position: 0px 0px; } to { background-position: 0px -96px; } }
 
-@-webkit-keyframes animCeiling {
-   0% { background-position: 0px 0px; }
-   100% { background-position: -63px 0px; }
-}
-@-moz-keyframes animCeiling {
-   0% { background-position: 0px 0px; }
-   100% { background-position: -63px 0px; }
-}
-@-o-keyframes animCeiling {
-   0% { background-position: 0px 0px; }
-   100% { background-position: -63px 0px; }
-}
-@keyframes animCeiling {
-   0% { background-position: 0px 0px; }
-   100% { background-position: -63px 0px; }
-}
+@-webkit-keyframes animPipe { 0% { left: 900px; } 100% { left: -100px; } }
+@keyframes animPipe { 0% { left: 900px; } 100% { left: -100px; } }
 
-
-*,
-*:before,
-*:after
-{
-   /* border box */
+*, *:before, *:after {
    -moz-box-sizing: border-box;
    -webkit-box-sizing: border-box;
    box-sizing: border-box;
-   /* gpu acceleration */
-   -webkit-transition: translate3d(0,0,0);
-   /* select disable */
-   -webkit-touch-callout: none;
    -webkit-user-select: none;
-   -khtml-user-select: none;
-   -moz-user-select: none;
-   -ms-user-select: none;
    user-select: none;
 }
 
-html,
-body
-{
+html, body {
    height: 100%;
+   width: 100%;
    overflow: hidden;
-   font-family: monospace;
-   font-size: 12px;
-   color: #fff;
+   background-color: #4ec0ca;
+   margin: 0; padding: 0;
 }
 
-#gamecontainer
-{
+/* CONTAINER UTAMA - DIBIKIN TENGAH & FULL */
+#gamecontainer {
+   position: relative;
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+/* SCREEN GAME - DIBIKIN AUTO SCALE BIAR GEDE DI HP */
+#gamescreen {
    position: relative;
    width: 100%;
    height: 100%;
-   min-height: 525px;
+   max-width: 100%;
+   max-height: 100%;
+   overflow: hidden;
 }
 
-/*
-Screen - Game
-*/
-#gamescreen
-{
-   position: absolute;
-   width: 100%;
-   height: 100%;
-}
-
-#sky
-{
+#sky {
    position: absolute;
    top: 0;
    width: 100%;
-   height: 80%;
+   height: 100%; /* Ditarik sampai bawah biar gak ada area putih */
    background-image: url('../assets/sky.png');
    background-repeat: repeat-x;
    background-position: 0px 100%;
    background-color: #4ec0ca;
-
    -webkit-animation: animSky 7s linear infinite;
    animation: animSky 7s linear infinite;
 }
 
-#flyarea
-{
+#flyarea {
    position: absolute;
-   bottom: 0;
+   bottom: 20%; /* Kasih jarak buat tanah */
    height: 420px;
    width: 100%;
 }
 
-#ceiling
-{
-   position: absolute;
-   top: -16px;
-   height: 16px;
-   width: 100%;
-   background-image: url('../assets/ceiling.png');
-   background-repeat: repeat-x;
-
-   -webkit-animation: animCeiling 481ms linear infinite;
-   animation: animCeiling 481ms linear infinite;
-}
-
-#land
-{
+#land {
    position: absolute;
    bottom: 0;
    width: 100%;
    height: 20%;
    background-image: url('../assets/land.png');
    background-repeat: repeat-x;
-   background-position: 0px 0px;
    background-color: #ded895;
-
+   z-index: 20;
    -webkit-animation: animLand 2516ms linear infinite;
    animation: animLand 2516ms linear infinite;
 }
 
-#bigscore
-{
+/* POSISI ELEMEN TENGAH LAYAR */
+#bigscore {
    position: absolute;
-   top: 20px;
-   left: 150px;
+   top: 10%;
+   left: 50%;
+   transform: translateX(-50%);
    z-index: 100;
 }
 
-#bigscore img
-{
-   display: inline-block;
-   padding: 1px;
-}
-
-#splash
-{
+#splash {
    position: absolute;
    opacity: 0;
-   top: 75px;
-   left: 65px;
+   top: 20%;
+   left: 50%;
+   transform: translateX(-50%);
    width: 188px;
    height: 170px;
    background-image: url('../assets/splash.png');
    background-repeat: no-repeat;
 }
 
-#scoreboard
-{
+#scoreboard {
    position: absolute;
    display: none;
    opacity: 0;
-   top: 64px;
-   left: 43px;
+   top: 15%;
+   left: 50%;
+   transform: translateX(-50%);
    width: 236px;
    height: 280px;
    background-image: url('../assets/scoreboard.png');
    background-repeat: no-repeat;
-
    z-index: 1000;
 }
 
-#medal
-{
-   position: absolute;
-   opacity: 0;
-   top: 114px;
-   left: 32px;
-   width: 44px;
-   height: 44px;
-}
-
-#currentscore
-{
-   position: absolute;
-   top: 105px;
-   left: 107px;
-   width: 104px;
-   height: 14px;
-   text-align: right;
-}
-
-#currentscore img
-{
-   padding-left: 2px;
-}
-
-#highscore
-{
-   position: absolute;
-   top: 147px;
-   left: 107px;
-   width: 104px;
-   height: 14px;
-   text-align: right;
-}
-
-#highscore img
-{
-   padding-left: 2px;
-}
-
-#replay
-{
+#replay {
    position: absolute;
    opacity: 0;
    top: 205px;
-   left: 61px;
+   left: 50%;
+   transform: translateX(-50%);
    height: 115px;
    width: 70px;
    cursor: pointer;
 }
 
-.boundingbox
-{
-   position: absolute;
-   display: none;
-   top: 0;
-   left: 0;
-   width: 0;
-   height: 0;
-   border: 1px solid red;
-}
-
-#player
-{
-   left: 60px;
-   top: 200px;
-}
-
-.bird
-{
+/* BURUNG & PIPA */
+.bird {
    position: absolute;
    width: 34px;
    height: 24px;
    background-image: url('../assets/bird.png');
-
+   z-index: 50;
    -webkit-animation: animBird 300ms steps(4) infinite;
    animation: animBird 300ms steps(4) infinite;
 }
 
-.pipe
-{
+.pipe {
    position: absolute;
-   left: -100px;
    width: 52px;
    height: 100%;
    z-index: 10;
-
    -webkit-animation: animPipe 7500ms linear;
    animation: animPipe 7500ms linear;
 }
 
-.pipe_upper
-{
+.pipe_upper, .pipe_lower {
    position: absolute;
-   top: 0;
    width: 52px;
    background-image: url('../assets/pipe.png');
    background-repeat: repeat-y;
    background-position: center;
 }
 
-.pipe_upper:after
-{
-   content: "";
-   position: absolute;
-   bottom: 0;
-   width: 52px;
-   height: 26px;
+.pipe_upper { top: 0; }
+.pipe_lower { bottom: 0; }
+
+.pipe_upper:after {
+   content: ""; position: absolute; bottom: 0; width: 52px; height: 26px;
    background-image: url('../assets/pipe-down.png');
 }
 
-.pipe_lower
-{
-   position: absolute;
-   bottom: 0;
-   width: 52px;
-   background-image: url('../assets/pipe.png');
-   background-repeat: repeat-y;
-   background-position: center;
-}
-
-.pipe_lower:after
-{
-   content: "";
-   position: absolute;
-   top: 0;
-   width: 52px;
-   height: 26px;
+.pipe_lower:after {
+   content: ""; position: absolute; top: 0; width: 52px; height: 26px;
    background-image: url('../assets/pipe-up.png');
 }
 
-#footer
-{
-   position: absolute;
-   bottom: 3px;
-   left: 3px;
-}
-
-#footer a,
-#footer a:link,
-#footer a:visited,
-#footer a:hover,
-#footer a:active
-{
-   display: block;
-   padding: 2px;
-   text-decoration: none;
-   color: #fff;
-}
+/* MATIIN FOOTER WATERMARK */
+#footer { display: none !important; }
