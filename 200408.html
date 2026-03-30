@@ -27,7 +27,7 @@
     }
 
     /* 3 DOTS MENU */
-    .top-menu { position: fixed; top: 20px; right: 25px; z-index: 10000; }
+    .top-menu { position: fixed; top: 15px; right: 20px; z-index: 10000; }
     .dots-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; font-size: 1.5rem; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     .dots-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.05); }
     .dropdown-content { display: none; position: absolute; right: 0; top: 55px; background: #12233a; min-width: 180px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); overflow: hidden; animation: fadeInDown 0.3s ease; }
@@ -37,8 +37,9 @@
     .dropdown-content a:hover { background: rgba(255, 130, 170, 0.2); padding-left: 20px; }
     .show { display: block; }
 
+    /* TAMBAHAN PADDING TOP BIAR GAK NABRAK MENU */
     .container {
-      width: 100%; max-width: 500px; margin: 0 auto; padding: 15px; display: none;
+      width: 100%; max-width: 500px; margin: 0 auto; padding: 70px 15px 15px; display: none;
     }
     
     .heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
@@ -154,8 +155,8 @@
     }
     #winScreen { background: rgba(10, 30, 60, 0.95); }
     #loseScreen { background: rgba(232, 80, 122, 0.85); }
-    .game-overlay h1 { font-size: 2.2rem; margin: 0 0 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-    .game-overlay p { font-size: 1rem; font-weight: normal; margin: 0 0 20px; }
+    .game-overlay h1 { font-size: 2.5rem; margin: 0 0 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .game-overlay p { font-size: 1.1rem; font-weight: bold; margin: 0 0 20px; }
     .game-overlay button {
       background: white; color: #1a2e45; border: none; padding: 10px 20px; border-radius: 8px;
       font-weight: bold; font-family: 'Poppins'; cursor: pointer;
@@ -189,8 +190,8 @@
       <div class="htp-deco"></div>
       <div class="htp-logo">
         <span class="logo-emoji">🧩</span>
-        <h2>Misi Kedua</h2>
-        <p style="opacity: 0.7; font-size: 0.8rem; margin-top:5px; text-transform:uppercase; letter-spacing: 2px;">Spesial Buat Anggie</p>
+        <h2>Misi EAK</h2>
+        <p style="opacity: 0.7; font-size: 0.8rem; margin-top:5px; text-transform:uppercase; letter-spacing: 2px;">Spesial Buat Princess</p>
       </div>
     </div>
     <div class="htp-right">
@@ -204,7 +205,7 @@
       </div>
       <div class="htp-step">
         <span class="step-icon">🏆</span>
-        <div class="step-text">Capai skor <strong>686</strong> atau kotak <strong>512</strong> untuk dapat Clue!</div>
+        <div class="step-text">Capai skor <strong>2048</strong> atau kotak <strong>512</strong> untuk Lanjut</div>
       </div>
       <button class="btn-mulai" onclick="mulaiGame()">Gass Main! 🚀</button>
     </div>
@@ -364,7 +365,6 @@
 
     function triggerWin() {
       hasWon = true;
-      // Munculin Overlay Clue, user klik tombol sendiri buat lanjut
       document.getElementById('winScreen').style.display = 'flex';
     }
 
