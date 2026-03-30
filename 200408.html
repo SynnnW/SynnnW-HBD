@@ -11,7 +11,7 @@
     * { box-sizing: border-box; }
     body {
       margin: 0; padding: 0; 
-      background: #1a2e45; /* Sesuai dengan tema halaman sandi.html */
+      background: #1a2e45; 
       font-family: 'Poppins', sans-serif; font-size: 18px; color: #fff;
       overflow: hidden; touch-action: none;
     }
@@ -25,6 +25,17 @@
       background-size: 70px 70px, 35px 35px;
       background-position: 0 0, 17px 17px; pointer-events: none; z-index: -1;
     }
+
+    /* 3 DOTS MENU */
+    .top-menu { position: fixed; top: 20px; right: 25px; z-index: 10000; }
+    .dots-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; font-size: 1.5rem; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .dots-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.05); }
+    .dropdown-content { display: none; position: absolute; right: 0; top: 55px; background: #12233a; min-width: 180px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); overflow: hidden; animation: fadeInDown 0.3s ease; }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .dropdown-content a { color: white; padding: 14px 16px; text-decoration: none; display: block; font-size: 0.85rem; transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'Poppins', sans-serif;}
+    .dropdown-content a:last-child { border-bottom: none; }
+    .dropdown-content a:hover { background: rgba(255, 130, 170, 0.2); padding-left: 20px; }
+    .show { display: block; }
 
     .container {
       width: 100%; max-width: 500px; margin: 0 auto; padding: 15px; display: none;
@@ -76,7 +87,7 @@
     
     @media (max-width: 400px) { .tile { font-size: 1.5rem; } }
 
-    /* WARNA KOTAK (Gradasi Pink & Biru biar matching) */
+    /* WARNA KOTAK */
     .tile-2   { background: #2a5470; }
     .tile-4   { background: #1e3c5a; }
     .tile-8   { background: #e8507a; }
@@ -141,25 +152,45 @@
       z-index: 100; flex-direction: column; align-items: center; justify-content: center;
       border-radius: 12px; color: white; text-align: center; backdrop-filter: blur(5px);
     }
-    #winScreen { background: rgba(237, 194, 46, 0.85); }
+    #winScreen { background: rgba(10, 30, 60, 0.95); }
     #loseScreen { background: rgba(232, 80, 122, 0.85); }
-    .game-overlay h1 { font-size: 2.5rem; margin: 0 0 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-    .game-overlay p { font-size: 1.1rem; font-weight: bold; margin: 0 0 20px; }
+    .game-overlay h1 { font-size: 2.2rem; margin: 0 0 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .game-overlay p { font-size: 1rem; font-weight: normal; margin: 0 0 20px; }
     .game-overlay button {
       background: white; color: #1a2e45; border: none; padding: 10px 20px; border-radius: 8px;
       font-weight: bold; font-family: 'Poppins'; cursor: pointer;
     }
+
+    /* CLUE BOX */
+    .clue-box { background: rgba(255,255,255,0.05); border: 2px dashed #ffd166; padding: 20px; border-radius: 15px; margin: 10px 0 20px; width: 100%; max-width: 300px; box-shadow: 0 0 20px rgba(255, 209, 102, 0.2); }
+    .clue-box h3 { color: #ffd166; font-family: 'Poppins', sans-serif; font-size: 1rem; margin-bottom: 8px; letter-spacing: 1px; }
+    .clue-box .password-clue { color: #fff; font-family: monospace; font-size: 1.8rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+    
+    /* TOMBOL LANJUT KE LOGIN */
+    .btn-lanjut { background: linear-gradient(135deg, #e8507a, #c0254e); border: none; border-radius: 10px; color: #fff; font-size: 1rem; font-weight: bold; padding: 14px 30px; cursor: pointer; text-decoration: none; font-family: 'Poppins', sans-serif; box-shadow: 0 4px 15px rgba(200, 40, 80, 0.4); display: inline-block; transition: 0.2s; }
+    .btn-lanjut:active { transform: scale(0.95); }
+
+    #custom-footer { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; z-index: 9999; pointer-events: none; }
+    #custom-footer p { margin: 0; color: rgba(255, 255, 255, 0.4); font-size: 11px; font-family: 'Poppins', sans-serif; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); }
   </style>
 </head>
 <body>
+
+  <div class="top-menu">
+     <button onclick="toggleMenu()" class="dots-btn">⋮</button>
+     <div id="myDropdown" class="dropdown-content">
+        <a href="flappy.html">🔙 Kembali ke Misi 1</a>
+        <a href="tutor.html">ℹ️ Halaman Tutor</a>
+     </div>
+  </div>
 
   <div id="howToPlayOverlay">
     <div class="htp-left">
       <div class="htp-deco"></div>
       <div class="htp-logo">
         <span class="logo-emoji">🧩</span>
-        <h2>Misi EAK</h2>
-        <p style="opacity: 0.7; font-size: 0.8rem; margin-top:5px; text-transform:uppercase; letter-spacing: 2px;">Spesial Buat Princess</p>
+        <h2>Misi Kedua</h2>
+        <p style="opacity: 0.7; font-size: 0.8rem; margin-top:5px; text-transform:uppercase; letter-spacing: 2px;">Spesial Buat Anggie</p>
       </div>
     </div>
     <div class="htp-right">
@@ -173,7 +204,7 @@
       </div>
       <div class="htp-step">
         <span class="step-icon">🏆</span>
-        <div class="step-text">Capai skor <strong>2048</strong> atau kotak <strong>512</strong> untuk Lanjut</div>
+        <div class="step-text">Capai skor <strong>686</strong> atau kotak <strong>512</strong> untuk dapat Clue!</div>
       </div>
       <button class="btn-mulai" onclick="mulaiGame()">Gass Main! 🚀</button>
     </div>
@@ -200,8 +231,17 @@
       <div class="tile-container" id="tileContainer"></div>
       
       <div id="winScreen" class="game-overlay">
-        <h1>YEAY! 🎉</h1>
-        <p>Target Selesai!<br>Membuka hadiahmu...</p>
+        <div style="font-size:4rem; margin-bottom:10px;">🎉</div>
+        <h1 style="font-family:'Poppins', sans-serif;">Misi 2 Selesai!</h1>
+        <p style="color:#b8d8ea; font-size: 0.9rem;">Hebat! Ini clue terakhir untuk login:</p>
+        
+        <div class="clue-box">
+            <h3>CLUE PASSWORD:</h3>
+            <div class="password-clue">200408</div>
+        </div>
+
+        <p style="color:rgba(255,255,255,0.6); font-size:0.75rem; margin-bottom:30px;">(Ingat atau Screenshot ya!)</p>
+        <a href="index.html" class="btn-lanjut">Login Sekarang ➡️</a>
       </div>
 
       <div id="loseScreen" class="game-overlay">
@@ -212,15 +252,35 @@
     </div>
   </div>
 
+  <div id="custom-footer">
+    <p>Dibuat dengan ❤️ oleh Orang Ganteng buat Anggie</p>
+  </div>
+
   <script>
-    // FULL ENGINE 2048 JAVASCRIPT (Anti Error)
+    // FUNGSI MENU TITIK 3
+    function toggleMenu() {
+       document.getElementById("myDropdown").classList.toggle("show");
+    }
+    window.onclick = function(event) {
+       if (!event.target.matches('.dots-btn') && !event.target.matches('.dots-btn *')) {
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          for (var i = 0; i < dropdowns.length; i++) {
+             var openDropdown = dropdowns[i];
+             if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+             }
+          }
+       }
+    }
+
+    // FULL ENGINE 2048 JAVASCRIPT
     let board = [];
     let score = 0;
     let hasWon = false;
     let isGameOver = false;
     const size = 4;
     
-    // TARGET MENANG SUPER GAMPANG (Sesuai request)
+    // TARGET MENANG 
     const targetScore = 686;
     const targetTile = 512; 
 
@@ -304,10 +364,8 @@
 
     function triggerWin() {
       hasWon = true;
+      // Munculin Overlay Clue, user klik tombol sendiri buat lanjut
       document.getElementById('winScreen').style.display = 'flex';
-      setTimeout(() => {
-        window.location.href = "sandi.html";
-      }, 3000);
     }
 
     function triggerLose() {
