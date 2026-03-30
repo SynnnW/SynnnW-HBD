@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kejutan Spesial! 🎁</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS RESET & TEMPLATE GELAP ESTETIK */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body {
+            background: #1a2e45; /* Warna biru dongker tema kamu */
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Latar Belakang Bintang */
+        body::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 60px 60px, 30px 30px;
+            background-position: 0 0, 15px 15px; pointer-events: none; z-index: -1;
+        }
+
+        /* KOTAK KEJUTAN */
+        .surprise-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed #ffd166;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            animation: appear 0.6s ease-out;
+        }
+
+        @keyframes appear { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .emoji { font-size: 5rem; display: block; margin-bottom: 20px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+
+        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        p { font-size: 0.9rem; line-height: 1.8; color: rgba(255,255,255,0.8); }
+        .highlight { color: #ff6b8a; font-weight: 600; }
+
+        /* TOMBOL KEMBALI KE HOME */
+        .btn-home {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #e8507a, #c0254e);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(200, 40, 80, 0.4);
+            transition: 0.2s;
+        }
+        .btn-home:active { transform: scale(0.95); }
+
+    </style>
+</head>
+<body>
+
+    <div class="surprise-box">
+        <span class="emoji">👕</span>
+        <h1>Kejutan Berhasil!</h1>
+        <p>
+            Wah, Anggie nemu NFC rahasia di baju! 😂<br>
+            Nggak ada kado spesial di sini, cuma mau bilang:<br>
+            <span class="highlight">"Aku Sayang Banget Sama Kamu, Anggie."</span><br>
+            Happy Birthday, Princess! ✨
+        </p>
+        
+        <a href="happybirthday.html" class="btn-home">Balik ke Kado ➡️</a>
+    </div>
+
+</body>
+</html>
