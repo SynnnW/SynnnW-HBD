@@ -1,40 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
    <head>
       <title>HBD Sayangku Anggie ❤️</title>
       <meta http-equiv="content-type" content="text/html; charset=utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
       <link href="css/reset.css" rel="stylesheet">
       <link href="css/main.css" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+      
+      <style>
+         /* 3 DOTS MENU */
+         .top-menu { position: fixed; top: 20px; right: 25px; z-index: 10000; }
+         .dots-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; font-size: 1.5rem; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+         .dots-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.05); }
+         .dropdown-content { display: none; position: absolute; right: 0; top: 55px; background: #12233a; min-width: 180px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); overflow: hidden; animation: fadeInDown 0.3s ease; }
+         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+         .dropdown-content a { color: white; padding: 14px 16px; text-decoration: none; display: block; font-size: 0.85rem; transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'Poppins', sans-serif;}
+         .dropdown-content a:last-child { border-bottom: none; }
+         .dropdown-content a:hover { background: rgba(255, 130, 170, 0.2); padding-left: 20px; }
+         .show { display: block; }
+
+         /* CLUE BOX */
+         .clue-box { background: rgba(255,255,255,0.05); border: 2px dashed #ffd166; padding: 20px; border-radius: 15px; margin: 20px 0; width: 100%; max-width: 300px; box-shadow: 0 0 20px rgba(255, 209, 102, 0.2); }
+         .clue-box h3 { color: #ffd166; font-family: 'Poppins', sans-serif; font-size: 1rem; margin-bottom: 8px; letter-spacing: 1px; }
+         .clue-box .username-clue { color: #fff; font-family: monospace; font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+         
+         /* TOMBOL LANJUT */
+         .btn-lanjut { background: linear-gradient(135deg, #e8507a, #c0254e); border: none; border-radius: 10px; color: #fff; font-size: 1rem; font-weight: bold; padding: 14px 30px; cursor: pointer; text-decoration: none; font-family: 'Poppins', sans-serif; box-shadow: 0 4px 15px rgba(200, 40, 80, 0.4); display: inline-block; transition: 0.2s; }
+         .btn-lanjut:active { transform: scale(0.95); }
+         
+         #custom-footer { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; z-index: 9999; pointer-events: none; }
+         #custom-footer p { margin: 0; color: rgba(255, 255, 255, 0.6); font-size: 11px; font-family: 'Poppins', sans-serif; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); }
+      </style>
    </head>
    <body>
 
-      <!-- =============================================
-           WELCOME OVERLAY — muncul saat NFC di-scan
-           ============================================= -->
-      <div id="welcomeOverlay">
-         <div class="wc-emoji">👋</div>
-         <h1>Welcome!</h1>
-         <p>Hayoo ngapain ditempel hp-nya? 😄<br>Kalau ingin tahu lebih lanjut...</p>
-         <div class="wc-highlight">
-            Selesaikan <span>20</span> poin<br>dari game ini!
+      <div class="top-menu">
+         <button onclick="toggleMenu()" class="dots-btn">⋮</button>
+         <div id="myDropdown" class="dropdown-content">
+            <a href="tutor.html">🔙 Kembali ke Tutor</a>
+            <a href="index.html">🏠 Ke Halaman Awal</a>
          </div>
-         <p>Bisa gak? 😏</p>
-         <p class="tap-hint">— tap di mana saja untuk mulai —</p>
       </div>
 
-      <!-- =============================================
-           WIN OVERLAY — muncul saat 10 poin tercapai
-           ============================================= -->
-      <div id="winOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; background:rgba(10,30,60,0.93); display:none; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:30px;">
-         <div class="win-emoji">🎉</div>
-         <h2>Anjayyy tunggu sebentar... 😅</h2>
-         <p>Membuka game selanjutnya!</p>
+      <div id="welcomeOverlay">
+         <div class="wc-emoji">🎮</div>
+         <h1>Misi Pertama!</h1>
+         <p style="font-family:'Poppins', sans-serif; color:#b8d8ea;">Selesaikan misi ini untuk mendapatkan Clue Username rahasia!</p>
+         <div class="wc-highlight">
+            Dapatkan <span>10</span> Poin!
+         </div>
+         <p class="tap-hint">— Tap layar untuk mulai terbang —</p>
       </div>
 
-      <!-- =============================================
-           GAME WRAPPER
-           ============================================= -->
+      <div id="winOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; background:rgba(10,30,60,0.95); align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:30px;">
+         <div class="win-emoji" style="font-size:4rem; margin-bottom:10px;">🎉</div>
+         <h2 style="font-family:'Poppins', sans-serif; color:#fff; font-size:1.8rem; margin-bottom:10px;">Misi 1 Selesai!</h2>
+         <p style="font-family:'Poppins', sans-serif; color:#b8d8ea; margin-bottom:10px; font-size: 0.9rem;">Hebat! Ini clue pertama untuk buka hadiahmu:</p>
+         
+         <div class="clue-box">
+             <h3>CLUE USERNAME:</h3>
+             <div class="username-clue">Anggie Dwi Aprilia</div>
+         </div>
+
+         <p style="font-family:'Poppins', sans-serif; color:rgba(255,255,255,0.6); font-size:0.75rem; margin-bottom:30px;">(Ingat-ingat atau Screenshot ya!)</p>
+
+         <a href="200408.html" class="btn-lanjut">Lanjut Misi 2 ➡️</a>
+      </div>
+
       <div id="gameWrapper">
          <div id="gamecontainer">
             <div id="gamescreen">
@@ -50,13 +83,13 @@
                         <div id="highscore"></div>
                         <div id="replay"><img src="assets/replay.png" alt="replay"></div>
                      </div>
-                     <!-- Pipes go here! -->
                   </div>
                </div>
                <div id="land" class="animated"></div>
             </div>
          </div>
       </div>
+
       <div id="custom-footer"><p>Dibuat dengan ❤️ oleh Orang Ganteng buat Anggie</p></div>
 
       <div class="boundingbox" id="playerbox"></div>
@@ -66,5 +99,22 @@
       <script src="js/jquery.transit.min.js"></script>
       <script src="js/buzz.min.js"></script>
       <script src="js/main.js"></script>
+      
+      <script>
+         function toggleMenu() {
+            document.getElementById("myDropdown").classList.toggle("show");
+         }
+         window.onclick = function(event) {
+            if (!event.target.matches('.dots-btn') && !event.target.matches('.dots-btn *')) {
+               var dropdowns = document.getElementsByClassName("dropdown-content");
+               for (var i = 0; i < dropdowns.length; i++) {
+                  var openDropdown = dropdowns[i];
+                  if (openDropdown.classList.contains('show')) {
+                     openDropdown.classList.remove('show');
+                  }
+               }
+            }
+         }
+      </script>
    </body>
 </html>
