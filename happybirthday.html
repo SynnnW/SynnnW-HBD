@@ -15,18 +15,16 @@
     body { 
       background: #0f172a; 
       display: flex; justify-content: center; align-items: center; 
-      height: 100vh; /* Fallback browser lama */
-      height: 100dvh; /* Jurus sakti biar tombol navigasi gak ilang di HP */
+      height: 100vh; 
+      height: 100dvh; 
       color: #fff; overflow: hidden; 
     }
     
-    /* Pembungkus ala Aplikasi HP */
     .app-container {
       width: 100%; max-width: 480px; height: 100%; background: #1a2e45; position: relative;
       overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column;
     }
     
-    /* Background Bintang Ala-ala */
     .app-container::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
       background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
@@ -37,9 +35,10 @@
        VIEWS (HOME & PROFILE)
        ========================================= */
     .view-section {
-      flex: 1; overflow-y: auto; padding-bottom: 90px; /* Ruang buat bottom nav */
+      flex: 1; overflow-y: auto; padding-bottom: 120px; /* Ditambah ruangnya biar chapter 4 ga ketutupan nav */
       display: none; position: relative; z-index: 1;
       animation: fadeIn 0.4s ease-in-out;
+      scroll-behavior: smooth; /* Biar scrollnya halus */
     }
     .view-section.active { display: block; }
     
@@ -58,37 +57,92 @@
        ========================================= */
     .section-title { padding: 20px 20px 10px; font-size: 1.2rem; font-weight: 600; }
     
-    /* Container Geser Bawah (Vertikal) */
     .story-slider {
-      display: flex; flex-direction: column; gap: 20px; padding: 10px 20px 20px;
+      display: flex; flex-direction: column; gap: 40px; padding: 30px 20px 40px;
     }
     
-    /* Kartu Story */
+    /* Kartu Story & Efek Highlight */
     .story-card {
-      width: 100%; background: #12233a; border-radius: 20px; padding: 20px;
-      border: 1px solid rgba(255,255,255,0.1);
-      position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      width: 100%; border-radius: 20px; padding: 20px;
+      position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      opacity: 0.6; /* Redup secara default */
+      transform: scale(0.95); /* Agak kecil secara default */
+    }
+
+    /* Efek Saat Kartu di Tengah Layar (Highlight) */
+    .story-card.focused {
+        opacity: 1;
+        transform: scale(1.02);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
     
     /* Warna Tiap Kartu */
-    .card-1 { background: linear-gradient(135deg, #ff6b8a, #ff4757); }
-    .card-2 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-    .card-3 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-    .card-4 { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a2e45; }
+    .card-1 { background: linear-gradient(135deg, #ff6b8a, #ff4757); border: 1px solid rgba(255, 107, 138, 0.5); }
+    .card-2 { background: linear-gradient(135deg, #4facfe, #00f2fe); border: 1px solid rgba(79, 172, 254, 0.5); }
+    .card-3 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); border: 1px solid rgba(161, 140, 209, 0.5); }
+    .card-4 { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a2e45; border: 1px solid rgba(67, 233, 123, 0.5); }
     .card-unknown { background: linear-gradient(135deg, #12233a, #0f172a); border: 2px dashed #ffd166; }
 
-    .story-image {
-      width: 100%; height: 140px; background: rgba(0,0,0,0.2); border-radius: 12px;
-      margin-bottom: 15px; display: flex; justify-content: center; align-items: center; font-size: 3rem;
+    /* =========================================
+       EFEK TIMBUL (POP-OUT PNG)
+       ========================================= */
+    .story-image-container {
+      position: relative;
+      width: 100%;
+      height: 100px; /* Tinggi dasar kotak gambar */
+      margin-top: 30px; /* Kasih ruang di atas biar gambar bisa "nongol" */
+      margin-bottom: 20px;
+      background: rgba(0,0,0,0.15); /* Background gelap transparan buat dudukan gambar */
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .pop-out-img {
+      position: absolute;
+      bottom: 0; /* Gambar selalu nempel di bawah kotak dudukan */
+      height: 160px; /* Dibuat lebih tinggi dari container (100px) biar nongol 60px ke atas */
+      width: auto;
+      z-index: 2;
+      transition: transform 0.4s ease;
+      filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.4)); /* Bayangan PNG */
+    }
+
+    /* Animasi kecil pas di-highlight */
+    .story-card.focused .pop-out-img {
+        transform: translateY(-5px) scale(1.05);
+    }
+
+    /* =========================================
+       EFEK KUNCI GEMBOK (LOCKED)
+       ========================================= */
+    .story-card.locked {
+        filter: grayscale(80%) brightness(0.6);
+        pointer-events: none; /* Bikin tombol ga bisa diklik */
+    }
+
+    .lock-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.3);
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 4rem;
+        border-radius: 20px;
+        backdrop-filter: blur(2px);
     }
     
-    .story-card h3 { font-size: 1.3rem; margin-bottom: 5px; font-weight: 700; }
-    .story-card p { font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px; line-height: 1.4; }
+    .story-card h3 { font-size: 1.3rem; margin-bottom: 5px; font-weight: 700; position: relative; z-index: 3;}
+    .story-card p { font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px; line-height: 1.4; position: relative; z-index: 3;}
     
     .btn-read {
-      display: inline-block; padding: 10px 20px; background: rgba(255,255,255,0.2);
-      color: inherit; text-decoration: none; border-radius: 8px; font-weight: 600;
-      font-size: 0.9rem; backdrop-filter: blur(5px); text-align: center; width: 100%; transition: 0.2s;
+      display: inline-block; padding: 12px 20px; background: rgba(255,255,255,0.25);
+      color: inherit; text-decoration: none; border-radius: 10px; font-weight: 700;
+      font-size: 0.9rem; text-align: center; width: 100%; transition: 0.2s;
+      position: relative; z-index: 3; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     .card-unknown .btn-read { background: #ffd166; color: #1a2e45; }
     .btn-read:active { transform: scale(0.95); }
@@ -107,7 +161,6 @@
     .profile-name { font-size: 1.4rem; font-weight: 700; }
     .profile-status { font-size: 0.85rem; color: #ffd166; margin-top: 5px; }
 
-    /* Statistik Card */
     .stats-card {
       background: rgba(255,255,255,0.05); margin: 0 20px 20px; padding: 20px;
       border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center;
@@ -148,7 +201,7 @@
 </head>
 <body>
 
-  <audio class="song" loop autoplay>
+  <audio id="bg-music" class="song" loop autoplay>
     <source src="music/hbd.mp3" type="audio/mpeg" />
   </audio>
 
@@ -165,49 +218,57 @@
 
       <h2 class="section-title">Kumpulan Cerita Kita</h2>
       
-      <div class="story-slider">
+      <div class="story-slider" id="scroll-area">
         
-        <div class="story-card card-1">
-          <div class="story-image">
-            <img src="img/placeholder.png" alt="Story 1" style="width:100%; height:100%; object-fit:cover; border-radius:8px; display:none;">
-            📖
+        <div class="story-card card-1" id="chapter-1">
+          <div class="story-image-container">
+            <img src="img/buku.png" class="pop-out-img" alt="Chapter 1" onerror="this.style.display='none';">
           </div>
           <h3>Chapter 1</h3>
           <p>Awal mula semua rasa ini bermula. Baca yuk!</p>
           <a href="story1.html" class="btn-read">BACA CERITA</a>
         </div>
 
-        <div class="story-card card-2">
-          <div class="story-image">☕</div>
+        <div class="story-card card-2 locked" id="chapter-2">
+          <div class="lock-overlay">🔒</div>
+          <div class="story-image-container">
+            <img src="img/kopi.png" class="pop-out-img" alt="Chapter 2" onerror="this.style.display='none';">
+          </div>
           <h3>Chapter 2</h3>
           <p>Hal-hal kecil yang bikin aku makin jatuh hati.</p>
           <a href="story2.html" class="btn-read">BACA CERITA</a>
         </div>
 
-        <div class="story-card card-3">
-          <div class="story-image">🎢</div>
+        <div class="story-card card-3 locked" id="chapter-3">
+          <div class="lock-overlay">🔒</div>
+          <div class="story-image-container">
+            <img src="img/rollercoaster.png" class="pop-out-img" alt="Chapter 3" onerror="this.style.display='none';">
+          </div>
           <h3>Chapter 3</h3>
           <p>Jatuh bangun dan perjalanan seru kita berdua.</p>
           <a href="story3.html" class="btn-read">BACA CERITA</a>
         </div>
 
-        <div class="story-card card-4">
-          <div class="story-image">💌</div>
-          <h3 style="color:#1a2e45;">Chapter 4</h3>
+        <div class="story-card card-unknown" id="chapter-unknown">
+          <div class="story-image-container" style="background: transparent;">
+            <div style="font-size: 4rem; position:absolute; bottom:20px; z-index:2;">❓</div>
+          </div>
+          <h3 style="color:#ffd166;">The Unknown</h3>
+          <p>Sstt... ini rahasia. Selesaikan chapter 1-3 dulu ya!</p>
+          <a href="#" class="btn-read" style="pointer-events: none;">RAHASIA</a>
+        </div>
+
+        <div class="story-card card-4" id="chapter-4" style="display: none;">
+          <div class="story-image-container">
+            <img src="img/surat.png" class="pop-out-img" alt="Chapter 4" onerror="this.style.display='none';">
+          </div>
+          <h3 style="color:#1a2e45;">Chapter 4: Final</h3>
           <p style="color:#1a2e45;">Catatan untuk hari ini dan selamanya.</p>
           <a href="story4.html" class="btn-read" style="background: #1a2e45; color: #fff;">BACA CERITA</a>
         </div>
 
-        <div class="story-card card-unknown">
-          <div class="story-image">🔒</div>
-          <h3 style="color:#ffd166;">The Unknown</h3>
-          <p>Sstt... ini rahasia. Selesaikan chapter 1-4 dulu ya!</p>
-          <a href="storyunknown.html" class="btn-read">BUKA RAHASIA</a>
-        </div>
-
       </div>
     </div>
-
 
     <div id="view-profile" class="view-section">
       <div class="profile-header">
@@ -241,13 +302,16 @@
           <span class="menu-icon">🧩</span>
           <span>Main Game 2048 Lagi</span>
         </a>
+        <a href="#" class="menu-item" onclick="resetProgress()">
+          <span class="menu-icon">🔄</span>
+          <span>Reset Kunci Chapter (Test)</span>
+        </a>
         <a href="index.html" class="menu-item">
           <span class="menu-icon">🚪</span>
           <span style="color: #ff4757;">Keluar (Logout)</span>
         </a>
       </div>
     </div>
-
 
     <div class="bottom-nav">
       <div class="nav-item active" onclick="switchTab('home')">
@@ -263,17 +327,16 @@
   </div>
 
   <script>
-    // FUNGSI GANTI TAB TANPA LOADING
+    // ==========================================
+    // 1. LOGIKA PINDAH TAB (Tanpa Loading)
+    // ==========================================
     function switchTab(tabName) {
-      // Sembunyiin semua halaman
       document.getElementById('view-home').classList.remove('active');
       document.getElementById('view-profile').classList.remove('active');
       
-      // Reset warna tombol navigasi
       const navItems = document.querySelectorAll('.nav-item');
       navItems.forEach(item => item.classList.remove('active'));
 
-      // Tunjukin halaman yang dipencet
       if(tabName === 'home') {
         document.getElementById('view-home').classList.add('active');
         navItems[0].classList.add('active');
@@ -282,7 +345,76 @@
         navItems[1].classList.add('active');
       }
     }
-  </script>
 
+    // ==========================================
+    // 2. LOGIKA KUNCI GEMBOK & PROGRESS
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+      // Ambil progress dari memori browser (Default 1 kalau baru pertama kali)
+      let progress = parseInt(localStorage.getItem("storyProgress")) || 1;
+
+      // Logika Buka Kunci Chapter 2
+      if (progress >= 2) {
+          let ch2 = document.getElementById('chapter-2');
+          ch2.classList.remove('locked');
+          ch2.querySelector('.lock-overlay').style.display = 'none';
+      }
+
+      // Logika Buka Kunci Chapter 3
+      if (progress >= 3) {
+          let ch3 = document.getElementById('chapter-3');
+          ch3.classList.remove('locked');
+          ch3.querySelector('.lock-overlay').style.display = 'none';
+      }
+
+      // Logika Sembunyikan "The Unknown" dan Munculkan Chapter 4
+      if (progress >= 4) {
+          document.getElementById('chapter-unknown').style.display = 'none';
+          document.getElementById('chapter-4').style.display = 'block';
+      }
+
+      // Mainkan musik otomatis kalau browser mengizinkan
+      let bgMusic = document.getElementById("bg-music");
+      bgMusic.volume = 0.5;
+      document.body.addEventListener('click', function() {
+          bgMusic.play().catch(error => console.log("Autoplay ditahan browser"));
+      }, { once: true });
+    });
+
+    // Fungsi rahasia buat kamu ngetest hapus progress
+    function resetProgress() {
+        localStorage.setItem("storyProgress", 1);
+        alert("Kunci berhasil direset ke Chapter 1!");
+        location.reload();
+    }
+
+    // ==========================================
+    // 3. LOGIKA EFEK HIGHLIGHT SAAT DI-SCROLL
+    // ==========================================
+    const scrollArea = document.getElementById('view-home');
+    const cards = document.querySelectorAll('.story-card');
+
+    // Pengaturan sensor pembaca scroll
+    const observerOptions = {
+        root: scrollArea,
+        rootMargin: '-30% 0px -40% 0px', // Aktif ketika kartu berada tepat di tengah layar
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Hapus efek dari semua kartu
+                cards.forEach(c => c.classList.remove('focused'));
+                // Tambahkan efek ke kartu yang sedang di tengah layar
+                entry.target.classList.add('focused');
+            }
+        });
+    }, observerOptions);
+
+    // Tempelkan sensor ke semua kartu
+    cards.forEach(card => observer.observe(card));
+
+  </script>
 </body>
 </html>
