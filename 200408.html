@@ -326,7 +326,7 @@
 
   <div class="marquee-tape marquee-top">
       <div class="marquee-content">
-          ⚠️ MISI RAHASIA PRINCESS ⚠️ KUMPULKAN KOTAK 512 ⚠️ MISI RAHASIA PRINCESS ⚠️ KUMPULKAN KOTAK 512 ⚠️ MISI RAHASIA PRINCESS ⚠️ KUMPULKAN KOTAK 512 ⚠️ 
+          ⚠️ MISI RAHASIA PRINCESS ⚠️ CAPAI SKOR 700 ⚠️ MISI RAHASIA PRINCESS ⚠️ CAPAI SKOR 700 ⚠️ MISI RAHASIA PRINCESS ⚠️ CAPAI SKOR 700 ⚠️ 
       </div>
   </div>
 
@@ -367,7 +367,7 @@
         </div>
         <div class="htp-step">
             <span class="step-icon">🏆</span>
-            <div class="step-text">Gabungkan terus sampai dapat kotak <strong>512</strong> untuk menang!</div>
+            <div class="step-text">Gabungkan terus sampai dapat skor <strong>700</strong> untuk menang!</div>
         </div>
         
         <button class="btn-mulai ripple-btn" onclick="mulaiGame()">Gass Main! 🚀</button>
@@ -639,8 +639,8 @@
     let isGameOver = false;
     const size = 4;
     
-    // TARGET MENANG (Ubah 512 ke target lain jika mau lebih lama)
-    const targetScore = 99999; // Kita fokus di pencapaian kotak
+    // TARGET MENANG (SKOR 700)
+    const targetScore = 700;
     const targetTile = 512; 
 
     function mulaiGame() {
@@ -712,8 +712,8 @@
         }
       }
 
-      // Cek Menang / Kalah
-      if (maxTile >= targetTile && !hasWon) {
+      // Cek Menang / Kalah (Ubah ke score >= targetScore)
+      if ((score >= targetScore || maxTile >= targetTile) && !hasWon) {
         triggerWin();
       } else if (checkLose() && !hasWon) {
         triggerLose();
