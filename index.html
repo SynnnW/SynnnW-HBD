@@ -11,7 +11,27 @@
     
     <style>
         /* ==========================================================================
-           1. RESET & CSS VARIABLES (MAXIMALIST NEO-BRUTALISM)
+           0. RESET & CUSTOM CURSOR (MENYEMBUNYIKAN KURSOR ASLI)
+           ========================================================================== */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; 
+            cursor: none !important; /* Kursor asli dimatikan di seluruh web */
+        }
+
+        /* Kursor Kustom ala Brutalism */
+        .custom-cursor {
+            position: fixed; top: 0; left: 0; width: 25px; height: 25px;
+            border: 3px solid #111; border-radius: 50%; background: rgba(255,255,255,0.5);
+            pointer-events: none; z-index: 9999999; transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background 0.2s; mix-blend-mode: difference;
+        }
+        .custom-cursor.hovering {
+            width: 50px; height: 50px; background: #ff6b8a; border-color: #fff;
+        }
+
+        /* ==========================================================================
+           1. CSS VARIABLES (MAXIMALIST NEO-BRUTALISM THEME)
            ========================================================================== */
         :root {
             --bg-color: #f8f9fa;       
@@ -25,8 +45,6 @@
             --shadow-thick: 8px;       
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-
         body {
             background-color: var(--bg-color);
             color: var(--border-color);
@@ -35,7 +53,7 @@
         }
 
         /* ==========================================================================
-           2. EFEK VISUAL LATAR BELAKANG (CRT, GRAIN, PATTERN)
+           2. EFEK VISUAL LATAR BELAKANG (CRT, GRAIN, PATTERN, SCANLINES)
            ========================================================================== */
         .bg-pattern {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3;
@@ -46,8 +64,15 @@
 
         .grain-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99997;
-            pointer-events: none; opacity: 0.04;
-            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            pointer-events: none; opacity: 0.05;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99996;
+            pointer-events: none; opacity: 0.03;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
         }
 
         #bg-canvas, #cursor-canvas {
@@ -58,7 +83,21 @@
         #cursor-canvas { z-index: 99998; }
 
         /* ==========================================================================
-           3. TOMBOL MUSIK & ANTI-LAG KEKINIAN
+           3. FAKE TERMINAL BOOT SEQUENCE (EFEK HACKER)
+           ========================================================================== */
+        #terminal-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: #050505; color: #0f0; font-family: monospace;
+            z-index: 9999999; padding: 20px; display: flex; flex-direction: column;
+            justify-content: flex-end; overflow: hidden; transition: opacity 0.5s ease-out;
+        }
+        #terminal-screen.hidden { opacity: 0; pointer-events: none; }
+        .term-line { margin-bottom: 5px; font-size: 0.9rem; line-height: 1.2; text-shadow: 0 0 5px #0f0; }
+        .term-cursor { display: inline-block; width: 10px; height: 15px; background: #0f0; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+        /* ==========================================================================
+           4. TOMBOL MUSIK & ANTI-LAG KEKINIAN
            ========================================================================== */
         .control-panel {
             position: fixed; top: 15px; left: 15px; z-index: 999999;
@@ -66,17 +105,17 @@
         }
 
         .brutal-btn-small {
-            background: #fff; color: var(--border-color); padding: 8px 12px;
+            background: #fff; color: var(--border-color); padding: 10px 15px;
             font-size: 0.75rem; border-radius: 12px; box-shadow: 4px 4px 0px var(--border-color);
             border: 3px solid var(--border-color); font-weight: 900; transition: 0.2s;
-            cursor: pointer; text-transform: uppercase;
+            text-transform: uppercase; position: relative; overflow: hidden;
         }
         .brutal-btn-small:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--border-color); }
         .music-off { background: #ff4757; color: #fff; text-decoration: line-through; }
         .lite-on { background: var(--accent-yellow); }
 
         /* ==========================================================================
-           4. BRUTALIST COMPONENTS & RIPPLE
+           5. BRUTALIST COMPONENTS & RIPPLE
            ========================================================================== */
         .brutal-card {
             border: var(--border-thick) solid var(--border-color); border-radius: 12px;
@@ -88,7 +127,7 @@
             border: var(--border-thick) solid var(--border-color); border-radius: 8px;
             background: var(--accent-pink); color: var(--border-color); font-weight: 900;
             text-transform: uppercase; box-shadow: 6px 6px 0px var(--border-color);
-            cursor: pointer; transition: all 0.15s ease-in-out; display: inline-block;
+            transition: all 0.15s ease-in-out; display: inline-block;
             position: relative; overflow: hidden;
         }
         .brutal-button:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px var(--border-color); }
@@ -101,25 +140,25 @@
         @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
 
         /* ==========================================================================
-           5. OVERLAY PINTU MASUK (HELLO SCREEN)
+           6. OVERLAY PINTU MASUK (HELLO SCREEN)
            ========================================================================== */
         #start-gate {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh;
-            background-color: var(--bg-color); background-image: radial-gradient(var(--border-color) 2px, transparent 2px);
+            background-color: var(--accent-blue); background-image: radial-gradient(var(--border-color) 2px, transparent 2px);
             background-size: 30px 30px; z-index: 99999; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
         }
         .gate-content-box {
             background: #ffffff; border: var(--border-thick) solid var(--border-color);
-            padding: 50px 30px; border-radius: 16px; box-shadow: 12px 12px 0px var(--border-color);
+            padding: 60px 40px; border-radius: 20px; box-shadow: 15px 15px 0px var(--border-color);
             text-align: center; animation: floatSlow 4s ease-in-out infinite;
         }
         #start-gate.opened { transform: translateY(-100%); pointer-events: none; }
-        .gate-btn { background: var(--accent-green); padding: 20px 40px; font-size: 1.5rem; letter-spacing: 2px; margin-top: 20px; }
-        @keyframes floatSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .gate-btn { background: var(--accent-green); padding: 25px 50px; font-size: 1.6rem; letter-spacing: 2px; margin-top: 20px; border-radius: 15px;}
+        @keyframes floatSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
         /* ==========================================================================
-           6. HERO SECTION DENGAN MARQUEE & DEKORASI
+           7. HERO SECTION DENGAN EFEK GLITCH & PARALLAX DEKORASI
            ========================================================================== */
         .hero-section {
             height: 100vh; height: 100dvh; display: flex; flex-direction: column; 
@@ -128,146 +167,183 @@
             background: transparent;
         }
 
-        .hero-title {
-            font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 900; line-height: 1.1;
+        /* EFEK GLITCH TEKS */
+        .glitch-text {
+            font-size: clamp(3rem, 10vw, 5rem); font-weight: 900; line-height: 1.1;
             text-transform: uppercase; position: relative; z-index: 2;
-            text-shadow: 2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff;
+            color: var(--border-color); text-shadow: 3px 3px 0px #fff;
         }
-        .hero-title .highlight-blue { color: var(--accent-blue); }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: transparent; z-index: -1;
+        }
+        .glitch-text::before {
+            left: 4px; text-shadow: -2px 0 var(--accent-pink);
+            clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch-text::after {
+            left: -4px; text-shadow: -2px 0 var(--accent-blue);
+            clip: rect(44px, 450px, 56px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 83px, 0); }
+            20% { clip: rect(32px, 9999px, 12px, 0); }
+            40% { clip: rect(87px, 9999px, 54px, 0); }
+            60% { clip: rect(42px, 9999px, 73px, 0); }
+            80% { clip: rect(15px, 9999px, 92px, 0); }
+            100% { clip: rect(65px, 9999px, 34px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(85px, 9999px, 14px, 0); }
+            20% { clip: rect(12px, 9999px, 65px, 0); }
+            40% { clip: rect(54px, 9999px, 83px, 0); }
+            60% { clip: rect(92px, 9999px, 21px, 0); }
+            80% { clip: rect(34px, 9999px, 45px, 0); }
+            100% { clip: rect(73px, 9999px, 87px, 0); }
+        }
+
         .hero-title .badge {
-            background: var(--accent-yellow); padding: 5px 20px; border: var(--border-thick) solid var(--border-color); 
-            display: inline-block; transform: rotate(-4deg); margin-top: 15px; box-shadow: 6px 6px 0px var(--border-color);
-            animation: pulseBadge 2s infinite;
+            background: var(--accent-yellow); padding: 5px 25px; border: var(--border-thick) solid var(--border-color); 
+            display: inline-block; transform: rotate(-4deg); margin-top: 20px; box-shadow: 8px 8px 0px var(--border-color);
+            animation: pulseBadge 1.5s infinite; font-size: clamp(2rem, 6vw, 3rem);
         }
-        @keyframes pulseBadge { 0%, 100% { transform: rotate(-4deg) scale(1); } 50% { transform: rotate(-4deg) scale(1.05); } }
+        @keyframes pulseBadge { 0%, 100% { transform: rotate(-4deg) scale(1); } 50% { transform: rotate(-4deg) scale(1.1); } }
 
         .typewriter-container {
-            margin-top: 30px; background: #fff; padding: 10px 15px; border: 3px solid var(--border-color); 
-            display: inline-block; box-shadow: 4px 4px 0px var(--border-color); transform: rotate(2deg);
+            margin-top: 40px; background: #fff; padding: 15px 20px; border: 4px solid var(--border-color); 
+            display: inline-block; box-shadow: 6px 6px 0px var(--border-color); transform: rotate(2deg);
         }
-        .typewriter-text { font-weight: 800; font-size: 1rem; color: var(--border-color); min-height: 24px; }
+        .typewriter-text { font-weight: 800; font-size: 1.1rem; color: var(--border-color); min-height: 28px; }
 
-        /* Floating Geometrics */
-        .floating-shape { position: absolute; border: var(--border-thick) solid var(--border-color); z-index: 1; animation: spinAndFloat 20s linear infinite; }
-        .shape-1 { width: 70px; height: 70px; background: var(--accent-pink); border-radius: 50%; top: 15%; left: 8%; }
-        .shape-2 { width: 60px; height: 60px; background: var(--accent-blue); top: 25%; right: 10%; transform: rotate(15deg); }
-        .shape-3 { width: 80px; height: 35px; background: var(--accent-green); bottom: 20%; left: 15%; transform: rotate(-25deg); }
-        @keyframes spinAndFloat { 0% { transform: rotate(0deg) translate(0, 0); } 50% { transform: rotate(180deg) translate(30px, 40px); } 100% { transform: rotate(360deg) translate(0, 0); } }
+        /* Floating Geometrics Parallax (Akan digerakkan oleh JS) */
+        .parallax-shape { position: absolute; border: var(--border-thick) solid var(--border-color); z-index: 1; box-shadow: 5px 5px 0px rgba(0,0,0,0.8); }
+        .shape-1 { width: 80px; height: 80px; background: var(--accent-pink); border-radius: 50%; top: 15%; left: 8%; }
+        .shape-2 { width: 70px; height: 70px; background: var(--accent-blue); top: 30%; right: 10%; transform: rotate(15deg); }
+        .shape-3 { width: 100px; height: 40px; background: var(--accent-green); bottom: 25%; left: 15%; transform: rotate(-25deg); }
 
         /* Marquee Tapes */
         .marquee-tape {
-            position: absolute; width: 100vw; background: var(--accent-yellow);
+            position: absolute; width: 120vw; left: -10vw; background: var(--accent-yellow);
             border-top: var(--border-thick) solid var(--border-color); border-bottom: var(--border-thick) solid var(--border-color);
-            color: var(--border-color); font-weight: 900; font-size: 0.9rem; padding: 8px 0; overflow: hidden; white-space: nowrap; z-index: 10;
+            color: var(--border-color); font-weight: 900; font-size: 1rem; padding: 10px 0; overflow: hidden; white-space: nowrap; z-index: 10;
         }
-        .marquee-bottom { bottom: 5%; transform: rotate(2deg) scale(1.1); background: var(--accent-orange); color: #fff;}
-        .marquee-content { display: inline-block; text-transform: uppercase; animation: marquee 12s linear infinite; letter-spacing: 2px;}
+        .marquee-bottom { bottom: 5%; transform: rotate(3deg) scale(1.1); background: var(--accent-orange); color: #fff; box-shadow: 0px -5px 15px rgba(0,0,0,0.2);}
+        .marquee-content { display: inline-block; text-transform: uppercase; animation: marquee 12s linear infinite; letter-spacing: 3px;}
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* ==========================================================================
-           7. GALLERY SECTION (EFEK 3D TILT & HIGHLIGHT)
+           8. GALLERY SECTION (EFEK 3D TILT & HIGHLIGHT)
            ========================================================================== */
         .gallery-section { 
-            padding: 90px 0; background: rgba(255,255,255,0.85); 
+            padding: 100px 0; background: rgba(255,255,255,0.85); 
             border-bottom: var(--border-thick) solid var(--border-color); 
-            position: relative; backdrop-filter: blur(8px); 
+            position: relative; backdrop-filter: blur(10px); 
         }
-        .section-header { padding: 0 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .section-header h2 { font-weight: 900; font-size: 2.4rem; line-height: 1; text-transform: uppercase; text-shadow: 2px 2px 0px #fff; }
-        .section-header p { font-weight: 800; font-size: 0.9rem; letter-spacing: 2px; color: var(--accent-pink); text-transform: uppercase; }
-        .swipe-indicator { background: var(--border-color); color: #fff; padding: 10px 20px; font-weight: 900; font-size: 0.8rem; border-radius: 20px; animation: bounceX 2s infinite; }
+        .section-header { padding: 0 20px; margin-bottom: 50px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .section-header h2 { font-weight: 900; font-size: 2.8rem; line-height: 1; text-transform: uppercase; text-shadow: 3px 3px 0px #fff; }
+        .section-header p { font-weight: 800; font-size: 1rem; letter-spacing: 3px; color: var(--accent-pink); text-transform: uppercase; }
+        .swipe-indicator { background: var(--border-color); color: #fff; padding: 12px 25px; font-weight: 900; font-size: 0.9rem; border-radius: 25px; animation: bounceX 1.5s infinite; }
 
-        @keyframes bounceX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+        @keyframes bounceX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(15px); } }
 
         .gallery-track {
-            display: flex; gap: 30px; padding: 20px 30px 60px; overflow-x: auto;
-            scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; perspective: 1000px;
+            display: flex; gap: 35px; padding: 20px 30px 80px; overflow-x: auto;
+            scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; perspective: 1200px;
         }
         .gallery-track::-webkit-scrollbar { display: none; } 
 
         .gallery-card {
-            flex: 0 0 75%; height: 450px; scroll-snap-align: center; border: var(--border-thick) solid var(--border-color); border-radius: 16px;
-            position: relative; background: #ddd; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: scale(0.85) rotateY(10deg); opacity: 0.4; box-shadow: 0px 0px 0px var(--border-color); transform-style: preserve-3d;
+            flex: 0 0 80%; height: 480px; scroll-snap-align: center; border: 5px solid var(--border-color); border-radius: 20px;
+            position: relative; background: #ddd; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.85) rotateY(15deg); opacity: 0.4; box-shadow: 0px 0px 0px var(--border-color); transform-style: preserve-3d;
         }
-        .gallery-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; transition: transform 0.5s ease; }
-        .gallery-card.is-focused { transform: scale(1.05) rotateY(0deg); opacity: 1; box-shadow: 15px 15px 0px var(--border-color); z-index: 10; }
-        .gallery-card.is-focused img { transform: scale(1.05); }
+        .gallery-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; transition: transform 0.6s ease; }
+        .gallery-card.is-focused { transform: scale(1.05) rotateY(0deg); opacity: 1; box-shadow: 20px 20px 0px var(--border-color); z-index: 10; }
+        .gallery-card.is-focused img { transform: scale(1.08); }
 
         /* ==========================================================================
-           8. GAMES SECTION
+           9. GAMES SECTION
            ========================================================================== */
-        .games-section { padding: 90px 20px; background: transparent; border-bottom: var(--border-thick) solid var(--border-color); }
-        .games-grid { display: flex; flex-direction: column; gap: 50px; margin-top: 50px; perspective: 1000px; }
+        .games-section { padding: 100px 20px; background: transparent; border-bottom: var(--border-thick) solid var(--border-color); }
+        .games-grid { display: flex; flex-direction: column; gap: 60px; margin-top: 60px; perspective: 1200px; }
         
         .game-card { 
-            display: block; text-decoration: none; color: var(--border-color); padding: 25px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); 
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0.5; transform: scale(0.9) translateY(30px); box-shadow: 5px 5px 0px var(--border-color);
+            display: block; text-decoration: none; color: var(--border-color); padding: 30px; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); 
+            border-radius: 20px; transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0.4; transform: scale(0.85) translateY(50px); box-shadow: 5px 5px 0px var(--border-color);
         }
-        .game-card.game-focused { opacity: 1; transform: scale(1.02) translateY(0); box-shadow: 15px 15px 0px var(--border-color); z-index: 10; }
-        .game-card.game-focused .play-icon { transform: rotate(45deg) scale(1.2); background: var(--accent-pink); color: #fff; }
+        .game-card.game-focused { opacity: 1; transform: scale(1.02) translateY(0); box-shadow: 18px 18px 0px var(--border-color); z-index: 10; border: 5px solid var(--border-color);}
+        .game-card.game-focused .play-icon { transform: rotate(45deg) scale(1.3); background: var(--accent-pink); color: #fff; box-shadow: 4px 4px 0px var(--border-color);}
 
         .game-thumbnail { 
-            width: 100%; height: 200px; border: var(--border-thick) solid var(--border-color); border-radius: 12px; overflow: hidden; margin-bottom: 25px; background: #ccc; box-shadow: inset 0px 0px 20px rgba(0,0,0,0.2);
+            width: 100%; height: 220px; border: var(--border-thick) solid var(--border-color); border-radius: 15px; overflow: hidden; margin-bottom: 30px; background: #ccc; box-shadow: inset 0px 0px 25px rgba(0,0,0,0.3);
         }
-        .game-thumbnail img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .game-card.game-focused .game-thumbnail img { transform: scale(1.1); }
+        .game-thumbnail img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+        .game-card.game-focused .game-thumbnail img { transform: scale(1.15) rotate(2deg); }
 
         .game-info { display: flex; justify-content: space-between; align-items: center; }
-        .game-info h3 { font-size: 1.6rem; font-weight: 900; text-transform: uppercase; }
-        .game-info p { font-size: 0.9rem; font-weight: 700; margin-top: 5px; color: #555; }
-        .play-icon { background: var(--accent-yellow); width: 50px; height: 50px; border: var(--border-thick) solid var(--border-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; font-weight: 900; transition: 0.4s; }
+        .game-info h3 { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; }
+        .game-info p { font-size: 1rem; font-weight: 800; margin-top: 8px; color: #555; }
+        .play-icon { background: var(--accent-yellow); width: 60px; height: 60px; border: var(--border-thick) solid var(--border-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; font-weight: 900; transition: 0.5s; }
 
         /* ==========================================================================
-           9. LOGIN SECTION & ALERT BAR
+           10. LOGIN SECTION & ALERT BAR (JEBAKAN TYPO)
            ========================================================================== */
-        .login-section { padding: 120px 20px; background: var(--accent-blue); display: flex; justify-content: center; align-items: center; position: relative; z-index: 5;}
+        .login-section { padding: 150px 20px; background: var(--accent-blue); display: flex; justify-content: center; align-items: center; position: relative; z-index: 5;}
         
         .login-box { 
-            width: 100%; max-width: 420px; background: #ffffff; padding: 45px 30px; 
-            text-align: center; box-shadow: 15px 15px 0px var(--border-color); transform-style: preserve-3d;
+            width: 100%; max-width: 450px; background: #ffffff; padding: 50px 35px; 
+            text-align: center; box-shadow: 20px 20px 0px var(--border-color); border-radius: 25px;
+            transform-style: preserve-3d; border: 5px solid var(--border-color);
         }
-        .login-box h2 { font-size: 2.4rem; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; }
-        .login-box p { font-size: 1rem; font-weight: 700; color: #666; margin-bottom: 35px; }
+        .login-box h2 { font-size: 2.8rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; text-shadow: 3px 3px 0px var(--accent-pink);}
+        .login-box p { font-size: 1.1rem; font-weight: 800; color: #555; margin-bottom: 40px; }
 
         .alert-bar {
-            display: block; width: 100%; padding: 18px 15px; margin-bottom: 35px; background: var(--accent-yellow); color: var(--border-color);
-            border: var(--border-thick) solid var(--border-color); border-radius: 12px; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; text-decoration: none;
-            box-shadow: 6px 6px 0px var(--border-color); animation: pulseAlert 2.5s infinite; transition: 0.2s; letter-spacing: 0.5px;
+            display: block; width: 100%; padding: 20px 15px; margin-bottom: 40px; background: var(--accent-yellow); color: var(--border-color);
+            border: 5px solid var(--border-color); border-radius: 15px; font-weight: 900; font-size: 1rem; text-transform: uppercase; text-decoration: none;
+            box-shadow: 8px 8px 0px var(--border-color); animation: pulseAlert 2s infinite; transition: 0.2s; letter-spacing: 1px;
         }
-        .alert-bar:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px var(--border-color); animation: none; }
-        @keyframes pulseAlert { 0%, 100% { background: var(--accent-yellow); color: var(--border-color); } 50% { background: var(--accent-pink); color: #fff; } }
+        .alert-bar:active { transform: translate(8px, 8px); box-shadow: 0px 0px 0px var(--border-color); animation: none; }
+        @keyframes pulseAlert { 0%, 100% { background: var(--accent-yellow); color: var(--border-color); transform: scale(1);} 50% { background: var(--accent-pink); color: #fff; transform: scale(1.03);} }
 
-        .input-wrapper { margin-bottom: 30px; text-align: left; }
-        .input-wrapper label { display: block; font-size: 0.9rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
+        .input-wrapper { margin-bottom: 35px; text-align: left; }
+        .input-wrapper label { display: block; font-size: 1rem; font-weight: 900; text-transform: uppercase; margin-bottom: 12px; }
         .input-wrapper input {
-            width: 100%; padding: 18px; border: var(--border-thick) solid var(--border-color); border-radius: 12px;
-            font-size: 1.1rem; font-weight: 700; font-family: 'Poppins', sans-serif; outline: none; transition: all 0.3s; background: var(--bg-color);
+            width: 100%; padding: 20px; border: 5px solid var(--border-color); border-radius: 15px;
+            font-size: 1.2rem; font-weight: 800; font-family: 'Poppins', sans-serif; outline: none; transition: all 0.3s; background: var(--bg-color);
         }
-        .input-wrapper input:focus { background: #fff; transform: translate(-4px, -4px); box-shadow: 8px 8px 0px var(--accent-pink); }
+        .input-wrapper input:focus { background: #fff; transform: translate(-5px, -5px); box-shadow: 10px 10px 0px var(--accent-green); }
 
-        .btn-submit { width: 100%; padding: 20px; font-size: 1.3rem; margin-top: 15px; }
+        .btn-submit { width: 100%; padding: 25px; font-size: 1.5rem; margin-top: 20px; border-radius: 15px; letter-spacing: 2px;}
         
         .error-message { 
-            display: none; color: #fff; font-weight: 900; font-size: 0.9rem; margin-top: 20px; 
-            background: #ff4757; padding: 15px; border: 3px solid var(--border-color); border-radius: 8px; 
-            text-transform: uppercase; letter-spacing: 1px;
+            display: none; color: #fff; font-weight: 900; font-size: 1rem; margin-top: 25px; 
+            background: #ff4757; padding: 18px; border: 4px solid var(--border-color); border-radius: 12px; 
+            text-transform: uppercase; letter-spacing: 1px; box-shadow: 5px 5px 0px #000;
         }
-        @keyframes shakeHard { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-10px) rotate(-1deg); } 20%, 40%, 60%, 80% { transform: translateX(10px) rotate(1deg); } }
-        .shake-animation { animation: shakeHard 0.5s ease-in-out; }
+        @keyframes shakeHard { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-15px) rotate(-2deg); } 20%, 40%, 60%, 80% { transform: translateX(15px) rotate(2deg); } }
+        .shake-animation { animation: shakeHard 0.6s ease-in-out; }
 
     </style>
 </head>
 <body>
 
+    <div class="custom-cursor" id="customCursor"></div>
+
+    <div id="terminal-screen">
+        <div id="term-content"></div>
+        <div class="term-line">> Memuat modul kejutan... <span class="term-cursor"></span></div>
+    </div>
+
     <div class="control-panel">
-        <button id="musicToggle" class="brutal-btn-small ripple-btn">🎵 BGM: OFF</button>
-        <button id="lite-mode-btn" class="brutal-btn-small ripple-btn">⚡ ANTI-LAG</button>
+        <button id="musicToggle" class="brutal-btn-small custom-hover">🎵 BGM: OFF</button>
+        <button id="lite-mode-btn" class="brutal-btn-small custom-hover">⚡ ANTI-LAG</button>
     </div>
 
     <div class="bg-pattern"></div>
     <canvas id="bg-canvas"></canvas>
     <canvas id="cursor-canvas"></canvas>
+    <div class="scanlines"></div>
     <div class="grain-overlay"></div>
 
     <audio id="bg-audio" loop preload="auto">
@@ -276,25 +352,25 @@
 
     <div id="start-gate">
         <div class="gate-content-box brutal-card">
-            <h1 style="font-size: 4rem; margin-bottom: 10px; font-weight: 900; color: var(--border-color); text-transform: uppercase; line-height: 1;">Hello!</h1>
-            <p style="margin-bottom: 30px; font-weight: 800; font-size: 0.9rem; color: #555; text-transform: uppercase;">Pastikan volume HP nyala ya!</p>
-            <button class="brutal-button gate-btn ripple-btn" onclick="openGate()">BUKA UNDANGAN</button>
+            <h1 style="font-size: 5rem; margin-bottom: 10px; font-weight: 900; color: var(--border-color); text-transform: uppercase; line-height: 1;">Hello!</h1>
+            <p style="margin-bottom: 40px; font-weight: 800; font-size: 1rem; color: #555; text-transform: uppercase; background: var(--accent-yellow); padding: 5px 10px; border: 2px solid #111;">Volume HP harus nyala!</p>
+            <button class="brutal-button gate-btn custom-hover" onclick="openGate()">BUKA UNDANGAN</button>
         </div>
     </div>
 
     <section class="hero-section">
-        <div class="floating-shape shape-1 tilt-element"></div>
-        <div class="floating-shape shape-2 tilt-element"></div>
-        <div class="floating-shape shape-3 tilt-element"></div>
+        <div class="parallax-shape shape-1"></div>
+        <div class="parallax-shape shape-2"></div>
+        <div class="parallax-shape shape-3"></div>
         
-        <h1 class="hero-title tilt-element">
+        <h1 class="hero-title glitch-text" data-text="LEVEL UP">
             LEVEL UP <br>
             <span class="highlight-blue">YOUR DAY</span> <br>
             WITH OUR <br>
             <span class="badge">SURPRISE</span>
         </h1>
         
-        <div class="typewriter-container tilt-element">
+        <div class="typewriter-container">
             <div class="typewriter-text" id="typewriter"></div>
         </div>
 
@@ -315,19 +391,19 @@
         </div>
 
         <div class="gallery-track" id="gallery-track">
-            <div class="gallery-card brutal-card tilt-element">
+            <div class="gallery-card brutal-card custom-hover">
                 <img src="img/gallery1.jpg" alt="Memory 1" onerror="this.src='https://via.placeholder.com/600x800/ff6b8a/fff?text=Foto+1'">
             </div>
-            <div class="gallery-card brutal-card tilt-element">
+            <div class="gallery-card brutal-card custom-hover">
                 <img src="img/gallery2.jpg" alt="Memory 2" onerror="this.src='https://via.placeholder.com/600x800/4facfe/fff?text=Foto+2'">
             </div>
-            <div class="gallery-card brutal-card tilt-element">
+            <div class="gallery-card brutal-card custom-hover">
                 <img src="img/gallery3.jpg" alt="Memory 3" onerror="this.src='https://via.placeholder.com/600x800/ccff00/111?text=Foto+3'">
             </div>
-            <div class="gallery-card brutal-card tilt-element">
+            <div class="gallery-card brutal-card custom-hover">
                 <img src="img/gallery4.jpg" alt="Memory 4" onerror="this.src='https://via.placeholder.com/600x800/ffd166/111?text=Foto+4'">
             </div>
-            <div class="gallery-card brutal-card tilt-element">
+            <div class="gallery-card brutal-card custom-hover">
                 <img src="img/gallery5.jpg" alt="Memory 5" onerror="this.src='https://via.placeholder.com/600x800/111111/fff?text=Foto+5'">
             </div>
         </div>
@@ -342,7 +418,7 @@
         </div>
 
         <div class="games-grid" id="games-track">
-            <a href="flapy.html" class="brutal-card game-card game-1 ripple-btn tilt-element">
+            <a href="flapy.html" class="brutal-card game-card game-1 custom-hover">
                 <div class="game-thumbnail">
                     <img src="img/thumb-flappy.jpg" alt="Flappy Bird" onerror="this.src='https://via.placeholder.com/600x400/4facfe/fff?text=Thumbnail+Flappy'">
                 </div>
@@ -355,7 +431,7 @@
                 </div>
             </a>
 
-            <a href="200408.html" class="brutal-card game-card game-2 ripple-btn tilt-element">
+            <a href="200408.html" class="brutal-card game-card game-2 custom-hover">
                 <div class="game-thumbnail">
                     <img src="img/thumb-2048.jpg" alt="Game 2048" onerror="this.src='https://via.placeholder.com/600x400/ff6b8a/fff?text=Thumbnail+2048'">
                 </div>
@@ -371,37 +447,86 @@
     </section>
 
     <section class="login-section" id="form-login">
-        <div class="brutal-card login-box tilt-element" id="login-container">
+        <div class="brutal-card login-box" id="login-container">
             <h2>BUKA KADO 🎁</h2>
             <p>Masukkan kunci rahasia yang kamu dapat.</p>
 
-            <a href="tutor.html" class="alert-bar ripple-btn">
-                ⚠️ Sebelum input sandi, klik ini dulu ya! (Baca Aturan) ⚠️
+            <a href="tutor.html" class="alert-bar custom-hover">
+                ⚠️ Wajib baca aturan dulu di sini! ⚠️
             </a>
 
             <div class="input-wrapper">
                 <label>Username</label>
-                <input type="text" id="inputUsername" placeholder="Siapa nama princess?" autocomplete="off">
+                <input type="text" id="inputUsername" placeholder="Siapa nama princess?" autocomplete="off" class="custom-hover">
             </div>
 
             <div class="input-wrapper">
                 <label>Kode Rahasia</label>
-                <input type="password" id="inputPassword" placeholder="Enam digit sandi rahasia" autocomplete="off">
+                <input type="password" id="inputPassword" placeholder="Ingat tanda bacanya!" autocomplete="off" class="custom-hover">
             </div>
 
-            <button class="brutal-button btn-submit ripple-btn" id="btn-login" onclick="processLogin()">BUKA SEKARANG</button>
+            <button class="brutal-button btn-submit custom-hover" id="btn-login" onclick="processLogin()">BUKA SEKARANG</button>
             
             <div class="error-message" id="error-msg">
-                Ngapain nebak-nebak? Cari clue nya dulu dong 😜
+                Salah! Jangan nebak-nebak, cari clue-nya di game! 😜
             </div>
             
         </div>
     </section>
 
     <script>
-        // =========================================================================
-        // 0. KONTROL AUDIO (BGM)
-        // =========================================================================
+        // -------------------------------------------------------------------------
+        // 0. SISTEM KURSOR KUSTOM (BRUTALISM CURSOR)
+        // -------------------------------------------------------------------------
+        const cursor = document.getElementById('customCursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Efek membesar saat hover pada elemen interaktif
+        const hoverElements = document.querySelectorAll('.custom-hover, a, input');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        });
+
+        // -------------------------------------------------------------------------
+        // 1. TERMINAL BOOT SEQUENCE (EFEK HACKER)
+        // -------------------------------------------------------------------------
+        const bootText = [
+            "Memulai sistem kejutan v3.0...",
+            "Memeriksa memori kenangan...",
+            "[OK] 1000+ Kenangan ditemukan.",
+            "Memuat modul keamanan tingkat tinggi...",
+            "[WARNING] Menyiapkan puzzle 2048...",
+            "[WARNING] Mengkonfigurasi Flappy Bird...",
+            "Sistem siap. Mengalihkan ke antarmuka utama..."
+        ];
+        
+        let bootIndex = 0;
+        const termContent = document.getElementById('term-content');
+        const terminalScreen = document.getElementById('terminal-screen');
+
+        function printBootLine() {
+            if (bootIndex < bootText.length) {
+                const line = document.createElement('div');
+                line.className = 'term-line';
+                line.textContent = '> ' + bootText[bootIndex];
+                termContent.appendChild(line);
+                bootIndex++;
+                setTimeout(printBootLine, Math.random() * 400 + 200); // Waktu ngetik random
+            } else {
+                setTimeout(() => { terminalScreen.classList.add('hidden'); }, 1000);
+            }
+        }
+        
+        // Jalankan animasi boot saat halaman dimuat
+        window.addEventListener('load', () => { setTimeout(printBootLine, 500); });
+
+        // -------------------------------------------------------------------------
+        // 2. KONTROL AUDIO (BGM)
+        // -------------------------------------------------------------------------
         const bgAudio = document.getElementById('bg-audio');
         const musicBtn = document.getElementById('musicToggle');
         let isMusicPlaying = false;
@@ -412,7 +537,7 @@
                 musicBtn.textContent = '🎵 BGM: OFF';
                 musicBtn.classList.add('music-off');
             } else {
-                bgAudio.volume = 0.4;
+                bgAudio.volume = 0.5;
                 bgAudio.play().catch(e => console.log("Audio diblokir browser"));
                 musicBtn.textContent = '🎵 BGM: ON';
                 musicBtn.classList.remove('music-off');
@@ -422,9 +547,9 @@
 
         musicBtn.addEventListener('click', toggleMusic);
 
-        // =========================================================================
-        // 1. LOGIKA TOMBOL ANTI-LAG (PERFORMANCE MODE)
-        // =========================================================================
+        // -------------------------------------------------------------------------
+        // 3. LOGIKA TOMBOL ANTI-LAG (PERFORMANCE MODE)
+        // -------------------------------------------------------------------------
         let isLiteMode = false;
         const liteModeBtn = document.getElementById('lite-mode-btn');
         const bgCanvasEl = document.getElementById('bg-canvas');
@@ -437,7 +562,7 @@
                 this.classList.add('lite-on');
                 bgCanvasEl.style.opacity = '0';
                 cursorCanvasEl.style.opacity = '0';
-                document.querySelectorAll('.tilt-element').forEach(el => { el.style.transform = ''; });
+                document.querySelectorAll('.parallax-shape').forEach(el => { el.style.transform = ''; });
             } else {
                 this.textContent = '⚡ ANTI-LAG';
                 this.classList.remove('lite-on');
@@ -446,9 +571,9 @@
             }
         });
 
-        // =========================================================================
-        // 2. ENGINE CANVAS INTERAKTIF UTAMA (PARTIKEL, LEDAKAN & CONFETTI)
-        // =========================================================================
+        // -------------------------------------------------------------------------
+        // 4. ENGINE CANVAS INTERAKTIF (PARTIKEL, LEDAKAN, & CONFETTI KEMENANGAN)
+        // -------------------------------------------------------------------------
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -460,23 +585,25 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             particles = [];
-            let count = window.innerWidth < 500 ? 10 : 20; 
+            let count = window.innerWidth < 500 ? 10 : 25; // Partikel dibanyakin di versi V5
             for(let i=0; i<count; i++) particles.push(new Particle());
         }
 
+        // Kelas Fisika Partikel Dasar
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 15 + 8;
-                this.speedX = (Math.random() - 0.5) * 1.5; this.speedY = (Math.random() - 0.5) * 1.5;
+                this.size = Math.random() * 18 + 10;
+                this.speedX = (Math.random() - 0.5) * 2; this.speedY = (Math.random() - 0.5) * 2;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.angle = Math.random() * 360;
                 this.type = Math.random() > 0.5 ? 'rect' : 'circle';
             }
             update() {
                 this.x += this.speedX; this.y += this.speedY; this.angle += 1;
-                if(this.x < -30) this.x = canvas.width + 30; if(this.x > canvas.width + 30) this.x = -30;
-                if(this.y < -30) this.y = canvas.height + 30; if(this.y > canvas.height + 30) this.y = -30;
+                // Logika wrapping (nembus tembok)
+                if(this.x < -40) this.x = canvas.width + 40; if(this.x > canvas.width + 40) this.x = -40;
+                if(this.y < -40) this.y = canvas.height + 40; if(this.y > canvas.height + 40) this.y = -40;
             }
             draw() {
                 ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle * Math.PI / 180);
@@ -487,35 +614,46 @@
             }
         }
 
+        // Kelas Fisika Ledakan (Sparks dengan Friction)
         class Spark {
             constructor(x, y) {
-                this.x = x; this.y = y; this.size = Math.random() * 12 + 5;
-                this.speedX = (Math.random() - 0.5) * 12; this.speedY = (Math.random() - 0.5) * 12;
+                this.x = x; this.y = y; this.size = Math.random() * 15 + 5;
+                this.speedX = (Math.random() - 0.5) * 15; this.speedY = (Math.random() - 0.5) * 15;
+                this.friction = 0.95; // Perlambatan udara
                 this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.life = 1.0; this.decay = Math.random() * 0.04 + 0.02; this.angle = Math.random() * 360;
+                this.life = 1.0; this.decay = Math.random() * 0.03 + 0.02; this.angle = Math.random() * 360;
             }
-            update() { this.x += this.speedX; this.y += this.speedY; this.life -= this.decay; this.angle += 5; }
+            update() { 
+                this.speedX *= this.friction; this.speedY *= this.friction;
+                this.x += this.speedX; this.y += this.speedY; 
+                this.life -= this.decay; this.angle += 8; 
+            }
             draw() {
                 ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle * Math.PI / 180);
                 ctx.globalAlpha = Math.max(0, this.life); ctx.fillStyle = this.color;
-                ctx.strokeStyle = '#111'; ctx.lineWidth = 2; ctx.beginPath();
+                ctx.strokeStyle = '#111'; ctx.lineWidth = 3; ctx.beginPath();
                 ctx.rect(-this.size/2, -this.size/2, this.size, this.size); ctx.fill(); ctx.stroke(); ctx.restore();
             }
         }
 
+        // Kelas Fisika Confetti (Dengan Gravitasi) khusus saat berhasil Login
         class Confetti {
             constructor() {
-                this.x = canvas.width / 2; this.y = canvas.height / 2 + 200;
-                this.size = Math.random() * 15 + 5;
-                this.speedX = (Math.random() - 0.5) * 30; this.speedY = (Math.random() * -20) - 10;
+                this.x = canvas.width / 2; this.y = canvas.height; // Ledakan dari bawah
+                this.size = Math.random() * 20 + 8;
+                this.speedX = (Math.random() - 0.5) * 40; 
+                this.speedY = (Math.random() * -30) - 15; // Kecepatan tinggi ke atas
                 this.gravity = 0.8;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.angle = Math.random() * 360; this.spin = (Math.random() - 0.5) * 15;
+                this.angle = Math.random() * 360; this.spin = (Math.random() - 0.5) * 20;
             }
-            update() { this.speedY += this.gravity; this.x += this.speedX; this.y += this.speedY; this.angle += this.spin; }
+            update() { 
+                this.speedY += this.gravity; // Ditarik bumi ke bawah
+                this.x += this.speedX; this.y += this.speedY; this.angle += this.spin; 
+            }
             draw() {
                 ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle * Math.PI / 180);
-                ctx.fillStyle = this.color; ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
+                ctx.fillStyle = this.color; ctx.strokeStyle = '#111'; ctx.lineWidth = 3;
                 ctx.beginPath(); ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
                 ctx.fill(); ctx.stroke(); ctx.restore();
             }
@@ -526,29 +664,30 @@
             let x = e.clientX || (e.touches && e.touches[0].clientX);
             let y = e.clientY || (e.touches && e.touches[0].clientY);
             if (x && y) {
-                let sparkCount = Math.floor(Math.random() * 6) + 8;
+                let sparkCount = Math.floor(Math.random() * 8) + 10;
                 for(let i=0; i<sparkCount; i++) sparks.push(new Spark(x, y));
             }
         });
 
-        function fireConfetti() {
-            if (isLiteMode) { // Kalau lite mode, nyalain bentar buat confetti
-                bgCanvasEl.style.opacity = '1';
-            }
-            for(let i=0; i<150; i++) confettis.push(new Confetti());
+        // Fungsi pemicu ledakan kemenangan
+        function fireWinConfetti() {
+            if (isLiteMode) bgCanvasEl.style.opacity = '1'; // Paksa nyala saat menang
+            for(let i=0; i<200; i++) confettis.push(new Confetti());
         }
 
         function animateCanvas() {
             if (!isLiteMode || confettis.length > 0) { 
                 ctx.clearRect(0,0,canvas.width, canvas.height);
                 if (!isLiteMode) particles.forEach(p => { p.update(); p.draw(); });
+                
                 for (let i = sparks.length - 1; i >= 0; i--) {
                     sparks[i].update(); sparks[i].draw();
                     if (sparks[i].life <= 0) sparks.splice(i, 1);
                 }
                 for (let i = confettis.length - 1; i >= 0; i--) {
                     confettis[i].update(); confettis[i].draw();
-                    if (confettis[i].y > canvas.height + 50) confettis.splice(i, 1);
+                    // Hapus jika sudah jatuh melewati layar
+                    if (confettis[i].y > canvas.height + 100) confettis.splice(i, 1);
                 }
             }
             requestAnimationFrame(animateCanvas);
@@ -557,9 +696,9 @@
         window.addEventListener('resize', initCanvas);
         initCanvas(); animateCanvas();
 
-        // =========================================================================
-        // 3. ENGINE KANVAS KURSOR (JEJAK BINTANG)
-        // =========================================================================
+        // -------------------------------------------------------------------------
+        // 5. ENGINE KANVAS KURSOR (JEJAK BINTANG MENGIKUTI MOUSE)
+        // -------------------------------------------------------------------------
         const cursorCanvas = document.getElementById('cursor-canvas');
         const cCtx = cursorCanvas.getContext('2d');
         let cursorTrails = [];
@@ -568,10 +707,10 @@
 
         class TrailPoint {
             constructor(x, y) {
-                this.x = x; this.y = y; this.size = Math.random() * 8 + 4;
+                this.x = x; this.y = y; this.size = Math.random() * 10 + 5;
                 this.life = 1.0; this.color = colors[Math.floor(Math.random() * colors.length)];
             }
-            update() { this.life -= 0.05; this.size -= 0.2; }
+            update() { this.life -= 0.04; this.size -= 0.3; }
             draw() {
                 cCtx.save(); cCtx.globalAlpha = Math.max(0, this.life); cCtx.fillStyle = this.color;
                 cCtx.beginPath(); cCtx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
@@ -599,59 +738,59 @@
         window.addEventListener('resize', initCursorCanvas);
         initCursorCanvas(); animateCursor();
 
-        // =========================================================================
-        // 4. FUNGSI PINTU MASUK & MESIN KETIK
-        // =========================================================================
+        // -------------------------------------------------------------------------
+        // 6. FUNGSI PINTU MASUK & EFEK NGETIK
+        // -------------------------------------------------------------------------
         function openGate() {
             const gate = document.getElementById('start-gate');
             gate.classList.add('opened');
-            if(!isMusicPlaying) toggleMusic(); // Auto play lagu pas gate dibuka
-            setTimeout(typeWriterEffect, 1000); 
+            if(!isMusicPlaying) toggleMusic(); // Otomatis putar musik
+            setTimeout(typeWriterEffect, 1200); 
         }
 
-        const textToType = "Siap untuk melihat kejutanmu hari ini? Scroll ke bawah ya...";
+        const textToType = "Siap untuk melihat kejutanmu hari ini? Cari kuncinya di bawah ya...";
         let typeIndex = 0;
         function typeWriterEffect() {
             if (typeIndex < textToType.length) {
                 document.getElementById("typewriter").innerHTML += textToType.charAt(typeIndex);
-                typeIndex++; setTimeout(typeWriterEffect, 60);
+                typeIndex++; setTimeout(typeWriterEffect, 50);
             }
         }
 
-        // =========================================================================
-        // 5. EFEK RIPPLE & TILT 3D
-        // =========================================================================
-        document.querySelectorAll('.ripple-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                let rect = this.getBoundingClientRect();
-                let clientX = e.clientX || (e.touches && e.touches[0].clientX) || rect.left + rect.width/2;
-                let clientY = e.clientY || (e.touches && e.touches[0].clientY) || rect.top + rect.height/2;
-                let x = clientX - rect.left; let y = clientY - rect.top;
-                let ripple = document.createElement('span'); ripple.classList.add('ripple');
-                ripple.style.left = `${x}px`; ripple.style.top = `${y}px`;
-                this.appendChild(ripple); setTimeout(() => ripple.remove(), 600);
+        // -------------------------------------------------------------------------
+        // 7. EFEK RIPPLE (GELOMBANG AIR PADA TOMBOL)
+        // -------------------------------------------------------------------------
+        document.addEventListener('click', function(e) {
+            // Ripple effect diterapkan ke elemen yang punya class custom-hover
+            let target = e.target.closest('.custom-hover');
+            if (!target) return;
+            
+            let rect = target.getBoundingClientRect();
+            let x = e.clientX - rect.left; let y = e.clientY - rect.top;
+            let ripple = document.createElement('span'); ripple.classList.add('ripple');
+            ripple.style.left = `${x}px`; ripple.style.top = `${y}px`;
+            
+            // Handle error kalau target gak bisa di-append
+            try { target.appendChild(ripple); setTimeout(() => ripple.remove(), 600); } catch(err){}
+        });
+
+        // -------------------------------------------------------------------------
+        // 8. EFEK PARALLAX SCROLLING (DEKORASI BERGERAK 3D)
+        // -------------------------------------------------------------------------
+        const parallaxShapes = document.querySelectorAll('.parallax-shape');
+        window.addEventListener('scroll', () => {
+            if (isLiteMode) return;
+            let scrollY = window.scrollY;
+            parallaxShapes.forEach((shape, index) => {
+                // Kecepatan gerak beda-beda berdasarkan urutan indeks
+                let speed = (index + 1) * 0.15;
+                shape.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY * 0.1}deg)`;
             });
         });
 
-        const tiltElements = document.querySelectorAll('.tilt-element');
-        tiltElements.forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                if (isLiteMode) return; 
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                const centerX = rect.width / 2; const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -10; const rotateY = ((x - centerX) / centerX) * 10;
-                el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                el.style.transition = 'transform 0.1s ease-out';
-            });
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = ''; el.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            });
-        });
-
-        // =========================================================================
-        // 6. OBSERVER HIGHLIGHT (GALERI & GAME)
-        // =========================================================================
+        // -------------------------------------------------------------------------
+        // 9. OBSERVER HIGHLIGHT (GALERI HORIZONTAL & GAME VERTIKAL)
+        // -------------------------------------------------------------------------
         const galleryTrack = document.getElementById('gallery-track');
         const galleryCards = document.querySelectorAll('.gallery-card');
         const galleryObserver = new IntersectionObserver((entries) => {
@@ -671,9 +810,9 @@
         }, { root: null, rootMargin: '-20% 0px -20% 0px', threshold: 0.5 });
         gameCards.forEach(card => gameObserver.observe(card));
 
-        // =========================================================================
-        // 7. LOGIKA LOGIN FORM (PASSWORD TYPO: 200408!)
-        // =========================================================================
+        // -------------------------------------------------------------------------
+        // 10. LOGIKA LOGIN FORM SANGAT KETAT (SANDI: 200408!)
+        // -------------------------------------------------------------------------
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') processLogin();
         });
@@ -686,8 +825,8 @@
             const container = document.getElementById('login-container');
             let isSuccess = false;
 
-            // CEK SANDI BARU YANG ADA TANDA SERUNYA
-            if (user === "anggi dwi aprilia" || user === "anggie dwi aprilia") {
+            // CEK SANDI BARU YANG MENGGUNAKAN TANDA SERU (!)
+            if (user === "anggun dwi aprilia" || user === "anggi dwi aprilia" || user === "anggie dwi aprilia") {
                 if (pass === "200408!") isSuccess = true;
             } else if (user === "aldo leo saputra") {
                 if (pass === "280708!") isSuccess = true;
@@ -696,22 +835,29 @@
             }
 
             if (isSuccess) {
+                // Sembunyikan Error
                 errMsg.style.display = 'none';
-                btn.textContent = 'MEMBUKA... ✨';
+                
+                // Ubah Tombol Jadi Hijau & Hentikan Kursor Custom Sementara
+                btn.textContent = 'MENGAKSES SISTEM... ✨';
                 btn.style.background = 'var(--accent-green)';
                 btn.style.color = 'var(--border-color)';
                 btn.style.boxShadow = '0px 0px 0px transparent';
+                cursor.style.display = 'none';
                 
-                // Tembakkan Confetti Kemenangan!
-                fireConfetti();
+                // Tembakkan Confetti Kemenangan Super Meriah
+                fireWinConfetti();
                 
-                // Tunggu 1.5 detik biar bisa nikmatin confetti sebelum pindah
-                setTimeout(() => window.location.href = 'happybirthday.html', 1500);
+                // Tunggu 2 detik penuh biar Anggi bisa menikmati confetti sebelum masuk
+                setTimeout(() => window.location.href = 'happybirthday.html', 2000);
             } else {
+                // Munculkan Error dengan Ancaman Mengulang Game
                 errMsg.style.display = 'block';
                 btn.textContent = 'COBA LAGI';
                 btn.style.background = '#ff4757';
                 btn.style.color = '#fff';
+                
+                // Animasi Getar Gelo (Memaksa Reflow DOM)
                 container.classList.remove('shake-animation');
                 void container.offsetWidth; 
                 container.classList.add('shake-animation');
