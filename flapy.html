@@ -159,7 +159,7 @@
    </head>
    <body>
 
-      <audio id="win-music" preload="auto">
+      <audio id="game-bgm" loop preload="auto">
          <source src="music/menang.mp3" type="audio/mpeg" />
       </audio>
 
@@ -259,24 +259,24 @@
             }
          }
 
-         // 3. SENSOR RAHASIA UNTUK MUTAR MUSIK SAAT MENANG
-         // Ini memantau elemen #winOverlay, kalau 'display'-nya berubah dari 'none' ke 'flex', lagu diputar.
-         const winOverlayEl = document.getElementById('winOverlay');
-         const winObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-               if (mutation.attributeName === 'style') {
-                  const displayStyle = window.getComputedStyle(winOverlayEl).display;
-                  if (displayStyle !== 'none') {
-                     const laguMenang = document.getElementById('win-music');
-                     // Putar lagu jika ada filenya
-                     if (laguMenang) {
-                        laguMenang.play().catch(e => console.log("Gagal memutar audio otomatis:", e));
-                     }
-                  }
-               }
-            });
-         });
-         winObserver.observe(winOverlayEl, { attributes: true });
+         // 3. LOGIKA MUSIK BGM DIMAINKAN SAAT BERMAIN
+         const bgm = document.getElementById('game-bgm');
+         let isMusicStarted = false;
+
+         function startMusic() {
+            if (!isMusicStarted) {
+               bgm.volume = 0.5; // Atur volume biar gak nutupin suara game
+               bgm.play().catch(e => console.log("Audio ditahan browser. Menunggu interaksi."));
+               isMusicStarted = true;
+            }
+            // Hapus listener biar gak dipanggil berkali-kali setiap nge-tap burung
+            document.removeEventListener('click', startMusic);
+            document.removeEventListener('touchstart', startMusic);
+         }
+
+         // Musik akan diputar otomatis pada sentuhan atau klik pertama Anggi (Syarat dari browser)
+         document.addEventListener('click', startMusic);
+         document.addEventListener('touchstart', startMusic);
       </script>
    </body>
 </html>
