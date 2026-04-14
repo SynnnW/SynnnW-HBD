@@ -2,286 +2,470 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <title>Misi Buat Anggie 🎮</title>
+  <title>Misi Buat Princess 🎮</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+  
   <style>
-    /* ===================== TEMA ESTETIK ANGGUN (DARK BLUE) ===================== */
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; padding: 0; 
-      background: #1a2e45; 
-      font-family: 'Poppins', sans-serif; font-size: 18px; color: #fff;
-      overflow: hidden; touch-action: none;
-    }
-    
-    /* Latar Belakang Bintang-Bintang */
-    body::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
-        radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
-      background-size: 70px 70px, 35px 35px;
-      background-position: 0 0, 17px 17px; pointer-events: none; z-index: -1;
+    /* ==========================================================================
+       1. RESET & CSS VARIABLES (NEO-BRUTALISM SETTINGS)
+       ========================================================================== */
+    :root {
+        --bg-color: #f8f9fa;       
+        --border-color: #111111;   
+        --accent-pink: #ff6b8a;    
+        --accent-blue: #4facfe;    
+        --accent-green: #ccff00;   
+        --accent-yellow: #ffd166;  
+        --border-thick: 4px;       
     }
 
-    /* 3 DOTS MENU */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      background-color: var(--bg-color);
+      color: var(--border-color);
+      overflow: hidden; touch-action: none;
+      height: 100vh; height: 100dvh;
+    }
+
+    /* Background Pattern Solid */
+    .bg-pattern {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+        background-color: var(--bg-color);
+        background-image: radial-gradient(var(--border-color) 1.5px, transparent 1.5px);
+        background-size: 30px 30px; opacity: 0.8;
+    }
+
+    /* Kanvas Partikel Interaktif */
+    #bg-canvas {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1; pointer-events: none;
+    }
+
+    /* ==========================================================================
+       2. SPLASH SCREEN (LAYAR LOADING AWAL)
+       ========================================================================== */
+    #splash-screen {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh;
+        background: var(--bg-color); z-index: 99999;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        background-image: radial-gradient(var(--border-color) 1.5px, transparent 1.5px);
+        background-size: 30px 30px;
+    }
+    #splash-screen.hidden { opacity: 0; transform: scale(1.1); pointer-events: none; }
+
+    .loader-box {
+        width: 70px; height: 70px; border: var(--border-thick) solid var(--border-color);
+        background: var(--accent-yellow); animation: spinBrutal 2s infinite cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        box-shadow: 6px 6px 0px var(--border-color); margin-bottom: 30px;
+    }
+    @keyframes spinBrutal {
+        0% { transform: rotate(0deg) scale(1); background: var(--accent-yellow); }
+        50% { transform: rotate(180deg) scale(1.2); background: var(--accent-pink); }
+        100% { transform: rotate(360deg) scale(1); background: var(--accent-blue); }
+    }
+    .splash-text { font-size: 1.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--border-color); animation: pulseText 1.5s infinite alternate; }
+    @keyframes pulseText { from { opacity: 0.5; transform: translateY(0); } to { opacity: 1; transform: translateY(-5px); } }
+
+    /* ==========================================================================
+       3. TOP MENU (3 DOTS)
+       ========================================================================== */
     .top-menu { position: fixed; top: 15px; right: 20px; z-index: 10000; }
-    .dots-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; font-size: 1.5rem; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .dots-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.05); }
-    .dropdown-content { display: none; position: absolute; right: 0; top: 55px; background: #12233a; min-width: 180px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); overflow: hidden; animation: fadeInDown 0.3s ease; }
+    .dots-btn { 
+        background: #fff; border: 3px solid var(--border-color); color: var(--border-color); 
+        font-size: 1.5rem; font-weight: 900; width: 50px; height: 50px; border-radius: 12px; 
+        cursor: pointer; display: flex; align-items: center; justify-content: center; 
+        transition: 0.2s; box-shadow: 4px 4px 0px var(--border-color); 
+    }
+    .dots-btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--border-color); }
+    
+    .dropdown-content { 
+        display: none; position: absolute; right: 0; top: 60px; background: #fff; 
+        min-width: 200px; border-radius: 12px; box-shadow: 8px 8px 0px var(--border-color); 
+        border: 3px solid var(--border-color); overflow: hidden; animation: fadeInDown 0.3s ease; 
+    }
     @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    .dropdown-content a { color: white; padding: 14px 16px; text-decoration: none; display: block; font-size: 0.85rem; transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'Poppins', sans-serif;}
+    .dropdown-content a { 
+        color: var(--border-color); padding: 15px 20px; text-decoration: none; 
+        display: block; font-size: 0.9rem; font-weight: 800; transition: 0.2s; 
+        border-bottom: 2px solid var(--border-color); text-transform: uppercase;
+    }
     .dropdown-content a:last-child { border-bottom: none; }
-    .dropdown-content a:hover { background: rgba(255, 130, 170, 0.2); padding-left: 20px; }
+    .dropdown-content a:hover { background: var(--accent-green); padding-left: 25px; }
     .show { display: block; }
 
-    /* TAMBAHAN PADDING TOP BIAR GAK NABRAK MENU */
-    .container {
-      width: 100%; max-width: 500px; margin: 0 auto; padding: 70px 15px 15px; display: none;
+    /* ==========================================================================
+       4. HOW TO PLAY OVERLAY (CARA MAIN)
+       ========================================================================== */
+    #howToPlayOverlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; display: flex;
+      background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
+      justify-content: center; align-items: center; padding: 20px;
     }
+    .htp-card {
+        background: #fff; border: var(--border-thick) solid var(--border-color);
+        border-radius: 16px; box-shadow: 12px 12px 0px var(--border-color);
+        width: 100%; max-width: 400px; padding: 30px 20px; text-align: center;
+        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     
-    .heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .title { font-size: 2.2rem; font-weight: bold; margin: 0; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    .htp-logo { font-size: 4rem; margin-bottom: 10px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
     
-    /* Area Skor & Reset */
-    .controls-container { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
-    .scores-container { display: flex; gap: 10px; }
+    .htp-card h2 { font-size: 2rem; font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 5px; }
+    .htp-card p.subtitle { font-weight: 700; color: var(--accent-pink); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; font-size: 0.85rem; }
+    
+    .htp-step {
+      background: var(--bg-color); border: 2px solid var(--border-color); border-radius: 10px; 
+      padding: 12px; margin-bottom: 10px; display: flex; gap: 15px; align-items: center; 
+      text-align: left; box-shadow: 3px 3px 0px var(--border-color);
+    }
+    .step-icon { font-size: 1.5rem; }
+    .step-text { font-size: 0.85rem; font-weight: 600; color: #333; }
+    .step-text strong { color: var(--border-color); font-weight: 900; }
+    
+    .btn-mulai {
+      width: 100%; padding: 18px; background: var(--accent-blue);
+      border: 3px solid var(--border-color); border-radius: 12px; color: #fff; font-weight: 900; 
+      cursor: pointer; text-transform: uppercase; margin-top: 15px; font-size: 1.1rem;
+      box-shadow: 6px 6px 0px var(--border-color); transition: 0.2s;
+    }
+    .btn-mulai:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--border-color); }
+
+    /* ==========================================================================
+       5. GAME CONTAINER (BRUTALISM STYLE)
+       ========================================================================== */
+    .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 80px 20px 20px; display: none; }
+    
+    .heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+    .title { font-size: 2rem; font-weight: 900; color: var(--border-color); text-transform: uppercase; line-height: 1; }
+    
+    .controls-container { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
     .score-container {
-      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-      padding: 6px 15px; border-radius: 8px; text-align: center; color: #fff; 
-      min-width: 70px; font-weight: bold; backdrop-filter: blur(5px);
+      background: #fff; border: 3px solid var(--border-color); padding: 8px 20px; 
+      border-radius: 12px; text-align: center; color: var(--border-color); 
+      min-width: 90px; font-weight: 900; font-size: 1.2rem; box-shadow: 4px 4px 0px var(--border-color);
     }
-    .score-container::before { content: "SCORE"; display: block; font-size: 0.65rem; opacity: 0.7; letter-spacing: 1px; }
+    .score-container::before { content: "SCORE"; display: block; font-size: 0.7rem; color: #777; letter-spacing: 1px; margin-bottom: -3px; }
     
     .btn-reset {
-      background: linear-gradient(135deg, #e8507a, #c0254e); border: none; border-radius: 6px;
-      color: white; padding: 8px 15px; font-family: 'Poppins', sans-serif; font-weight: 600;
-      font-size: 0.8rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-      box-shadow: 0 4px 15px rgba(200, 40, 80, 0.4); transition: transform 0.1s;
+      background: var(--accent-yellow); border: 3px solid var(--border-color); border-radius: 8px;
+      color: var(--border-color); padding: 8px 15px; font-weight: 900; font-size: 0.85rem; 
+      cursor: pointer; text-transform: uppercase; box-shadow: 3px 3px 0px var(--border-color); transition: 0.15s;
     }
-    .btn-reset:active { transform: scale(0.95); }
+    .btn-reset:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px var(--border-color); }
 
-    /* GAME BOARD (GLASMORPHISM) */
-    .game-container {
-      position: relative; padding: 10px; cursor: default;
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 12px; width: 100%; aspect-ratio: 1/1; max-width: 450px; 
-      margin: 0 auto; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    /* Papan Permainan Utama */
+    .game-board-wrapper {
+      position: relative; padding: 12px; background: #fff; border: var(--border-thick) solid var(--border-color);
+      border-radius: 16px; width: 100%; aspect-ratio: 1/1; max-width: 450px; 
+      margin: 0 auto; box-shadow: 10px 10px 0px var(--border-color);
     }
     .grid-container {
       display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr);
-      gap: 10px; width: 100%; height: 100%;
+      gap: 12px; width: 100%; height: 100%;
     }
-    .grid-cell { background: rgba(0,0,0,0.2); border-radius: 8px; width: 100%; height: 100%; }
+    .grid-cell { background: #e0e0e0; border-radius: 8px; width: 100%; height: 100%; border: 2px solid #ccc; inset: shadow; }
 
-    /* TILE CONTAINER & TILES */
-    .tile-container { position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; z-index: 2; }
+    /* Tiles Angka */
+    .tile-container { position: absolute; top: 12px; left: 12px; right: 12px; bottom: 12px; z-index: 2; }
     .tile {
       position: absolute; display: flex; align-items: center; justify-content: center;
-      border-radius: 8px; font-weight: bold; font-size: 2rem; color: #fff;
+      border-radius: 8px; font-weight: 900; font-size: 2.2rem; color: var(--border-color);
       transition: 150ms ease-in-out; transition-property: transform, top, left;
-      width: calc(25% - 7.5px); height: calc(25% - 7.5px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      width: calc(25% - 9px); height: calc(25% - 9px);
+      border: 3px solid var(--border-color); box-shadow: 4px 4px 0px var(--border-color);
     }
-    
-    @media (max-width: 400px) { .tile { font-size: 1.5rem; } }
+    @media (max-width: 400px) { .tile { font-size: 1.8rem; box-shadow: 3px 3px 0px var(--border-color); border: 2px solid var(--border-color);} }
 
-    /* WARNA KOTAK */
-    .tile-2   { background: #2a5470; }
-    .tile-4   { background: #1e3c5a; }
-    .tile-8   { background: #e8507a; }
-    .tile-16  { background: #c0254e; }
-    .tile-32  { background: #ff6b8a; }
-    .tile-64  { background: #ff4757; }
-    .tile-128 { background: #9b59b6; font-size: 1.6rem; }
-    .tile-256 { background: #8e44ad; font-size: 1.6rem; }
-    .tile-512 { background: #ffd166; color: #1a2e45; font-size: 1.6rem; box-shadow: 0 0 20px rgba(255, 209, 102, 0.6); }
+    /* Warna Brutalism untuk setiap angka */
+    .tile-2   { background: #ffffff; }
+    .tile-4   { background: var(--accent-pink); }
+    .tile-8   { background: var(--accent-blue); }
+    .tile-16  { background: var(--accent-green); }
+    .tile-32  { background: var(--accent-yellow); }
+    .tile-64  { background: #ff9f43; color: #fff; }
+    .tile-128 { background: #9b59b6; color: #fff; font-size: 1.8rem; }
+    .tile-256 { background: #111111; color: #fff; font-size: 1.8rem; }
+    .tile-512 { background: var(--accent-green); font-size: 1.8rem; box-shadow: 0 0 15px var(--accent-green), 4px 4px 0px var(--border-color); animation: pulse 1s infinite; }
 
-    /* Animations */
-    .tile-new { animation: appear 0.2s ease-in-out; animation-fill-mode: backwards; }
+    .tile-new { animation: appear 0.2s ease-in-out backwards; }
     @keyframes appear { 0%{opacity:0;transform:scale(0)} 100%{opacity:1;transform:scale(1)} }
-    .tile-merged { animation: pop 0.2s ease-in-out; animation-fill-mode: backwards; z-index: 20; }
+    .tile-merged { animation: pop 0.2s ease-in-out backwards; z-index: 20; }
     @keyframes pop { 0%{transform:scale(0)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
 
-    /* ===================== HOW-TO-PLAY OVERLAY ===================== */
-    #howToPlayOverlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99999; display: flex;
-    }
-    .htp-left {
-      flex: 1; background: linear-gradient(145deg, #2a5470 0%, #1e3c5a 60%, #162e47 100%);
-      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center;
-      position: relative;
-    }
-    .htp-deco {
-      position: absolute; width: 200px; height: 200px; border-radius: 50%;
-      background: radial-gradient(circle at 40% 40%, rgba(255, 130, 170, 0.15) 0%, transparent 100%);
-      top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;
-    }
-    .htp-logo { z-index: 1; color: white;}
-    .htp-logo .logo-emoji { font-size: 4rem; margin-bottom: 10px; display: block; animation: floatEmoji 3s infinite;}
-    @keyframes floatEmoji { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-    .htp-logo h2 { font-size: 1.5rem; margin: 0; letter-spacing: 1px;}
-    
-    .htp-right {
-      flex: 1; background: #12233a; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px;
-    }
-    .htp-step {
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 15px;
-      display: flex; gap: 15px; align-items: center; color: #fff; width: 100%; max-width: 300px;
-    }
-    .step-icon { font-size: 1.5rem; }
-    .step-text { font-size: 0.85rem; line-height: 1.5; color: rgba(255,255,255,0.8); }
-    .step-text strong { color: #ffd166; }
-    .btn-mulai {
-      width: 100%; max-width: 300px; padding: 15px; background: linear-gradient(135deg, #e8507a, #c0254e);
-      border: none; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px;
-      box-shadow: 0 4px 20px rgba(200, 40, 80, 0.4); transition: 0.2s; font-family: 'Poppins'; letter-spacing: 2px;
-    }
-    .btn-mulai:active { transform: scale(0.98); }
-    
-    @media (max-width: 600px) {
-      #howToPlayOverlay { flex-direction: column; }
-      .htp-left { flex: none; padding: 30px; min-height: 220px; }
-      .htp-right { flex: 1; justify-content: flex-start; padding-top: 40px;}
-    }
-
-    /* OVERLAY KEMENANGAN & KEKALAHAN */
+    /* ==========================================================================
+       6. OVERLAY WIN / LOSE (BRUTALISM)
+       ========================================================================== */
     .game-overlay {
-      display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      display: none; position: absolute; top: -12px; left: -12px; right: -12px; bottom: -12px;
       z-index: 100; flex-direction: column; align-items: center; justify-content: center;
-      border-radius: 12px; color: white; text-align: center; backdrop-filter: blur(5px);
+      border-radius: 16px; color: var(--border-color); text-align: center; 
+      backdrop-filter: blur(8px); padding: 20px;
     }
-    #winScreen { background: rgba(10, 30, 60, 0.95); }
-    #loseScreen { background: rgba(232, 80, 122, 0.85); }
-    .game-overlay h1 { font-size: 2.5rem; margin: 0 0 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-    .game-overlay p { font-size: 1.1rem; font-weight: bold; margin: 0 0 20px; }
-    .game-overlay button {
-      background: white; color: #1a2e45; border: none; padding: 10px 20px; border-radius: 8px;
-      font-weight: bold; font-family: 'Poppins'; cursor: pointer;
-    }
-
-    /* CLUE BOX */
-    .clue-box { background: rgba(255,255,255,0.05); border: 2px dashed #ffd166; padding: 20px; border-radius: 15px; margin: 10px 0 20px; width: 100%; max-width: 300px; box-shadow: 0 0 20px rgba(255, 209, 102, 0.2); }
-    .clue-box h3 { color: #ffd166; font-family: 'Poppins', sans-serif; font-size: 1rem; margin-bottom: 8px; letter-spacing: 1px; }
-    .clue-box .password-clue { color: #fff; font-family: monospace; font-size: 1.8rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
     
-    /* TOMBOL LANJUT KE LOGIN */
-    .btn-lanjut { background: linear-gradient(135deg, #e8507a, #c0254e); border: none; border-radius: 10px; color: #fff; font-size: 1rem; font-weight: bold; padding: 14px 30px; cursor: pointer; text-decoration: none; font-family: 'Poppins', sans-serif; box-shadow: 0 4px 15px rgba(200, 40, 80, 0.4); display: inline-block; transition: 0.2s; }
-    .btn-lanjut:active { transform: scale(0.95); }
+    #winScreen { background: rgba(255, 255, 255, 0.9); border: var(--border-thick) solid var(--accent-green); }
+    #loseScreen { background: rgba(255, 255, 255, 0.9); border: var(--border-thick) solid var(--accent-pink); }
+    
+    .game-overlay h1 { font-size: 2.2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; }
+    .game-overlay p.desc { font-size: 0.9rem; font-weight: 700; color: #555; margin-bottom: 20px; }
+    
+    /* Box Clue Spesial dengan Typo Tanda Seru */
+    .clue-box { 
+        background: #fff; border: 4px dashed var(--accent-pink); padding: 15px; 
+        border-radius: 12px; margin: 10px 0 20px; width: 100%; box-shadow: 6px 6px 0px var(--accent-yellow); 
+        transform: rotate(-2deg);
+    }
+    .clue-box h3 { color: var(--border-color); font-size: 0.9rem; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; }
+    .clue-box .password-clue { color: var(--accent-blue); font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; text-shadow: 2px 2px 0px var(--border-color); }
+    
+    .btn-lanjut { 
+        background: var(--accent-pink); border: 3px solid var(--border-color); border-radius: 10px; 
+        color: #fff; font-size: 1.1rem; font-weight: 900; padding: 15px 25px; cursor: pointer; 
+        text-decoration: none; box-shadow: 5px 5px 0px var(--border-color); transition: 0.2s; text-transform: uppercase; 
+    }
+    .btn-lanjut:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--border-color); }
 
+    /* Footer */
     #custom-footer { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; z-index: 9999; pointer-events: none; }
-    #custom-footer p { margin: 0; color: rgba(255, 255, 255, 0.4); font-size: 11px; font-family: 'Poppins', sans-serif; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); }
+    #custom-footer p { margin: 0; color: #777; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+
+    /* Ripple Effect */
+    .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-animation 0.6s linear; background-color: rgba(255,255,255,0.4); pointer-events: none; }
+    @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
+
   </style>
 </head>
 <body>
 
+  <div class="bg-pattern"></div>
+  <canvas id="bg-canvas"></canvas>
+
+  <div id="splash-screen">
+      <div class="loader-box"></div>
+      <div class="splash-text">Memuat Puzzle...</div>
+  </div>
+
   <div class="top-menu">
-     <button onclick="toggleMenu()" class="dots-btn">⋮</button>
+     <button onclick="toggleMenu()" class="dots-btn ripple-btn">⋮</button>
      <div id="myDropdown" class="dropdown-content">
-        <a href="flappy.html">🔙 Kembali ke Misi 1</a>
-        <a href="tutor.html">ℹ️ Halaman Tutor</a>
+        <a href="flapy.html">🔙 Kembali ke Misi 1</a>
+        <a href="tutor.html">ℹ️ Halaman Aturan</a>
      </div>
   </div>
 
   <div id="howToPlayOverlay">
-    <div class="htp-left">
-      <div class="htp-deco"></div>
-      <div class="htp-logo">
-        <span class="logo-emoji">🧩</span>
+    <div class="htp-card">
+        <div class="htp-logo">🧩</div>
         <h2>Misi EAK</h2>
-        <p style="opacity: 0.7; font-size: 0.8rem; margin-top:5px; text-transform:uppercase; letter-spacing: 2px;">Spesial Buat Princess</p>
-      </div>
-    </div>
-    <div class="htp-right">
-      <div class="htp-step">
-        <span class="step-icon">👆</span>
-        <div class="step-text"><strong>Geser (swipe)</strong> layar untuk memindahkan semua kotak ke satu arah.</div>
-      </div>
-      <div class="htp-step">
-        <span class="step-icon">🔢</span>
-        <div class="step-text">Angka yang sama akan <strong>bergabung</strong> jika bersentuhan (2+2=4).</div>
-      </div>
-      <div class="htp-step">
-        <span class="step-icon">🏆</span>
-        <div class="step-text">Capai skor <strong>2048</strong> atau kotak <strong>512</strong> untuk Lanjut</div>
-      </div>
-      <button class="btn-mulai" onclick="mulaiGame()">Gass Main! 🚀</button>
+        <p class="subtitle">Spesial Buat Princess</p>
+        
+        <div class="htp-step">
+            <span class="step-icon">👆</span>
+            <div class="step-text"><strong>Geser (swipe)</strong> layar untuk memindahkan kotak.</div>
+        </div>
+        <div class="htp-step">
+            <span class="step-icon">🔢</span>
+            <div class="step-text">Angka sama akan <strong>bergabung</strong> (2+2=4).</div>
+        </div>
+        <div class="htp-step">
+            <span class="step-icon">🏆</span>
+            <div class="step-text">Capai kotak <strong>512</strong> untuk dapat password!</div>
+        </div>
+        
+        <button class="btn-mulai ripple-btn" onclick="mulaiGame()">Gass Main! 🚀</button>
     </div>
   </div>
 
   <div class="container" id="gameContainer">
     <div class="heading">
-      <div class="title">Misi Anggie</div>
+      <div class="title">MISI 2</div>
       <div class="controls-container">
-        <div class="scores-container">
-          <div class="score-container" id="scoreValue">0</div>
-        </div>
-        <button class="btn-reset" onclick="resetGame()">Ulangi 🔄</button>
+        <div class="score-container" id="scoreValue">0</div>
+        <button class="btn-reset ripple-btn" onclick="resetGame()">Ulangi 🔄</button>
       </div>
     </div>
 
-    <div class="game-container">
+    <div class="game-board-wrapper">
       <div class="grid-container">
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
       </div>
+      
       <div class="tile-container" id="tileContainer"></div>
       
       <div id="winScreen" class="game-overlay">
-        <div style="font-size:4rem; margin-bottom:10px;">🎉</div>
-        <h1 style="font-family:'Poppins', sans-serif;">Misi 2 Selesai!</h1>
-        <p style="color:#b8d8ea; font-size: 0.9rem;">Hebat! Ini clue terakhir untuk login:</p>
+        <div style="font-size:4rem; margin-bottom:5px; animation: bounce 1s infinite;">🎉</div>
+        <h1>MISI SELESAI!</h1>
+        <p class="desc">Hebat! Ini clue terakhir untuk login:</p>
         
         <div class="clue-box">
             <h3>CLUE PASSWORD:</h3>
-            <div class="password-clue">200408</div>
+            <div class="password-clue">200408!</div>
         </div>
 
-        <p style="color:rgba(255,255,255,0.6); font-size:0.75rem; margin-bottom:30px;">(Ingat atau Screenshot ya!)</p>
-        <a href="index.html" class="btn-lanjut">Login Sekarang ➡️</a>
+        <p style="color:#555; font-size:0.75rem; font-weight:800; margin-bottom:20px; text-transform:uppercase;">📸 Wajib Screenshot!</p>
+        <a href="index.html" class="btn-lanjut ripple-btn">Login Sekarang ➡️</a>
       </div>
 
       <div id="loseScreen" class="game-overlay">
-        <h1>Yahh Penuh 😢</h1>
-        <p>Ayo coba lagi, Anggie pasti bisa!</p>
-        <button onclick="resetGame()">Coba Lagi</button>
+        <div style="font-size:4rem; margin-bottom:5px;">💀</div>
+        <h1>Yahh Penuh!</h1>
+        <p class="desc">Ayo coba lagi, jangan nyerah wleee!</p>
+        <button class="btn-lanjut ripple-btn" onclick="resetGame()" style="width: 80%; background: var(--accent-blue);">Coba Lagi</button>
       </div>
     </div>
   </div>
 
   <div id="custom-footer">
-    <p>Dibuat dengan ❤️ oleh Orang Ganteng buat Anggie</p>
+    <p>Dibuat dengan ❤️ oleh Orang Ganteng</p>
   </div>
 
   <script>
-    // FUNGSI MENU TITIK 3
-    function toggleMenu() {
-       document.getElementById("myDropdown").classList.toggle("show");
+    // =========================================================================
+    // 1. ENGINE CANVAS PARTIKEL (EFEK LEDAKAN SENTUHAN)
+    // =========================================================================
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let sparks = [];
+    const colors = ['#ff6b8a', '#4facfe', '#ffd166', '#ccff00'];
+
+    function initCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        particles = [];
+        let count = window.innerWidth < 500 ? 8 : 15; 
+        for(let i=0; i<count; i++) particles.push(new Particle());
     }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 12 + 6;
+            this.speedX = (Math.random() - 0.5) * 1.5;
+            this.speedY = (Math.random() - 0.5) * 1.5;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.angle = Math.random() * 360;
+            this.type = Math.random() > 0.5 ? 'rect' : 'circle';
+        }
+        update() {
+            this.x += this.speedX; this.y += this.speedY; this.angle += 1;
+            if(this.x < -30) this.x = canvas.width + 30;
+            if(this.x > canvas.width + 30) this.x = -30;
+            if(this.y < -30) this.y = canvas.height + 30;
+            if(this.y > canvas.height + 30) this.y = -30;
+        }
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle * Math.PI / 180);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = 0.5;
+            ctx.beginPath();
+            if(this.type === 'rect') ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
+            else ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+            ctx.fill(); 
+            ctx.restore();
+        }
+    }
+
+    class Spark {
+        constructor(x, y) {
+            this.x = x; this.y = y;
+            this.size = Math.random() * 10 + 4;
+            this.speedX = (Math.random() - 0.5) * 10;
+            this.speedY = (Math.random() - 0.5) * 10;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.life = 1.0;
+            this.decay = Math.random() * 0.04 + 0.02;
+        }
+        update() { this.x += this.speedX; this.y += this.speedY; this.life -= this.decay; }
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, this.life);
+            ctx.fillStyle = this.color;
+            ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.rect(this.x, this.y, this.size, this.size);
+            ctx.fill(); ctx.stroke();
+            ctx.restore();
+        }
+    }
+
+    // Pemicu Kembang Api saat layar disentuh
+    window.addEventListener('pointerdown', (e) => {
+        let x = e.clientX || (e.touches && e.touches[0].clientX);
+        let y = e.clientY || (e.touches && e.touches[0].clientY);
+        if (x && y) {
+            let sparkCount = Math.floor(Math.random() * 5) + 6;
+            for(let i=0; i<sparkCount; i++) sparks.push(new Spark(x, y));
+        }
+    });
+
+    function animateCanvas() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        for (let i = sparks.length - 1; i >= 0; i--) {
+            sparks[i].update(); sparks[i].draw();
+            if (sparks[i].life <= 0) sparks.splice(i, 1);
+        }
+        requestAnimationFrame(animateCanvas);
+    }
+    
+    window.addEventListener('resize', initCanvas);
+    initCanvas(); animateCanvas();
+
+
+    // =========================================================================
+    // 2. FUNGSI UI & EFEK LAINNYA
+    // =========================================================================
+    window.addEventListener('load', function() {
+        setTimeout(function() { document.getElementById('splash-screen').classList.add('hidden'); }, 1200);
+    });
+
+    function toggleMenu() { document.getElementById("myDropdown").classList.toggle("show"); }
     window.onclick = function(event) {
        if (!event.target.matches('.dots-btn') && !event.target.matches('.dots-btn *')) {
           var dropdowns = document.getElementsByClassName("dropdown-content");
           for (var i = 0; i < dropdowns.length; i++) {
-             var openDropdown = dropdowns[i];
-             if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-             }
+             if (dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
           }
        }
     }
 
-    // FULL ENGINE 2048 JAVASCRIPT
+    document.querySelectorAll('.ripple-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            let rect = this.getBoundingClientRect();
+            let clientX = e.clientX || (e.touches && e.touches[0].clientX) || rect.left + rect.width/2;
+            let clientY = e.clientY || (e.touches && e.touches[0].clientY) || rect.top + rect.height/2;
+            let x = clientX - rect.left; let y = clientY - rect.top;
+            let ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            ripple.style.left = `${x}px`; ripple.style.top = `${y}px`;
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+
+
+    // =========================================================================
+    // 3. ENGINE GAME 2048 (TIDAK DIUBAH LOGIKANYA, HANYA DOM)
+    // =========================================================================
     let board = [];
     let score = 0;
     let hasWon = false;
     let isGameOver = false;
     const size = 4;
-    
-    // TARGET MENANG 
     const targetScore = 686;
     const targetTile = 512; 
 
@@ -299,12 +483,9 @@
 
     function initBoard() {
       board = Array(size).fill().map(() => Array(size).fill(0));
-      score = 0;
-      hasWon = false;
-      isGameOver = false;
+      score = 0; hasWon = false; isGameOver = false;
       updateScore();
-      addRandomTile();
-      addRandomTile();
+      addRandomTile(); addRandomTile();
       renderBoard();
     }
 
@@ -325,7 +506,6 @@
     function renderBoard() {
       const container = document.getElementById('tileContainer');
       container.innerHTML = '';
-      
       let maxTile = 0;
 
       for (let r = 0; r < size; r++) {
@@ -337,10 +517,12 @@
 
             let tileDiv = document.createElement('div');
             
+            // Penyesuaian margin dinamis
             let topPos = (r * 25) + "%";
             let leftPos = (c * 25) + "%";
-            tileDiv.style.top = `calc(${topPos} + ${(r * 2.5)}px)`;
-            tileDiv.style.left = `calc(${leftPos} + ${(c * 2.5)}px)`;
+            // Hitung sela grid (12px gap total ada 3 gap) -> disederhanakan pakai calc
+            tileDiv.style.top = `calc(${topPos} + ${(r * 3)}px)`;
+            tileDiv.style.left = `calc(${leftPos} + ${(c * 3)}px)`;
             
             let classes = ['tile', `tile-${val}`];
             if (typeof cell === 'object' && cell.isNew) classes.push('tile-new');
@@ -355,7 +537,6 @@
         }
       }
 
-      // CEK KEMENANGAN (Skor nyentuh 686 atau dapet kotak 512)
       if ((score >= targetScore || maxTile >= targetTile) && !hasWon) {
         triggerWin();
       } else if (checkLose() && !hasWon) {
@@ -373,9 +554,7 @@
       document.getElementById('loseScreen').style.display = 'flex';
     }
 
-    function updateScore() {
-      document.getElementById('scoreValue').textContent = score;
-    }
+    function updateScore() { document.getElementById('scoreValue').textContent = score; }
 
     function checkLose() {
       for (let r = 0; r < size; r++) {
@@ -420,9 +599,7 @@
       board = rotateBoard(tempBoard, (4 - direction) % 4);
 
       if (moved) {
-        updateScore();
-        addRandomTile();
-        renderBoard();
+        updateScore(); addRandomTile(); renderBoard();
       }
     }
 
@@ -440,7 +617,7 @@
       return result;
     }
 
-    // KONTROL KEYBOARD
+    // Input Keyboard
     document.addEventListener('keydown', (e) => {
       if (hasWon || isGameOver) return;
       switch (e.key) {
@@ -451,7 +628,7 @@
       }
     });
 
-    // KONTROL SWIPE (TOUCH)
+    // Input Swipe Layar Sentuh
     let touchStartX = 0, touchStartY = 0;
     const gameArea = document.getElementById('gameContainer');
 
@@ -466,8 +643,7 @@
       if (hasWon || isGameOver) return;
       let touchEndX = e.changedTouches[0].screenX;
       let touchEndY = e.changedTouches[0].screenY;
-      let dx = touchEndX - touchStartX;
-      let dy = touchEndY - touchStartY;
+      let dx = touchEndX - touchStartX; let dy = touchEndY - touchStartY;
       
       if (Math.abs(dx) > Math.abs(dy)) {
         if (Math.abs(dx) > 30) dx > 0 ? move(2) : move(0); 
