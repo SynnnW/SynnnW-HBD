@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     
     <style>
         /* ==========================================================================
@@ -39,17 +39,24 @@
             scroll-behavior: smooth;
         }
 
-        /* Latar Belakang Polkadot Tipis */
+        /* Latar Belakang Polkadot Solid (Tidak Tembus) */
         .bg-pattern {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
-            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
-            background-size: 30px 30px; opacity: 0.5;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(var(--border-color) 1.5px, transparent 1.5px);
+            background-size: 35px 35px; opacity: 0.8;
         }
 
         /* Kanvas Partikel Interaktif */
         #bg-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; pointer-events: none;
+        }
+
+        /* Kanvas Jejak Kursor Bintang */
+        #cursor-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 99998; pointer-events: none;
         }
 
         /* ==========================================================================
@@ -60,7 +67,7 @@
             border-radius: 12px;
             background: #ffffff;
             box-shadow: var(--shadow-thick) var(--shadow-thick) 0px var(--border-color);
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
         }
 
@@ -71,7 +78,7 @@
             color: var(--border-color);
             font-weight: 900;
             text-transform: uppercase;
-            box-shadow: 5px 5px 0px var(--border-color);
+            box-shadow: 6px 6px 0px var(--border-color);
             cursor: pointer;
             transition: all 0.15s ease-in-out;
             display: inline-block;
@@ -80,8 +87,8 @@
         }
 
         .brutal-button:active {
-            transform: translate(4px, 4px);
-            box-shadow: 1px 1px 0px var(--border-color);
+            transform: translate(6px, 6px);
+            box-shadow: 0px 0px 0px var(--border-color);
         }
 
         /* Efek Ripple (Gelombang Air) pada tombol */
@@ -89,8 +96,8 @@
             position: absolute;
             border-radius: 50%;
             transform: scale(0);
-            animation: ripple-animation 0.6s linear;
-            background-color: rgba(255, 255, 255, 0.6);
+            animation: ripple-animation 0.6s ease-out;
+            background-color: rgba(255, 255, 255, 0.7);
             pointer-events: none;
         }
         @keyframes ripple-animation {
@@ -98,17 +105,29 @@
         }
 
         /* ==========================================================================
-           3. OVERLAY PINTU MASUK
+           3. OVERLAY PINTU MASUK (HELLO SCREEN - FIXED SOLID)
            ========================================================================== */
         #start-gate {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh;
-            background: var(--bg-color);
+            /* BACKGROUND SOLID AGAR TIDAK TEMBUS PANDANG */
+            background-color: var(--bg-color);
+            background-image: radial-gradient(var(--border-color) 2px, transparent 2px);
+            background-size: 30px 30px;
             z-index: 99999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-            background-image: repeating-linear-gradient(45deg, #e5e5e5 25%, transparent 25%, transparent 75%, #e5e5e5 75%, #e5e5e5), repeating-linear-gradient(45deg, #e5e5e5 25%, var(--bg-color) 25%, var(--bg-color) 75%, #e5e5e5 75%, #e5e5e5);
-            background-position: 0 0, 15px 15px; background-size: 30px 30px;
+            transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        /* Kotak putih penahan teks di layar awal agar mudah dibaca */
+        .gate-content-box {
+            background: #ffffff;
+            border: var(--border-thick) solid var(--border-color);
+            padding: 50px 30px;
+            border-radius: 16px;
+            box-shadow: 12px 12px 0px var(--border-color);
+            text-align: center;
+            animation: floatSlow 4s ease-in-out infinite;
         }
 
         #start-gate.opened { transform: translateY(-100%); pointer-events: none; }
@@ -116,16 +135,16 @@
         .gate-btn {
             background: var(--accent-green); padding: 20px 40px;
             font-size: 1.5rem; letter-spacing: 2px;
-            animation: floating 3s ease-in-out infinite;
+            margin-top: 20px;
         }
 
-        @keyframes floating {
+        @keyframes floatSlow {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-10px); }
         }
 
         /* ==========================================================================
-           4. HERO SECTION
+           4. HERO SECTION (PEMBUKAAN)
            ========================================================================== */
         .hero-section {
             height: 100vh; height: 100dvh;
@@ -138,114 +157,197 @@
         .hero-title {
             font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 900; line-height: 1.1;
             text-transform: uppercase; position: relative; z-index: 2;
+            text-shadow: 2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff;
         }
 
         .hero-title .highlight-blue { color: var(--accent-blue); }
         
         .hero-title .badge {
-            background: var(--accent-yellow); padding: 5px 15px;
+            background: var(--accent-yellow); padding: 5px 20px;
             border: var(--border-thick) solid var(--border-color); display: inline-block;
-            transform: rotate(-4deg); margin-top: 10px; box-shadow: 4px 4px 0px var(--border-color);
+            transform: rotate(-4deg); margin-top: 15px; box-shadow: 6px 6px 0px var(--border-color);
+            animation: pulseBadge 2s infinite;
+        }
+        
+        @keyframes pulseBadge {
+            0%, 100% { transform: rotate(-4deg) scale(1); }
+            50% { transform: rotate(-4deg) scale(1.05); }
         }
 
-        .typewriter-text {
-            margin-top: 25px; font-weight: 600; font-size: 1rem; color: #444;
-            min-height: 24px; background: #fff; padding: 5px 10px;
-            border: 2px solid var(--border-color); display: inline-block;
+        .typewriter-container {
+            margin-top: 30px; background: #fff; padding: 10px 15px;
+            border: 3px solid var(--border-color); display: inline-block;
+            box-shadow: 4px 4px 0px var(--border-color); transform: rotate(2deg);
         }
+        
+        .typewriter-text { font-weight: 800; font-size: 1rem; color: var(--border-color); min-height: 24px; }
 
-        /* Dekorasi Mengambang */
-        .floating-shape { position: absolute; border: var(--border-thick) solid var(--border-color); z-index: 1; animation: spinAndFloat 15s linear infinite; }
-        .shape-1 { width: 60px; height: 60px; background: var(--accent-pink); border-radius: 50%; top: 15%; left: 10%; }
-        .shape-2 { width: 50px; height: 50px; background: var(--accent-blue); top: 20%; right: 15%; transform: rotate(15deg); }
-        .shape-3 { width: 70px; height: 30px; background: var(--accent-green); bottom: 25%; left: 20%; transform: rotate(-25deg); }
+        /* Dekorasi Mengambang Interaktif */
+        .floating-shape { position: absolute; border: var(--border-thick) solid var(--border-color); z-index: 1; animation: spinAndFloat 20s linear infinite; }
+        .shape-1 { width: 70px; height: 70px; background: var(--accent-pink); border-radius: 50%; top: 15%; left: 8%; }
+        .shape-2 { width: 60px; height: 60px; background: var(--accent-blue); top: 25%; right: 10%; transform: rotate(15deg); }
+        .shape-3 { width: 80px; height: 35px; background: var(--accent-green); bottom: 20%; left: 15%; transform: rotate(-25deg); }
 
         @keyframes spinAndFloat {
             0% { transform: rotate(0deg) translate(0, 0); }
-            50% { transform: rotate(180deg) translate(20px, 30px); }
+            50% { transform: rotate(180deg) translate(30px, 40px); }
             100% { transform: rotate(360deg) translate(0, 0); }
         }
 
         /* Marquee Teks Berjalan */
         .marquee-container {
             position: absolute; bottom: 0; left: 0; width: 100%; background: var(--border-color);
-            color: var(--accent-green); padding: 10px 0; overflow: hidden; white-space: nowrap;
+            color: var(--accent-green); padding: 12px 0; overflow: hidden; white-space: nowrap;
             border-top: var(--border-thick) solid var(--border-color); z-index: 10;
         }
-        .marquee-content { display: inline-block; font-weight: 800; font-size: 1.2rem; text-transform: uppercase; animation: marquee 15s linear infinite; }
+        .marquee-content { display: inline-block; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; animation: marquee 15s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* ==========================================================================
-           5. GALLERY SECTION
+           5. GALLERY SECTION (EFEK 3D TILT & HIGHLIGHT)
            ========================================================================== */
-        .gallery-section { padding: 80px 0; background: rgba(255,255,255,0.8); border-bottom: var(--border-thick) solid var(--border-color); position: relative; backdrop-filter: blur(5px); }
-        .section-header { padding: 0 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .section-header h2 { font-weight: 900; font-size: 2.2rem; line-height: 1; text-transform: uppercase; }
-        .section-header p { font-weight: 600; font-size: 0.85rem; letter-spacing: 2px; color: #555; }
-        .swipe-indicator { background: #fff; padding: 8px 15px; font-weight: 800; font-size: 0.8rem; }
+        .gallery-section { 
+            padding: 90px 0; background: rgba(255,255,255,0.85); 
+            border-bottom: var(--border-thick) solid var(--border-color); 
+            position: relative; backdrop-filter: blur(8px); 
+        }
+        .section-header { padding: 0 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .section-header h2 { font-weight: 900; font-size: 2.4rem; line-height: 1; text-transform: uppercase; text-shadow: 2px 2px 0px #fff; }
+        .section-header p { font-weight: 800; font-size: 0.9rem; letter-spacing: 2px; color: var(--accent-pink); text-transform: uppercase; }
+        .swipe-indicator { background: var(--border-color); color: #fff; padding: 10px 20px; font-weight: 900; font-size: 0.8rem; border-radius: 20px; animation: bounceX 2s infinite; }
+
+        @keyframes bounceX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
 
         .gallery-track {
-            display: flex; gap: 25px; padding: 20px 30px 40px; overflow-x: auto;
+            display: flex; gap: 30px; padding: 20px 30px 60px; overflow-x: auto;
             scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+            perspective: 1000px; /* Untuk efek 3D tilt */
         }
         .gallery-track::-webkit-scrollbar { display: none; } 
 
         .gallery-card {
             flex: 0 0 75%; height: 450px; scroll-snap-align: center;
             border: var(--border-thick) solid var(--border-color); border-radius: 16px;
-            overflow: hidden; position: relative; background: #ddd;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: scale(0.9); opacity: 0.5; box-shadow: 0px 0px 0px var(--border-color);
+            position: relative; background: #ddd;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.85) rotateY(10deg); opacity: 0.4; 
+            box-shadow: 0px 0px 0px var(--border-color);
+            transform-style: preserve-3d;
         }
-        .gallery-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-        .gallery-card.is-focused { transform: scale(1.05); opacity: 1; box-shadow: 12px 12px 0px var(--border-color); z-index: 10; }
-        .gallery-card.is-focused img { transform: scale(1.1); }
+        
+        .gallery-card img { 
+            width: 100%; height: 100%; object-fit: cover; border-radius: 12px;
+            transition: transform 0.5s ease; 
+        }
+        
+        /* Highlight Galeri di Tengah */
+        .gallery-card.is-focused { 
+            transform: scale(1.05) rotateY(0deg); opacity: 1; 
+            box-shadow: 15px 15px 0px var(--border-color); z-index: 10; 
+        }
+        .gallery-card.is-focused img { transform: scale(1.05); }
 
         /* ==========================================================================
-           6. GAMES SECTION
+           6. GAMES SECTION (DENGAN EFEK HIGHLIGHT SCROLL SEPERTI HBD)
            ========================================================================== */
-        .games-section { padding: 80px 20px; background: transparent; border-bottom: var(--border-thick) solid var(--border-color); }
-        .games-grid { display: flex; flex-direction: column; gap: 35px; margin-top: 40px; }
-        .game-card { display: block; text-decoration: none; color: var(--border-color); padding: 20px; background: rgba(255,255,255,0.9); backdrop-filter: blur(5px); }
-        .game-thumbnail { width: 100%; height: 180px; border: var(--border-thick) solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 20px; background: #ccc; }
-        .game-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .games-section { padding: 90px 20px; background: transparent; border-bottom: var(--border-thick) solid var(--border-color); }
+        .games-grid { display: flex; flex-direction: column; gap: 50px; margin-top: 50px; perspective: 1000px; }
+        
+        .game-card { 
+            display: block; text-decoration: none; color: var(--border-color); 
+            padding: 25px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); 
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Setup awal untuk efek pop-out */
+            opacity: 0.5;
+            transform: scale(0.9) translateY(30px);
+            box-shadow: 5px 5px 0px var(--border-color);
+        }
+
+        /* HIGHLIGHT EFEK UNTUK GAME CARD */
+        .game-card.game-focused {
+            opacity: 1;
+            transform: scale(1.02) translateY(0);
+            box-shadow: 15px 15px 0px var(--border-color);
+            z-index: 10;
+        }
+
+        .game-card.game-focused .play-icon {
+            transform: rotate(45deg) scale(1.2);
+            background: var(--accent-pink);
+            color: #fff;
+        }
+
+        .game-thumbnail { 
+            width: 100%; height: 200px; border: var(--border-thick) solid var(--border-color); 
+            border-radius: 12px; overflow: hidden; margin-bottom: 25px; background: #ccc; 
+            box-shadow: inset 0px 0px 20px rgba(0,0,0,0.2);
+        }
+        .game-thumbnail img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .game-card.game-focused .game-thumbnail img { transform: scale(1.1); }
+
         .game-info { display: flex; justify-content: space-between; align-items: center; }
-        .game-info h3 { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; }
-        .game-info p { font-size: 0.85rem; font-weight: 600; margin-top: 5px; color: #444; }
-        .play-icon { background: var(--accent-yellow); width: 45px; height: 45px; border: var(--border-thick) solid var(--border-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; font-weight: 900; }
+        .game-info h3 { font-size: 1.6rem; font-weight: 900; text-transform: uppercase; }
+        .game-info p { font-size: 0.9rem; font-weight: 700; margin-top: 5px; color: #555; }
+        
+        .play-icon { 
+            background: var(--accent-yellow); width: 50px; height: 50px; 
+            border: var(--border-thick) solid var(--border-color); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; 
+            font-size: 1.5rem; font-weight: 900; transition: 0.4s;
+        }
 
         /* ==========================================================================
-           7. LOGIN SECTION & NEW RULES BANNER
+           7. LOGIN SECTION & ALERT BAR
            ========================================================================== */
-        .login-section { padding: 100px 20px; background: var(--accent-blue); display: flex; justify-content: center; align-items: center; position: relative; z-index: 5;}
-        .login-box { width: 100%; max-width: 400px; background: #ffffff; padding: 40px 25px; text-align: center; }
-        .login-box h2 { font-size: 2.2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
-        .login-box p { font-size: 0.9rem; font-weight: 600; color: #555; margin-bottom: 30px; }
+        .login-section { padding: 120px 20px; background: var(--accent-blue); display: flex; justify-content: center; align-items: center; position: relative; z-index: 5;}
+        
+        .login-box { 
+            width: 100%; max-width: 420px; background: #ffffff; padding: 45px 30px; 
+            text-align: center; box-shadow: 15px 15px 0px var(--border-color);
+            transform-style: preserve-3d;
+        }
+        
+        .login-box h2 { font-size: 2.4rem; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; }
+        .login-box p { font-size: 1rem; font-weight: 700; color: #666; margin-bottom: 35px; }
 
-        /* BAR ATURAN MAIN BARU */
+        /* BAR ATURAN MAIN (KUNING KEDAP KEDIP) */
         .alert-bar {
-            display: block; width: 100%; padding: 15px; margin-bottom: 30px;
+            display: block; width: 100%; padding: 18px 15px; margin-bottom: 35px;
             background: var(--accent-yellow); color: var(--border-color);
-            border: var(--border-thick) solid var(--border-color); border-radius: 8px;
-            font-weight: 900; font-size: 0.85rem; text-transform: uppercase; text-decoration: none;
-            box-shadow: 4px 4px 0px var(--border-color); animation: pulseAlert 2s infinite;
-            transition: 0.2s;
+            border: var(--border-thick) solid var(--border-color); border-radius: 12px;
+            font-weight: 900; font-size: 0.9rem; text-transform: uppercase; text-decoration: none;
+            box-shadow: 6px 6px 0px var(--border-color); animation: pulseAlert 2.5s infinite;
+            transition: 0.2s; letter-spacing: 0.5px;
         }
-        .alert-bar:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--border-color); animation: none; }
-        @keyframes pulseAlert { 0%, 100% { background: var(--accent-yellow); } 50% { background: var(--accent-pink); color: #fff; } }
+        .alert-bar:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px var(--border-color); animation: none; }
+        
+        @keyframes pulseAlert { 
+            0%, 100% { background: var(--accent-yellow); color: var(--border-color); } 
+            50% { background: var(--accent-pink); color: #fff; } 
+        }
 
-        .input-wrapper { margin-bottom: 25px; text-align: left; }
-        .input-wrapper label { display: block; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+        .input-wrapper { margin-bottom: 30px; text-align: left; }
+        .input-wrapper label { display: block; font-size: 0.9rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
         .input-wrapper input {
-            width: 100%; padding: 16px; border: var(--border-thick) solid var(--border-color); border-radius: 8px;
-            font-size: 1rem; font-weight: 600; font-family: 'Poppins', sans-serif; outline: none; transition: all 0.2s; background: var(--bg-color);
+            width: 100%; padding: 18px; border: var(--border-thick) solid var(--border-color); border-radius: 12px;
+            font-size: 1.1rem; font-weight: 700; font-family: 'Poppins', sans-serif; outline: none; transition: all 0.3s; background: var(--bg-color);
         }
-        .input-wrapper input:focus { background: #fff; transform: translate(-3px, -3px); box-shadow: 6px 6px 0px var(--accent-pink); }
+        .input-wrapper input:focus { background: #fff; transform: translate(-4px, -4px); box-shadow: 8px 8px 0px var(--accent-pink); }
 
-        .btn-submit { width: 100%; padding: 18px; font-size: 1.2rem; margin-top: 10px; }
-        .error-message { display: none; color: #fff; font-weight: 800; font-size: 0.85rem; margin-top: 15px; background: #ff4757; padding: 10px; border: 2px solid var(--border-color); border-radius: 5px; }
+        .btn-submit { width: 100%; padding: 20px; font-size: 1.3rem; margin-top: 15px; }
+        
+        .error-message { 
+            display: none; color: #fff; font-weight: 900; font-size: 0.9rem; margin-top: 20px; 
+            background: #ff4757; padding: 15px; border: 3px solid var(--border-color); border-radius: 8px; 
+            text-transform: uppercase; letter-spacing: 1px;
+        }
 
-        @keyframes shakeHard { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); } 20%, 40%, 60%, 80% { transform: translateX(8px); } }
+        /* Animasi Getar Hebat Saat Error */
+        @keyframes shakeHard { 
+            0%, 100% { transform: translateX(0); } 
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px) rotate(-1deg); } 
+            20%, 40%, 60%, 80% { transform: translateX(10px) rotate(1deg); } 
+        }
         .shake-animation { animation: shakeHard 0.5s ease-in-out; }
 
     </style>
@@ -254,30 +356,36 @@
 
     <div class="bg-pattern"></div>
     <canvas id="bg-canvas"></canvas>
+    
+    <canvas id="cursor-canvas"></canvas>
 
     <audio id="bg-audio" loop preload="auto">
         <source src="music/opening.mp3" type="audio/mpeg" />
     </audio>
 
     <div id="start-gate">
-        <h1 style="font-size: 4rem; margin-bottom: 20px; font-weight: 900; color: var(--border-color); text-transform: uppercase;">Hello!</h1>
-        <button class="brutal-button gate-btn ripple-btn" onclick="openGate()">TAP TO START</button>
-        <p style="margin-top: 20px; font-weight: 600; font-size: 0.8rem;">Pastikan volume HP nyala ya!</p>
+        <div class="gate-content-box brutal-card">
+            <h1 style="font-size: 4rem; margin-bottom: 10px; font-weight: 900; color: var(--border-color); text-transform: uppercase; line-height: 1;">Hello!</h1>
+            <p style="margin-bottom: 30px; font-weight: 800; font-size: 0.9rem; color: #555; text-transform: uppercase;">Pastikan volume HP nyala ya!</p>
+            <button class="brutal-button gate-btn ripple-btn" onclick="openGate()">BUKA UNDANGAN</button>
+        </div>
     </div>
 
     <section class="hero-section">
-        <div class="floating-shape shape-1"></div>
-        <div class="floating-shape shape-2"></div>
-        <div class="floating-shape shape-3"></div>
+        <div class="floating-shape shape-1 tilt-element"></div>
+        <div class="floating-shape shape-2 tilt-element"></div>
+        <div class="floating-shape shape-3 tilt-element"></div>
         
-        <h1 class="hero-title">
+        <h1 class="hero-title tilt-element">
             LEVEL UP <br>
             <span class="highlight-blue">YOUR DAY</span> <br>
             WITH OUR <br>
             <span class="badge">SURPRISE</span>
         </h1>
         
-        <div class="typewriter-text" id="typewriter"></div>
+        <div class="typewriter-container tilt-element">
+            <div class="typewriter-text" id="typewriter"></div>
+        </div>
 
         <div class="marquee-container">
             <div class="marquee-content">
@@ -296,19 +404,19 @@
         </div>
 
         <div class="gallery-track" id="gallery-track">
-            <div class="gallery-card brutal-card">
+            <div class="gallery-card brutal-card tilt-element">
                 <img src="img/gallery1.jpg" alt="Memory 1" onerror="this.src='https://via.placeholder.com/600x800/ff6b8a/fff?text=Foto+1'">
             </div>
-            <div class="gallery-card brutal-card">
+            <div class="gallery-card brutal-card tilt-element">
                 <img src="img/gallery2.jpg" alt="Memory 2" onerror="this.src='https://via.placeholder.com/600x800/4facfe/fff?text=Foto+2'">
             </div>
-            <div class="gallery-card brutal-card">
+            <div class="gallery-card brutal-card tilt-element">
                 <img src="img/gallery3.jpg" alt="Memory 3" onerror="this.src='https://via.placeholder.com/600x800/ccff00/111?text=Foto+3'">
             </div>
-            <div class="gallery-card brutal-card">
+            <div class="gallery-card brutal-card tilt-element">
                 <img src="img/gallery4.jpg" alt="Memory 4" onerror="this.src='https://via.placeholder.com/600x800/ffd166/111?text=Foto+4'">
             </div>
-            <div class="gallery-card brutal-card">
+            <div class="gallery-card brutal-card tilt-element">
                 <img src="img/gallery5.jpg" alt="Memory 5" onerror="this.src='https://via.placeholder.com/600x800/111111/fff?text=Foto+5'">
             </div>
         </div>
@@ -322,8 +430,8 @@
             </div>
         </div>
 
-        <div class="games-grid">
-            <a href="flapy.html" class="brutal-card game-card game-1 ripple-btn">
+        <div class="games-grid" id="games-track">
+            <a href="flapy.html" class="brutal-card game-card game-1 ripple-btn tilt-element">
                 <div class="game-thumbnail">
                     <img src="img/thumb-flappy.jpg" alt="Flappy Bird" onerror="this.src='https://via.placeholder.com/600x400/4facfe/fff?text=Thumbnail+Flappy'">
                 </div>
@@ -336,7 +444,7 @@
                 </div>
             </a>
 
-            <a href="200408.html" class="brutal-card game-card game-2 ripple-btn">
+            <a href="200408.html" class="brutal-card game-card game-2 ripple-btn tilt-element">
                 <div class="game-thumbnail">
                     <img src="img/thumb-2048.jpg" alt="Game 2048" onerror="this.src='https://via.placeholder.com/600x400/ff6b8a/fff?text=Thumbnail+2048'">
                 </div>
@@ -352,7 +460,7 @@
     </section>
 
     <section class="login-section" id="form-login">
-        <div class="brutal-card login-box" id="login-container">
+        <div class="brutal-card login-box tilt-element" id="login-container">
             <h2>BUKA KADO 🎁</h2>
             <p>Masukkan kunci rahasia yang kamu dapat.</p>
 
@@ -362,15 +470,15 @@
 
             <div class="input-wrapper">
                 <label>Username</label>
-                <input type="text" id="inputUsername" placeholder="Siapa nama princess?">
+                <input type="text" id="inputUsername" placeholder="Siapa nama princess?" autocomplete="off">
             </div>
 
             <div class="input-wrapper">
                 <label>Kode Rahasia</label>
-                <input type="password" id="inputPassword" placeholder="Enam angka rahasia">
+                <input type="password" id="inputPassword" placeholder="Enam angka rahasia" autocomplete="off">
             </div>
 
-            <button class="brutal-button btn-submit ripple-btn" id="btn-login" onclick="processLogin()">Buka Sekarang</button>
+            <button class="brutal-button btn-submit ripple-btn" id="btn-login" onclick="processLogin()">BUKA SEKARANG</button>
             
             <div class="error-message" id="error-msg">
                 Ngapain nebak-nebak? Cari clue nya dulu dong 😜
@@ -380,7 +488,9 @@
     </section>
 
     <script>
-        // 1. ENGINE CANVAS INTERAKTIF (PARTIKEL & LEDAKAN SENTUHAN)
+        // =========================================================================
+        // 1. ENGINE CANVAS INTERAKTIF UTAMA (PARTIKEL & LEDAKAN SENTUHAN)
+        // =========================================================================
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -391,8 +501,8 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             particles = [];
-            // Partikel santai yang melayang
-            let count = window.innerWidth < 500 ? 8 : 15; 
+            // Partikel melayang santai
+            let count = window.innerWidth < 500 ? 10 : 20; 
             for(let i=0; i<count; i++) particles.push(new Particle());
         }
 
@@ -400,7 +510,7 @@
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 15 + 5;
+                this.size = Math.random() * 15 + 8;
                 this.speedX = (Math.random() - 0.5) * 1.5;
                 this.speedY = (Math.random() - 0.5) * 1.5;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
@@ -419,7 +529,7 @@
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.angle * Math.PI / 180);
                 ctx.fillStyle = this.color;
-                ctx.globalAlpha = 0.5;
+                ctx.globalAlpha = 0.4; // Transparansi halus
                 ctx.beginPath();
                 if(this.type === 'rect') {
                     ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
@@ -434,35 +544,39 @@
         class Spark {
             constructor(x, y) {
                 this.x = x; this.y = y;
-                this.size = Math.random() * 10 + 4;
-                this.speedX = (Math.random() - 0.5) * 10;
-                this.speedY = (Math.random() - 0.5) * 10;
+                this.size = Math.random() * 12 + 5;
+                this.speedX = (Math.random() - 0.5) * 12;
+                this.speedY = (Math.random() - 0.5) * 12;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.life = 1.0;
                 this.decay = Math.random() * 0.04 + 0.02;
+                this.angle = Math.random() * 360;
             }
             update() {
-                this.x += this.speedX; this.y += this.speedY; this.life -= this.decay;
+                this.x += this.speedX; this.y += this.speedY; 
+                this.life -= this.decay; this.angle += 5;
             }
             draw() {
                 ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle * Math.PI / 180);
                 ctx.globalAlpha = Math.max(0, this.life);
                 ctx.fillStyle = this.color;
                 ctx.strokeStyle = '#111';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
-                ctx.rect(this.x, this.y, this.size, this.size);
+                ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
                 ctx.fill(); ctx.stroke();
                 ctx.restore();
             }
         }
 
-        // Event Sentuhan & Klik untuk ngeluarin ledakan kembang api
+        // Pemicu ledakan kembang api (Sparks)
         window.addEventListener('pointerdown', (e) => {
             let x = e.clientX || (e.touches && e.touches[0].clientX);
             let y = e.clientY || (e.touches && e.touches[0].clientY);
             if (x && y) {
-                let sparkCount = Math.floor(Math.random() * 5) + 6;
+                let sparkCount = Math.floor(Math.random() * 6) + 8;
                 for(let i=0; i<sparkCount; i++) sparks.push(new Spark(x, y));
             }
         });
@@ -480,14 +594,72 @@
         window.addEventListener('resize', initCanvas);
         initCanvas(); animateCanvas();
 
-        // 2. FUNGSI PINTU MASUK & MESIN KETIK
+        // =========================================================================
+        // 2. ENGINE KANVAS KURSOR (JEJAK BINTANG MENGIKUTI JARI/MOUSE)
+        // =========================================================================
+        const cursorCanvas = document.getElementById('cursor-canvas');
+        const cCtx = cursorCanvas.getContext('2d');
+        let cursorTrails = [];
+
+        function initCursorCanvas() {
+            cursorCanvas.width = window.innerWidth;
+            cursorCanvas.height = window.innerHeight;
+        }
+
+        class TrailPoint {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.size = Math.random() * 8 + 4;
+                this.life = 1.0;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.life -= 0.05; // Cepat menghilang
+                this.size -= 0.2;
+            }
+            draw() {
+                cCtx.save();
+                cCtx.globalAlpha = Math.max(0, this.life);
+                cCtx.fillStyle = this.color;
+                cCtx.beginPath();
+                // Menggambar Bintang Sederhana
+                cCtx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
+                cCtx.fill();
+                cCtx.restore();
+            }
+        }
+
+        window.addEventListener('pointermove', (e) => {
+            let x = e.clientX || (e.touches && e.touches[0].clientX);
+            let y = e.clientY || (e.touches && e.touches[0].clientY);
+            if (x && y) cursorTrails.push(new TrailPoint(x, y));
+        });
+
+        function animateCursor() {
+            cCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+            for (let i = cursorTrails.length - 1; i >= 0; i--) {
+                cursorTrails[i].update();
+                cursorTrails[i].draw();
+                if (cursorTrails[i].life <= 0 || cursorTrails[i].size <= 0) {
+                    cursorTrails.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(animateCursor);
+        }
+
+        window.addEventListener('resize', initCursorCanvas);
+        initCursorCanvas(); animateCursor();
+
+        // =========================================================================
+        // 3. FUNGSI PINTU MASUK & MESIN KETIK
+        // =========================================================================
         function openGate() {
             const gate = document.getElementById('start-gate');
             const audio = document.getElementById('bg-audio');
             gate.classList.add('opened');
-            audio.volume = 0.4;
+            audio.volume = 0.5;
             audio.play().catch(error => console.log("Audio ditahan browser"));
-            setTimeout(typeWriterEffect, 800);
+            setTimeout(typeWriterEffect, 1000); // Mulai ngetik setelah gerbang kebuka
         }
 
         const textToType = "Siap untuk melihat kejutanmu hari ini? Scroll ke bawah ya...";
@@ -496,16 +668,23 @@
             if (typeIndex < textToType.length) {
                 document.getElementById("typewriter").innerHTML += textToType.charAt(typeIndex);
                 typeIndex++;
-                setTimeout(typeWriterEffect, 50);
+                setTimeout(typeWriterEffect, 60);
             }
         }
 
-        // 3. EFEK RIPPLE (GELOMBANG AIR PADA TOMBOL)
+        // =========================================================================
+        // 4. EFEK RIPPLE (GELOMBANG AIR PADA TOMBOL)
+        // =========================================================================
         document.querySelectorAll('.ripple-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 let rect = this.getBoundingClientRect();
-                let x = e.clientX - rect.left;
-                let y = e.clientY - rect.top;
+                // Handle untuk touch atau mouse
+                let clientX = e.clientX || (e.touches && e.touches[0].clientX) || rect.left + rect.width/2;
+                let clientY = e.clientY || (e.touches && e.touches[0].clientY) || rect.top + rect.height/2;
+                
+                let x = clientX - rect.left;
+                let y = clientY - rect.top;
+                
                 let ripple = document.createElement('span');
                 ripple.classList.add('ripple');
                 ripple.style.left = `${x}px`;
@@ -515,12 +694,40 @@
             });
         });
 
-        // 4. OBSERVER GALERI FOTO HORIZONTAL
-        const track = document.getElementById('gallery-track');
-        const cards = document.querySelectorAll('.gallery-card');
-        const observerOptions = { root: track, rootMargin: '0px', threshold: 0.6 };
+        // =========================================================================
+        // 5. EFEK 3D TILT (KARTU GOYANG MENGIKUTI MOUSE/JARI)
+        // =========================================================================
+        const tiltElements = document.querySelectorAll('.tilt-element');
+        tiltElements.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Kalkulasi rotasi 3D
+                const rotateX = ((y - centerY) / centerY) * -10; // Max 10 derajat
+                const rotateY = ((x - centerX) / centerX) * 10;
+                
+                el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                el.style.transition = 'transform 0.1s ease-out';
+            });
+            
+            // Reset posisi saat ditinggalkan
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+                el.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        });
 
-        const observer = new IntersectionObserver((entries) => {
+        // =========================================================================
+        // 6. OBSERVER HIGHLIGHT (GALERI HORIZONTAL & GAME VERTIKAL)
+        // =========================================================================
+        // A. Observer Galeri Foto (Horizontal)
+        const galleryTrack = document.getElementById('gallery-track');
+        const galleryCards = document.querySelectorAll('.gallery-card');
+        const galleryObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-focused');
@@ -528,10 +735,27 @@
                     entry.target.classList.remove('is-focused');
                 }
             });
-        }, observerOptions);
-        cards.forEach(card => observer.observe(card));
+        }, { root: galleryTrack, rootMargin: '0px', threshold: 0.6 });
+        
+        galleryCards.forEach(card => galleryObserver.observe(card));
 
-        // 5. LOGIKA LOGIN FORM MENGGUNAKAN NAMA ANGGIE
+        // B. Observer Game Misi (Vertikal) --> BARU DITAMBAHKAN SESUAI PERMINTAAN
+        const gameCards = document.querySelectorAll('.game-card');
+        const gameObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('game-focused');
+                } else {
+                    entry.target.classList.remove('game-focused');
+                }
+            });
+        }, { root: null, rootMargin: '-20% 0px -20% 0px', threshold: 0.5 });
+        
+        gameCards.forEach(card => gameObserver.observe(card));
+
+        // =========================================================================
+        // 7. LOGIKA LOGIN FORM MENGGUNAKAN NAMA ANGGIE DENGAN EFEK GETAR
+        // =========================================================================
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') processLogin();
         });
@@ -544,6 +768,7 @@
             const container = document.getElementById('login-container');
             let isSuccess = false;
 
+            // Logika Sandi Multi-User
             if (user === "anggi dwi aprilia" || user === "anggie dwi aprilia") {
                 if (pass === "200408") isSuccess = true;
             } else if (user === "aldo leo saputra") {
@@ -553,17 +778,25 @@
             }
 
             if (isSuccess) {
+                // Sembunyikan Error & Ubah Tombol Jadi Hijau
                 errMsg.style.display = 'none';
                 btn.textContent = 'MEMBUKA... ✨';
                 btn.style.background = 'var(--accent-green)';
                 btn.style.color = 'var(--border-color)';
+                btn.style.boxShadow = '0px 0px 0px transparent';
+                
+                // Jeda 1 Detik untuk efek visual sebelum pindah halaman
                 setTimeout(() => window.location.href = 'happybirthday.html', 1000);
             } else {
+                // Munculkan Error & Ubah Tombol Jadi Merah
                 errMsg.style.display = 'block';
                 btn.textContent = 'COBA LAGI';
                 btn.style.background = '#ff4757';
+                btn.style.color = '#fff';
+                
+                // Trigger Animasi Getar Hebat pada Kotak Login
                 container.classList.remove('shake-animation');
-                void container.offsetWidth;
+                void container.offsetWidth; // Force Reflow DOM agar animasi mengulang
                 container.classList.add('shake-animation');
             }
         }
