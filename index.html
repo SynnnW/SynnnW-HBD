@@ -11,7 +11,7 @@
     
     <style>
         /* ==========================================================================
-           1. RESET & CSS VARIABLES (NEO-BRUTALISM SETTINGS)
+           1. RESET & CSS VARIABLES (MAXIMALIST NEO-BRUTALISM)
            ========================================================================== */
         :root {
             --bg-color: #f8f9fa;       
@@ -19,18 +19,13 @@
             --accent-pink: #ff6b8a;    
             --accent-blue: #4facfe;    
             --accent-green: #ccff00;   
-            --accent-yellow: #ffd166;  
+            --accent-yellow: #ffd166;
+            --accent-orange: #ff9f43;  
             --border-thick: 4px;       
             --shadow-thick: 8px;       
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'Poppins', sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg-color);
@@ -39,137 +34,97 @@
             scroll-behavior: smooth;
         }
 
-        /* Latar Belakang Polkadot Solid (Tidak Tembus) */
+        /* ==========================================================================
+           2. EFEK VISUAL LATAR BELAKANG (CRT, GRAIN, PATTERN)
+           ========================================================================== */
         .bg-pattern {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3;
             background-color: var(--bg-color);
             background-image: radial-gradient(var(--border-color) 1.5px, transparent 1.5px);
             background-size: 35px 35px; opacity: 0.8;
         }
 
-        /* Kanvas Partikel Interaktif */
-        #bg-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none;
-            transition: opacity 0.3s;
+        .grain-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99997;
+            pointer-events: none; opacity: 0.04;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
         }
 
-        /* Kanvas Jejak Kursor Bintang */
-        #cursor-canvas {
+        #bg-canvas, #cursor-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 99998; pointer-events: none;
-            transition: opacity 0.3s;
+            pointer-events: none; transition: opacity 0.3s;
         }
+        #bg-canvas { z-index: -1; }
+        #cursor-canvas { z-index: 99998; }
 
         /* ==========================================================================
-           2. GLOBAL UTILITIES & BRUTALIST COMPONENTS
+           3. TOMBOL MUSIK & ANTI-LAG KEKINIAN
+           ========================================================================== */
+        .control-panel {
+            position: fixed; top: 15px; left: 15px; z-index: 999999;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .brutal-btn-small {
+            background: #fff; color: var(--border-color); padding: 8px 12px;
+            font-size: 0.75rem; border-radius: 12px; box-shadow: 4px 4px 0px var(--border-color);
+            border: 3px solid var(--border-color); font-weight: 900; transition: 0.2s;
+            cursor: pointer; text-transform: uppercase;
+        }
+        .brutal-btn-small:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--border-color); }
+        .music-off { background: #ff4757; color: #fff; text-decoration: line-through; }
+        .lite-on { background: var(--accent-yellow); }
+
+        /* ==========================================================================
+           4. BRUTALIST COMPONENTS & RIPPLE
            ========================================================================== */
         .brutal-card {
-            border: var(--border-thick) solid var(--border-color);
-            border-radius: 12px;
-            background: #ffffff;
-            box-shadow: var(--shadow-thick) var(--shadow-thick) 0px var(--border-color);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
+            border: var(--border-thick) solid var(--border-color); border-radius: 12px;
+            background: #ffffff; box-shadow: var(--shadow-thick) var(--shadow-thick) 0px var(--border-color);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative;
         }
 
         .brutal-button {
-            border: var(--border-thick) solid var(--border-color);
-            border-radius: 8px;
-            background: var(--accent-pink);
-            color: var(--border-color);
-            font-weight: 900;
-            text-transform: uppercase;
-            box-shadow: 6px 6px 0px var(--border-color);
-            cursor: pointer;
-            transition: all 0.15s ease-in-out;
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
+            border: var(--border-thick) solid var(--border-color); border-radius: 8px;
+            background: var(--accent-pink); color: var(--border-color); font-weight: 900;
+            text-transform: uppercase; box-shadow: 6px 6px 0px var(--border-color);
+            cursor: pointer; transition: all 0.15s ease-in-out; display: inline-block;
+            position: relative; overflow: hidden;
         }
+        .brutal-button:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px var(--border-color); }
 
-        .brutal-button:active {
-            transform: translate(6px, 6px);
-            box-shadow: 0px 0px 0px var(--border-color);
-        }
-
-        /* Efek Ripple (Gelombang Air) pada tombol */
         .ripple {
-            position: absolute;
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple-animation 0.6s ease-out;
-            background-color: rgba(255, 255, 255, 0.7);
+            position: absolute; border-radius: 50%; transform: scale(0);
+            animation: ripple-animation 0.6s ease-out; background-color: rgba(255, 255, 255, 0.7);
             pointer-events: none;
         }
-        @keyframes ripple-animation {
-            to { transform: scale(4); opacity: 0; }
-        }
-
-        /* TOMBOL ANTI-LAG MELAYANG */
-        #lite-mode-btn {
-            position: fixed;
-            top: 20px; right: 20px;
-            z-index: 999999;
-            background: #fff;
-            color: var(--border-color);
-            padding: 10px 15px;
-            font-size: 0.85rem;
-            border-radius: 20px;
-            box-shadow: 4px 4px 0px var(--border-color);
-            border: 3px solid var(--border-color);
-            font-weight: 900;
-            transition: 0.3s;
-        }
-        #lite-mode-btn.active-lite {
-            background: var(--accent-yellow);
-        }
+        @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
 
         /* ==========================================================================
-           3. OVERLAY PINTU MASUK (HELLO SCREEN - FIXED SOLID)
+           5. OVERLAY PINTU MASUK (HELLO SCREEN)
            ========================================================================== */
         #start-gate {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh;
-            background-color: var(--bg-color);
-            background-image: radial-gradient(var(--border-color) 2px, transparent 2px);
-            background-size: 30px 30px;
-            z-index: 99999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh;
+            background-color: var(--bg-color); background-image: radial-gradient(var(--border-color) 2px, transparent 2px);
+            background-size: 30px 30px; z-index: 99999; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
         }
-
         .gate-content-box {
-            background: #ffffff;
-            border: var(--border-thick) solid var(--border-color);
-            padding: 50px 30px;
-            border-radius: 16px;
-            box-shadow: 12px 12px 0px var(--border-color);
-            text-align: center;
-            animation: floatSlow 4s ease-in-out infinite;
+            background: #ffffff; border: var(--border-thick) solid var(--border-color);
+            padding: 50px 30px; border-radius: 16px; box-shadow: 12px 12px 0px var(--border-color);
+            text-align: center; animation: floatSlow 4s ease-in-out infinite;
         }
-
         #start-gate.opened { transform: translateY(-100%); pointer-events: none; }
-
-        .gate-btn {
-            background: var(--accent-green); padding: 20px 40px;
-            font-size: 1.5rem; letter-spacing: 2px;
-            margin-top: 20px;
-        }
-
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+        .gate-btn { background: var(--accent-green); padding: 20px 40px; font-size: 1.5rem; letter-spacing: 2px; margin-top: 20px; }
+        @keyframes floatSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         /* ==========================================================================
-           4. HERO SECTION (PEMBUKAAN)
+           6. HERO SECTION DENGAN MARQUEE & DEKORASI
            ========================================================================== */
         .hero-section {
-            height: 100vh; height: 100dvh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 20px; text-align: center; position: relative; overflow: hidden;
-            border-bottom: var(--border-thick) solid var(--border-color);
+            height: 100vh; height: 100dvh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; padding: 20px; text-align: center; 
+            position: relative; overflow: hidden; border-bottom: var(--border-thick) solid var(--border-color);
             background: transparent;
         }
 
@@ -178,52 +133,39 @@
             text-transform: uppercase; position: relative; z-index: 2;
             text-shadow: 2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff;
         }
-
         .hero-title .highlight-blue { color: var(--accent-blue); }
-        
         .hero-title .badge {
-            background: var(--accent-yellow); padding: 5px 20px;
-            border: var(--border-thick) solid var(--border-color); display: inline-block;
-            transform: rotate(-4deg); margin-top: 15px; box-shadow: 6px 6px 0px var(--border-color);
+            background: var(--accent-yellow); padding: 5px 20px; border: var(--border-thick) solid var(--border-color); 
+            display: inline-block; transform: rotate(-4deg); margin-top: 15px; box-shadow: 6px 6px 0px var(--border-color);
             animation: pulseBadge 2s infinite;
         }
-        
-        @keyframes pulseBadge {
-            0%, 100% { transform: rotate(-4deg) scale(1); }
-            50% { transform: rotate(-4deg) scale(1.05); }
-        }
+        @keyframes pulseBadge { 0%, 100% { transform: rotate(-4deg) scale(1); } 50% { transform: rotate(-4deg) scale(1.05); } }
 
         .typewriter-container {
-            margin-top: 30px; background: #fff; padding: 10px 15px;
-            border: 3px solid var(--border-color); display: inline-block;
-            box-shadow: 4px 4px 0px var(--border-color); transform: rotate(2deg);
+            margin-top: 30px; background: #fff; padding: 10px 15px; border: 3px solid var(--border-color); 
+            display: inline-block; box-shadow: 4px 4px 0px var(--border-color); transform: rotate(2deg);
         }
-        
         .typewriter-text { font-weight: 800; font-size: 1rem; color: var(--border-color); min-height: 24px; }
 
-        /* Dekorasi Mengambang Interaktif */
+        /* Floating Geometrics */
         .floating-shape { position: absolute; border: var(--border-thick) solid var(--border-color); z-index: 1; animation: spinAndFloat 20s linear infinite; }
         .shape-1 { width: 70px; height: 70px; background: var(--accent-pink); border-radius: 50%; top: 15%; left: 8%; }
         .shape-2 { width: 60px; height: 60px; background: var(--accent-blue); top: 25%; right: 10%; transform: rotate(15deg); }
         .shape-3 { width: 80px; height: 35px; background: var(--accent-green); bottom: 20%; left: 15%; transform: rotate(-25deg); }
+        @keyframes spinAndFloat { 0% { transform: rotate(0deg) translate(0, 0); } 50% { transform: rotate(180deg) translate(30px, 40px); } 100% { transform: rotate(360deg) translate(0, 0); } }
 
-        @keyframes spinAndFloat {
-            0% { transform: rotate(0deg) translate(0, 0); }
-            50% { transform: rotate(180deg) translate(30px, 40px); }
-            100% { transform: rotate(360deg) translate(0, 0); }
+        /* Marquee Tapes */
+        .marquee-tape {
+            position: absolute; width: 100vw; background: var(--accent-yellow);
+            border-top: var(--border-thick) solid var(--border-color); border-bottom: var(--border-thick) solid var(--border-color);
+            color: var(--border-color); font-weight: 900; font-size: 0.9rem; padding: 8px 0; overflow: hidden; white-space: nowrap; z-index: 10;
         }
-
-        /* Marquee Teks Berjalan */
-        .marquee-container {
-            position: absolute; bottom: 0; left: 0; width: 100%; background: var(--border-color);
-            color: var(--accent-green); padding: 12px 0; overflow: hidden; white-space: nowrap;
-            border-top: var(--border-thick) solid var(--border-color); z-index: 10;
-        }
-        .marquee-content { display: inline-block; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; animation: marquee 15s linear infinite; }
+        .marquee-bottom { bottom: 5%; transform: rotate(2deg) scale(1.1); background: var(--accent-orange); color: #fff;}
+        .marquee-content { display: inline-block; text-transform: uppercase; animation: marquee 12s linear infinite; letter-spacing: 2px;}
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* ==========================================================================
-           5. GALLERY SECTION (EFEK 3D TILT & HIGHLIGHT)
+           7. GALLERY SECTION (EFEK 3D TILT & HIGHLIGHT)
            ========================================================================== */
         .gallery-section { 
             padding: 90px 0; background: rgba(255,255,255,0.85); 
@@ -239,64 +181,34 @@
 
         .gallery-track {
             display: flex; gap: 30px; padding: 20px 30px 60px; overflow-x: auto;
-            scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
-            perspective: 1000px;
+            scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; perspective: 1000px;
         }
         .gallery-track::-webkit-scrollbar { display: none; } 
 
         .gallery-card {
-            flex: 0 0 75%; height: 450px; scroll-snap-align: center;
-            border: var(--border-thick) solid var(--border-color); border-radius: 16px;
-            position: relative; background: #ddd;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: scale(0.85) rotateY(10deg); opacity: 0.4; 
-            box-shadow: 0px 0px 0px var(--border-color);
-            transform-style: preserve-3d;
+            flex: 0 0 75%; height: 450px; scroll-snap-align: center; border: var(--border-thick) solid var(--border-color); border-radius: 16px;
+            position: relative; background: #ddd; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.85) rotateY(10deg); opacity: 0.4; box-shadow: 0px 0px 0px var(--border-color); transform-style: preserve-3d;
         }
-        
-        .gallery-card img { 
-            width: 100%; height: 100%; object-fit: cover; border-radius: 12px;
-            transition: transform 0.5s ease; 
-        }
-        
-        .gallery-card.is-focused { 
-            transform: scale(1.05) rotateY(0deg); opacity: 1; 
-            box-shadow: 15px 15px 0px var(--border-color); z-index: 10; 
-        }
+        .gallery-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; transition: transform 0.5s ease; }
+        .gallery-card.is-focused { transform: scale(1.05) rotateY(0deg); opacity: 1; box-shadow: 15px 15px 0px var(--border-color); z-index: 10; }
         .gallery-card.is-focused img { transform: scale(1.05); }
 
         /* ==========================================================================
-           6. GAMES SECTION
+           8. GAMES SECTION
            ========================================================================== */
         .games-section { padding: 90px 20px; background: transparent; border-bottom: var(--border-thick) solid var(--border-color); }
         .games-grid { display: flex; flex-direction: column; gap: 50px; margin-top: 50px; perspective: 1000px; }
         
         .game-card { 
-            display: block; text-decoration: none; color: var(--border-color); 
-            padding: 25px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); 
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0.5;
-            transform: scale(0.9) translateY(30px);
-            box-shadow: 5px 5px 0px var(--border-color);
+            display: block; text-decoration: none; color: var(--border-color); padding: 25px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); 
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0.5; transform: scale(0.9) translateY(30px); box-shadow: 5px 5px 0px var(--border-color);
         }
-
-        .game-card.game-focused {
-            opacity: 1;
-            transform: scale(1.02) translateY(0);
-            box-shadow: 15px 15px 0px var(--border-color);
-            z-index: 10;
-        }
-
-        .game-card.game-focused .play-icon {
-            transform: rotate(45deg) scale(1.2);
-            background: var(--accent-pink);
-            color: #fff;
-        }
+        .game-card.game-focused { opacity: 1; transform: scale(1.02) translateY(0); box-shadow: 15px 15px 0px var(--border-color); z-index: 10; }
+        .game-card.game-focused .play-icon { transform: rotate(45deg) scale(1.2); background: var(--accent-pink); color: #fff; }
 
         .game-thumbnail { 
-            width: 100%; height: 200px; border: var(--border-thick) solid var(--border-color); 
-            border-radius: 12px; overflow: hidden; margin-bottom: 25px; background: #ccc; 
-            box-shadow: inset 0px 0px 20px rgba(0,0,0,0.2);
+            width: 100%; height: 200px; border: var(--border-thick) solid var(--border-color); border-radius: 12px; overflow: hidden; margin-bottom: 25px; background: #ccc; box-shadow: inset 0px 0px 20px rgba(0,0,0,0.2);
         }
         .game-thumbnail img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .game-card.game-focused .game-thumbnail img { transform: scale(1.1); }
@@ -304,42 +216,27 @@
         .game-info { display: flex; justify-content: space-between; align-items: center; }
         .game-info h3 { font-size: 1.6rem; font-weight: 900; text-transform: uppercase; }
         .game-info p { font-size: 0.9rem; font-weight: 700; margin-top: 5px; color: #555; }
-        
-        .play-icon { 
-            background: var(--accent-yellow); width: 50px; height: 50px; 
-            border: var(--border-thick) solid var(--border-color); border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; 
-            font-size: 1.5rem; font-weight: 900; transition: 0.4s;
-        }
+        .play-icon { background: var(--accent-yellow); width: 50px; height: 50px; border: var(--border-thick) solid var(--border-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; font-weight: 900; transition: 0.4s; }
 
         /* ==========================================================================
-           7. LOGIN SECTION & ALERT BAR
+           9. LOGIN SECTION & ALERT BAR
            ========================================================================== */
         .login-section { padding: 120px 20px; background: var(--accent-blue); display: flex; justify-content: center; align-items: center; position: relative; z-index: 5;}
         
         .login-box { 
             width: 100%; max-width: 420px; background: #ffffff; padding: 45px 30px; 
-            text-align: center; box-shadow: 15px 15px 0px var(--border-color);
-            transform-style: preserve-3d;
+            text-align: center; box-shadow: 15px 15px 0px var(--border-color); transform-style: preserve-3d;
         }
-        
         .login-box h2 { font-size: 2.4rem; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; }
         .login-box p { font-size: 1rem; font-weight: 700; color: #666; margin-bottom: 35px; }
 
         .alert-bar {
-            display: block; width: 100%; padding: 18px 15px; margin-bottom: 35px;
-            background: var(--accent-yellow); color: var(--border-color);
-            border: var(--border-thick) solid var(--border-color); border-radius: 12px;
-            font-weight: 900; font-size: 0.9rem; text-transform: uppercase; text-decoration: none;
-            box-shadow: 6px 6px 0px var(--border-color); animation: pulseAlert 2.5s infinite;
-            transition: 0.2s; letter-spacing: 0.5px;
+            display: block; width: 100%; padding: 18px 15px; margin-bottom: 35px; background: var(--accent-yellow); color: var(--border-color);
+            border: var(--border-thick) solid var(--border-color); border-radius: 12px; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; text-decoration: none;
+            box-shadow: 6px 6px 0px var(--border-color); animation: pulseAlert 2.5s infinite; transition: 0.2s; letter-spacing: 0.5px;
         }
         .alert-bar:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px var(--border-color); animation: none; }
-        
-        @keyframes pulseAlert { 
-            0%, 100% { background: var(--accent-yellow); color: var(--border-color); } 
-            50% { background: var(--accent-pink); color: #fff; } 
-        }
+        @keyframes pulseAlert { 0%, 100% { background: var(--accent-yellow); color: var(--border-color); } 50% { background: var(--accent-pink); color: #fff; } }
 
         .input-wrapper { margin-bottom: 30px; text-align: left; }
         .input-wrapper label { display: block; font-size: 0.9rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
@@ -356,24 +253,22 @@
             background: #ff4757; padding: 15px; border: 3px solid var(--border-color); border-radius: 8px; 
             text-transform: uppercase; letter-spacing: 1px;
         }
-
-        @keyframes shakeHard { 
-            0%, 100% { transform: translateX(0); } 
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px) rotate(-1deg); } 
-            20%, 40%, 60%, 80% { transform: translateX(10px) rotate(1deg); } 
-        }
+        @keyframes shakeHard { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-10px) rotate(-1deg); } 20%, 40%, 60%, 80% { transform: translateX(10px) rotate(1deg); } }
         .shake-animation { animation: shakeHard 0.5s ease-in-out; }
 
     </style>
 </head>
 <body>
 
-    <button id="lite-mode-btn" class="brutal-button ripple-btn">⚡ ANTI-LAG</button>
+    <div class="control-panel">
+        <button id="musicToggle" class="brutal-btn-small ripple-btn">🎵 BGM: OFF</button>
+        <button id="lite-mode-btn" class="brutal-btn-small ripple-btn">⚡ ANTI-LAG</button>
+    </div>
 
     <div class="bg-pattern"></div>
     <canvas id="bg-canvas"></canvas>
-    
     <canvas id="cursor-canvas"></canvas>
+    <div class="grain-overlay"></div>
 
     <audio id="bg-audio" loop preload="auto">
         <source src="music/opening.mp3" type="audio/mpeg" />
@@ -403,9 +298,9 @@
             <div class="typewriter-text" id="typewriter"></div>
         </div>
 
-        <div class="marquee-container">
+        <div class="marquee-tape marquee-bottom">
             <div class="marquee-content">
-                A SPECIAL DAY FOR A SPECIAL PERSON • HAPPY BIRTHDAY PRINCESS • SCROLL DOWN TO UNLOCK • FIND THE CLUES • A SPECIAL DAY FOR A SPECIAL PERSON • HAPPY BIRTHDAY PRINCESS • SCROLL DOWN TO UNLOCK • FIND THE CLUES •
+                A SPECIAL DAY FOR PRINCESS • HAPPY BIRTHDAY • SCROLL DOWN TO UNLOCK • FIND THE CLUES • A SPECIAL DAY FOR PRINCESS • HAPPY BIRTHDAY • SCROLL DOWN TO UNLOCK •
             </div>
         </div>
     </section>
@@ -491,7 +386,7 @@
 
             <div class="input-wrapper">
                 <label>Kode Rahasia</label>
-                <input type="password" id="inputPassword" placeholder="Enam angka rahasia" autocomplete="off">
+                <input type="password" id="inputPassword" placeholder="Enam digit sandi rahasia" autocomplete="off">
             </div>
 
             <button class="brutal-button btn-submit ripple-btn" id="btn-login" onclick="processLogin()">BUKA SEKARANG</button>
@@ -505,7 +400,30 @@
 
     <script>
         // =========================================================================
-        // 0. LOGIKA TOMBOL ANTI-LAG (PERFORMANCE MODE)
+        // 0. KONTROL AUDIO (BGM)
+        // =========================================================================
+        const bgAudio = document.getElementById('bg-audio');
+        const musicBtn = document.getElementById('musicToggle');
+        let isMusicPlaying = false;
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgAudio.pause();
+                musicBtn.textContent = '🎵 BGM: OFF';
+                musicBtn.classList.add('music-off');
+            } else {
+                bgAudio.volume = 0.4;
+                bgAudio.play().catch(e => console.log("Audio diblokir browser"));
+                musicBtn.textContent = '🎵 BGM: ON';
+                musicBtn.classList.remove('music-off');
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        musicBtn.addEventListener('click', toggleMusic);
+
+        // =========================================================================
+        // 1. LOGIKA TOMBOL ANTI-LAG (PERFORMANCE MODE)
         // =========================================================================
         let isLiteMode = false;
         const liteModeBtn = document.getElementById('lite-mode-btn');
@@ -515,33 +433,28 @@
         liteModeBtn.addEventListener('click', function() {
             isLiteMode = !isLiteMode;
             if (isLiteMode) {
-                // Aktifkan Mode Ringan (Matikan Efek Berat)
                 this.textContent = '🔥 MODE GELO';
-                this.classList.add('active-lite');
+                this.classList.add('lite-on');
                 bgCanvasEl.style.opacity = '0';
                 cursorCanvasEl.style.opacity = '0';
-                
-                // Matikan tilt 3D dengan force reset
-                document.querySelectorAll('.tilt-element').forEach(el => {
-                    el.style.transform = '';
-                });
+                document.querySelectorAll('.tilt-element').forEach(el => { el.style.transform = ''; });
             } else {
-                // Aktifkan Mode Gelo (Semua Nyala)
                 this.textContent = '⚡ ANTI-LAG';
-                this.classList.remove('active-lite');
+                this.classList.remove('lite-on');
                 bgCanvasEl.style.opacity = '1';
                 cursorCanvasEl.style.opacity = '1';
             }
         });
 
         // =========================================================================
-        // 1. ENGINE CANVAS INTERAKTIF UTAMA (PARTIKEL & LEDAKAN SENTUHAN)
+        // 2. ENGINE CANVAS INTERAKTIF UTAMA (PARTIKEL, LEDAKAN & CONFETTI)
         // =========================================================================
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
         let sparks = [];
-        const colors = ['#ff6b8a', '#4facfe', '#ffd166', '#ccff00'];
+        let confettis = [];
+        const colors = ['#ff6b8a', '#4facfe', '#ffd166', '#ccff00', '#ff9f43'];
 
         function initCanvas() {
             canvas.width = window.innerWidth;
@@ -553,71 +466,63 @@
 
         class Particle {
             constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
+                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 15 + 8;
-                this.speedX = (Math.random() - 0.5) * 1.5;
-                this.speedY = (Math.random() - 0.5) * 1.5;
+                this.speedX = (Math.random() - 0.5) * 1.5; this.speedY = (Math.random() - 0.5) * 1.5;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.angle = Math.random() * 360;
                 this.type = Math.random() > 0.5 ? 'rect' : 'circle';
             }
             update() {
                 this.x += this.speedX; this.y += this.speedY; this.angle += 1;
-                if(this.x < -30) this.x = canvas.width + 30;
-                if(this.x > canvas.width + 30) this.x = -30;
-                if(this.y < -30) this.y = canvas.height + 30;
-                if(this.y > canvas.height + 30) this.y = -30;
+                if(this.x < -30) this.x = canvas.width + 30; if(this.x > canvas.width + 30) this.x = -30;
+                if(this.y < -30) this.y = canvas.height + 30; if(this.y > canvas.height + 30) this.y = -30;
             }
             draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle * Math.PI / 180);
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = 0.4;
-                ctx.beginPath();
-                if(this.type === 'rect') {
-                    ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
-                } else {
-                    ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
-                }
-                ctx.fill(); 
-                ctx.restore();
+                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle * Math.PI / 180);
+                ctx.fillStyle = this.color; ctx.globalAlpha = 0.4; ctx.beginPath();
+                if(this.type === 'rect') ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
+                else ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+                ctx.fill(); ctx.restore();
             }
         }
 
         class Spark {
             constructor(x, y) {
-                this.x = x; this.y = y;
-                this.size = Math.random() * 12 + 5;
-                this.speedX = (Math.random() - 0.5) * 12;
-                this.speedY = (Math.random() - 0.5) * 12;
+                this.x = x; this.y = y; this.size = Math.random() * 12 + 5;
+                this.speedX = (Math.random() - 0.5) * 12; this.speedY = (Math.random() - 0.5) * 12;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.life = 1.0;
-                this.decay = Math.random() * 0.04 + 0.02;
-                this.angle = Math.random() * 360;
+                this.life = 1.0; this.decay = Math.random() * 0.04 + 0.02; this.angle = Math.random() * 360;
             }
-            update() {
-                this.x += this.speedX; this.y += this.speedY; 
-                this.life -= this.decay; this.angle += 5;
-            }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life -= this.decay; this.angle += 5; }
             draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle * Math.PI / 180);
-                ctx.globalAlpha = Math.max(0, this.life);
-                ctx.fillStyle = this.color;
-                ctx.strokeStyle = '#111';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
-                ctx.fill(); ctx.stroke();
-                ctx.restore();
+                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle * Math.PI / 180);
+                ctx.globalAlpha = Math.max(0, this.life); ctx.fillStyle = this.color;
+                ctx.strokeStyle = '#111'; ctx.lineWidth = 2; ctx.beginPath();
+                ctx.rect(-this.size/2, -this.size/2, this.size, this.size); ctx.fill(); ctx.stroke(); ctx.restore();
+            }
+        }
+
+        class Confetti {
+            constructor() {
+                this.x = canvas.width / 2; this.y = canvas.height / 2 + 200;
+                this.size = Math.random() * 15 + 5;
+                this.speedX = (Math.random() - 0.5) * 30; this.speedY = (Math.random() * -20) - 10;
+                this.gravity = 0.8;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.angle = Math.random() * 360; this.spin = (Math.random() - 0.5) * 15;
+            }
+            update() { this.speedY += this.gravity; this.x += this.speedX; this.y += this.speedY; this.angle += this.spin; }
+            draw() {
+                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle * Math.PI / 180);
+                ctx.fillStyle = this.color; ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.rect(-this.size/2, -this.size/2, this.size, this.size);
+                ctx.fill(); ctx.stroke(); ctx.restore();
             }
         }
 
         window.addEventListener('pointerdown', (e) => {
-            if (isLiteMode) return; // Matikan ledakan jika Anti-Lag aktif
+            if (isLiteMode) return;
             let x = e.clientX || (e.touches && e.touches[0].clientX);
             let y = e.clientY || (e.touches && e.touches[0].clientY);
             if (x && y) {
@@ -626,13 +531,24 @@
             }
         });
 
+        function fireConfetti() {
+            if (isLiteMode) { // Kalau lite mode, nyalain bentar buat confetti
+                bgCanvasEl.style.opacity = '1';
+            }
+            for(let i=0; i<150; i++) confettis.push(new Confetti());
+        }
+
         function animateCanvas() {
-            if (!isLiteMode) { // Berhenti render jika Anti-Lag aktif untuk hemat CPU
+            if (!isLiteMode || confettis.length > 0) { 
                 ctx.clearRect(0,0,canvas.width, canvas.height);
-                particles.forEach(p => { p.update(); p.draw(); });
+                if (!isLiteMode) particles.forEach(p => { p.update(); p.draw(); });
                 for (let i = sparks.length - 1; i >= 0; i--) {
                     sparks[i].update(); sparks[i].draw();
                     if (sparks[i].life <= 0) sparks.splice(i, 1);
+                }
+                for (let i = confettis.length - 1; i >= 0; i--) {
+                    confettis[i].update(); confettis[i].draw();
+                    if (confettis[i].y > canvas.height + 50) confettis.splice(i, 1);
                 }
             }
             requestAnimationFrame(animateCanvas);
@@ -642,43 +558,30 @@
         initCanvas(); animateCanvas();
 
         // =========================================================================
-        // 2. ENGINE KANVAS KURSOR (JEJAK BINTANG MENGIKUTI JARI/MOUSE)
+        // 3. ENGINE KANVAS KURSOR (JEJAK BINTANG)
         // =========================================================================
         const cursorCanvas = document.getElementById('cursor-canvas');
         const cCtx = cursorCanvas.getContext('2d');
         let cursorTrails = [];
 
-        function initCursorCanvas() {
-            cursorCanvas.width = window.innerWidth;
-            cursorCanvas.height = window.innerHeight;
-        }
+        function initCursorCanvas() { cursorCanvas.width = window.innerWidth; cursorCanvas.height = window.innerHeight; }
 
         class TrailPoint {
             constructor(x, y) {
-                this.x = x; this.y = y;
-                this.size = Math.random() * 8 + 4;
-                this.life = 1.0;
-                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.x = x; this.y = y; this.size = Math.random() * 8 + 4;
+                this.life = 1.0; this.color = colors[Math.floor(Math.random() * colors.length)];
             }
-            update() {
-                this.life -= 0.05; 
-                this.size -= 0.2;
-            }
+            update() { this.life -= 0.05; this.size -= 0.2; }
             draw() {
-                cCtx.save();
-                cCtx.globalAlpha = Math.max(0, this.life);
-                cCtx.fillStyle = this.color;
-                cCtx.beginPath();
-                cCtx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
-                cCtx.fill();
-                cCtx.restore();
+                cCtx.save(); cCtx.globalAlpha = Math.max(0, this.life); cCtx.fillStyle = this.color;
+                cCtx.beginPath(); cCtx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
+                cCtx.fill(); cCtx.restore();
             }
         }
 
         window.addEventListener('pointermove', (e) => {
-            if (isLiteMode) return; // Matikan jejak jika Anti-Lag aktif
-            let x = e.clientX || (e.touches && e.touches[0].clientX);
-            let y = e.clientY || (e.touches && e.touches[0].clientY);
+            if (isLiteMode) return; 
+            let x = e.clientX || (e.touches && e.touches[0].clientX); let y = e.clientY || (e.touches && e.touches[0].clientY);
             if (x && y) cursorTrails.push(new TrailPoint(x, y));
         });
 
@@ -686,11 +589,8 @@
             if (!isLiteMode) {
                 cCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
                 for (let i = cursorTrails.length - 1; i >= 0; i--) {
-                    cursorTrails[i].update();
-                    cursorTrails[i].draw();
-                    if (cursorTrails[i].life <= 0 || cursorTrails[i].size <= 0) {
-                        cursorTrails.splice(i, 1);
-                    }
+                    cursorTrails[i].update(); cursorTrails[i].draw();
+                    if (cursorTrails[i].life <= 0 || cursorTrails[i].size <= 0) cursorTrails.splice(i, 1);
                 }
             }
             requestAnimationFrame(animateCursor);
@@ -700,14 +600,12 @@
         initCursorCanvas(); animateCursor();
 
         // =========================================================================
-        // 3. FUNGSI PINTU MASUK & MESIN KETIK
+        // 4. FUNGSI PINTU MASUK & MESIN KETIK
         // =========================================================================
         function openGate() {
             const gate = document.getElementById('start-gate');
-            const audio = document.getElementById('bg-audio');
             gate.classList.add('opened');
-            audio.volume = 0.5;
-            audio.play().catch(error => console.log("Audio ditahan browser"));
+            if(!isMusicPlaying) toggleMusic(); // Auto play lagu pas gate dibuka
             setTimeout(typeWriterEffect, 1000); 
         }
 
@@ -716,70 +614,50 @@
         function typeWriterEffect() {
             if (typeIndex < textToType.length) {
                 document.getElementById("typewriter").innerHTML += textToType.charAt(typeIndex);
-                typeIndex++;
-                setTimeout(typeWriterEffect, 60);
+                typeIndex++; setTimeout(typeWriterEffect, 60);
             }
         }
 
         // =========================================================================
-        // 4. EFEK RIPPLE (GELOMBANG AIR PADA TOMBOL)
+        // 5. EFEK RIPPLE & TILT 3D
         // =========================================================================
         document.querySelectorAll('.ripple-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 let rect = this.getBoundingClientRect();
                 let clientX = e.clientX || (e.touches && e.touches[0].clientX) || rect.left + rect.width/2;
                 let clientY = e.clientY || (e.touches && e.touches[0].clientY) || rect.top + rect.height/2;
-                
-                let x = clientX - rect.left;
-                let y = clientY - rect.top;
-                
-                let ripple = document.createElement('span');
-                ripple.classList.add('ripple');
-                ripple.style.left = `${x}px`;
-                ripple.style.top = `${y}px`;
-                this.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
+                let x = clientX - rect.left; let y = clientY - rect.top;
+                let ripple = document.createElement('span'); ripple.classList.add('ripple');
+                ripple.style.left = `${x}px`; ripple.style.top = `${y}px`;
+                this.appendChild(ripple); setTimeout(() => ripple.remove(), 600);
             });
         });
 
-        // =========================================================================
-        // 5. EFEK 3D TILT (KARTU GOYANG MENGIKUTI MOUSE/JARI)
-        // =========================================================================
         const tiltElements = document.querySelectorAll('.tilt-element');
         tiltElements.forEach(el => {
             el.addEventListener('mousemove', (e) => {
-                if (isLiteMode) return; // Matikan goyangan 3D jika Anti-Lag aktif
+                if (isLiteMode) return; 
                 const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -10; 
-                const rotateY = ((x - centerX) / centerX) * 10;
-                
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                const centerX = rect.width / 2; const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -10; const rotateY = ((x - centerX) / centerX) * 10;
                 el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
                 el.style.transition = 'transform 0.1s ease-out';
             });
-            
             el.addEventListener('mouseleave', () => {
-                el.style.transform = '';
-                el.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                el.style.transform = ''; el.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
             });
         });
 
         // =========================================================================
-        // 6. OBSERVER HIGHLIGHT (GALERI HORIZONTAL & GAME VERTIKAL)
+        // 6. OBSERVER HIGHLIGHT (GALERI & GAME)
         // =========================================================================
         const galleryTrack = document.getElementById('gallery-track');
         const galleryCards = document.querySelectorAll('.gallery-card');
         const galleryObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-focused');
-                } else {
-                    entry.target.classList.remove('is-focused');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('is-focused');
+                else entry.target.classList.remove('is-focused');
             });
         }, { root: galleryTrack, rootMargin: '0px', threshold: 0.6 });
         galleryCards.forEach(card => galleryObserver.observe(card));
@@ -787,17 +665,14 @@
         const gameCards = document.querySelectorAll('.game-card');
         const gameObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('game-focused');
-                } else {
-                    entry.target.classList.remove('game-focused');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('game-focused');
+                else entry.target.classList.remove('game-focused');
             });
         }, { root: null, rootMargin: '-20% 0px -20% 0px', threshold: 0.5 });
         gameCards.forEach(card => gameObserver.observe(card));
 
         // =========================================================================
-        // 7. LOGIKA LOGIN FORM MENGGUNAKAN NAMA ANGGIE
+        // 7. LOGIKA LOGIN FORM (PASSWORD TYPO: 200408!)
         // =========================================================================
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') processLogin();
@@ -811,12 +686,13 @@
             const container = document.getElementById('login-container');
             let isSuccess = false;
 
+            // CEK SANDI BARU YANG ADA TANDA SERUNYA
             if (user === "anggi dwi aprilia" || user === "anggie dwi aprilia") {
-                if (pass === "200408") isSuccess = true;
+                if (pass === "200408!") isSuccess = true;
             } else if (user === "aldo leo saputra") {
-                if (pass === "280708") isSuccess = true;
+                if (pass === "280708!") isSuccess = true;
             } else if (user === "alief hidayat") {
-                if (pass === "200408") isSuccess = true;
+                if (pass === "200408!") isSuccess = true;
             }
 
             if (isSuccess) {
@@ -825,7 +701,12 @@
                 btn.style.background = 'var(--accent-green)';
                 btn.style.color = 'var(--border-color)';
                 btn.style.boxShadow = '0px 0px 0px transparent';
-                setTimeout(() => window.location.href = 'happybirthday.html', 1000);
+                
+                // Tembakkan Confetti Kemenangan!
+                fireConfetti();
+                
+                // Tunggu 1.5 detik biar bisa nikmatin confetti sebelum pindah
+                setTimeout(() => window.location.href = 'happybirthday.html', 1500);
             } else {
                 errMsg.style.display = 'block';
                 btn.textContent = 'COBA LAGI';
