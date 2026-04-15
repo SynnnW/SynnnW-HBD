@@ -806,8 +806,22 @@
     <div id="rain-container"></div>
 
     <script>
-        // 1. SPLASH SCREEN
-        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 1200); typeWriter(); });
+        // 1. SPLASH SCREEN (Dengan Fallback) 
+        let isLoaded = false; 
+        function hideSplashScreen() { 
+            if (isLoaded) return; 
+            isLoaded = true; 
+            document.getElementById('splash-screen').classList.add('hidden'); 
+            typeWriter(); 
+        } 
+        
+        // Normal: tunggu 1.2 detik setelah semua file beres dimuat
+        window.addEventListener('load', () => { 
+            setTimeout(hideSplashScreen, 1200); 
+        }); 
+        
+        // Fallback: Paksa loading hilang maksimal setelah 5 detik walaupun ada gambar/musik yang error
+        setTimeout(hideSplashScreen, 5000);
 
         // 2. DARK MODE TOGGLE
         function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode')); }
