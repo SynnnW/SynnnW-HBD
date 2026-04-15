@@ -244,7 +244,25 @@
         .play-icon { background: var(--accent-yellow); width: 60px; height: 60px; border: var(--border-thick) solid var(--border-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; font-weight: 900; transition: 0.5s; }
 
         /* ==========================================================================
-           10. LOGIN SECTION & THE TROLL BUTTON
+           10. AI ASSISTANT SECTION
+           ========================================================================== */
+        .ai-section { padding: 100px 20px; background: var(--accent-pink); border-bottom: var(--border-thick) solid var(--border-color); position: relative; z-index: 5; }
+        .ai-box { background: #fff; padding: 40px; border-radius: 25px; border: var(--border-thick) solid var(--border-color); box-shadow: 15px 15px 0px var(--border-color); max-width: 600px; margin: 0 auto; text-align: left;}
+        .ai-box h2 { font-weight: 900; font-size: 2.2rem; margin-bottom: 10px; text-transform: uppercase;}
+        .ai-box p { font-weight: 700; font-size: 1rem; margin-bottom: 25px; color: #555;}
+        
+        .ai-input-group { display: flex; flex-direction: column; gap: 15px; }
+        .ai-input { padding: 18px; border: var(--border-thick) solid var(--border-color); border-radius: 15px; font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 700; outline: none; transition: 0.2s; background: var(--bg-color);}
+        .ai-input:focus { box-shadow: 8px 8px 0px var(--accent-blue); transform: translate(-4px, -4px); background: #fff;}
+        .ai-btn { padding: 18px; background: var(--accent-yellow); color: var(--border-color); font-weight: 900; font-size: 1.2rem; border: var(--border-thick) solid var(--border-color); border-radius: 15px; cursor: pointer; text-transform: uppercase; box-shadow: 6px 6px 0px var(--border-color); transition: 0.2s;}
+        .ai-btn:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px transparent;}
+        
+        .ai-response-box { margin-top: 25px; padding: 20px; border: 3px dashed var(--border-color); border-radius: 15px; background: #f0f0f0; font-weight: 700; display: none; line-height: 1.6; font-size: 1.05rem;}
+        .ai-loading { font-weight: 900; font-size: 1.1rem; animation: blink 1s infinite; display: none; margin-top: 20px; color: var(--border-color); text-align: center;}
+        @keyframes blink { 50% { opacity: 0.5; } }
+
+        /* ==========================================================================
+           11. LOGIN SECTION & THE TROLL BUTTON
            ========================================================================== */
         .login-section { padding: 150px 20px; background: var(--accent-blue); display: flex; justify-content: center; align-items: center; position: relative; z-index: 5;}
         
@@ -394,6 +412,20 @@
         </div>
     </section>
 
+    <!-- BAGIAN BARU: AI ASSISTANT -->
+    <section class="ai-section">
+        <div class="ai-box brutal-card">
+            <h2>🤖 Tanya Asisten Aldo</h2>
+            <p>Ada kesulitan cari clue? Atau mau nanya sesuatu sebelum masuk? Ketik aja keluh kesahmu di sini, nanti dibantuin!</p>
+            <div class="ai-input-group">
+                <input type="text" id="aiQuery" class="ai-input" placeholder="Misal: Aldo clue sandinya apaan sih? Susah amat!">
+                <button class="ai-btn ripple-btn" id="aiSubmitBtn" onclick="askAI()">Tanya Asisten 🧠</button>
+            </div>
+            <div id="aiLoading" class="ai-loading">Bentar ya cantik, lagi nyari jawabannya... ⏳</div>
+            <div id="aiResponse" class="ai-response-box"></div>
+        </div>
+    </section>
+
     <section class="login-section" id="form-login">
         <div class="brutal-card login-box" id="login-container">
             <h2 id="secret-title" class="secret-title"> HAY SAYANG 🎁</h2>
@@ -424,13 +456,22 @@
 
     <script>
         // =========================================================================
-        // 1. SPLASH SCREEN LOGIC
+        // 1. SPLASH SCREEN LOGIC (DENGAN FALLBACK ANTI-NYANGKUT)
         // =========================================================================
+        let isLoaded = false;
+        function hideSplashScreen() {
+            if (isLoaded) return;
+            isLoaded = true;
+            const splash = document.getElementById('splash-screen');
+            if (splash) splash.classList.add('hidden');
+        }
+
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('splash-screen').classList.add('hidden');
-            }, 1500); // Menunggu 1.5 detik sebelum layar utama muncul
+            setTimeout(hideSplashScreen, 1500); // Menunggu 1.5 detik setelah beres
         });
+
+        // Fallback: Paksa loading hilang maksimal setelah 5 detik (jaga-jaga ada gambar error)
+        setTimeout(hideSplashScreen, 5000);
 
         // =========================================================================
         // 2. KONTROL AUDIO (BGM)
@@ -541,10 +582,9 @@
             }
         }
 
-        // Event Sentuh untuk Kembang Api (Dibatasi di canvas belakang)
         window.addEventListener('pointerdown', (e) => {
-            // Hindari klik meledak kalau yang diklik adalah tombol/input
-            if (isLiteMode || e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'A') return;
+            // Hindari meledak kalau klik di input form, tombol, atau di bagian AI
+            if (isLiteMode || e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'A' || e.target.closest('.ai-section')) return;
             let x = e.clientX || (e.touches && e.touches[0].clientX); let y = e.clientY || (e.touches && e.touches[0].clientY);
             if (x && y) {
                 let sparkCount = Math.floor(Math.random() * 8) + 10;
@@ -609,7 +649,7 @@
         });
 
         // =========================================================================
-        // 7. EFEK PARALLAX SCROLLING (DEKORASI BERGERAK 3D)
+        // 7. EFEK PARALLAX SCROLLING
         // =========================================================================
         const parallaxShapes = document.querySelectorAll('.parallax-shape');
         window.addEventListener('scroll', () => {
@@ -622,7 +662,7 @@
         });
 
         // =========================================================================
-        // 8. LOGIKA DRAG-TO-SCROLL GALERI (BIAR BISA DI-GESER MANUAL)
+        // 8. LOGIKA DRAG-TO-SCROLL GALERI
         // =========================================================================
         const slider = document.getElementById('gallery-track');
         let isDown = false; let startX; let scrollLeft;
@@ -639,7 +679,7 @@
             if (!isDown) return;
             e.preventDefault();
             const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 2; // Kecepatan scroll
+            const walk = (x - startX) * 2;
             slider.scrollLeft = scrollLeft - walk;
         });
 
@@ -749,6 +789,76 @@
                 container.classList.remove('shake-animation');
                 void container.offsetWidth; 
                 container.classList.add('shake-animation');
+            }
+        }
+
+        // =========================================================================
+        // 13. GEMINI AI ASSISTANT (FITUR BARU)
+        // =========================================================================
+        const apiKey = ""; // API Key Gemini otomatis disediakan environment
+
+        async function fetchWithRetry(url, options, retries = 5) {
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await new Promise(res => setTimeout(res, delays[i]));
+                }
+            }
+        }
+
+        async function askAI() {
+            const query = document.getElementById('aiQuery').value.trim();
+            const responseBox = document.getElementById('aiResponse');
+            const loadingBox = document.getElementById('aiLoading');
+            const btn = document.getElementById('aiSubmitBtn');
+
+            if (!query) {
+                alert("Ketik sesuatu dulu dong sayang!");
+                return;
+            }
+
+            // Atur status UI
+            responseBox.style.display = 'none';
+            loadingBox.style.display = 'block';
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+
+            // Prompt Sistem agar AI bertingkah seperti Aldo
+            const systemPrompt = "Kamu adalah asisten AI yang dibuat oleh Aldo (atau Leo) untuk memandu pacarnya, Anggie, di website ulang tahunnya. Jawab dengan gaya bahasa gaul, santai, lucu, dan sedikit manja/gombal. PENTING: Jika Anggie bertanya tentang password, clue, atau kunci masuk, JANGAN PERNAH sebutkan password aslinya (200408!). Berikan saja petunjuk samar seperti 'coba ingat-ingat tanggal jadian kita sayang' atau suruh dia main game Flappy Bird / 2048 di atas. Jawablah maksimal 3 kalimat saja.";
+
+            const payload = {
+                contents: [{ parts: [{ text: query }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                const result = await fetchWithRetry(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    responseBox.innerHTML = text.replace(/\n/g, '<br>');
+                    responseBox.style.display = 'block';
+                } else {
+                    throw new Error("Empty response");
+                }
+            } catch (error) {
+                console.error(error);
+                responseBox.innerHTML = "Waduh, koneksi ke otak Aldo lagi putus nih. Coba tanya lagi ya sayang! 😅";
+                responseBox.style.display = 'block';
+            } finally {
+                loadingBox.style.display = 'none';
+                btn.disabled = false;
+                btn.style.opacity = '1';
             }
         }
     </script>
