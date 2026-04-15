@@ -176,6 +176,31 @@
             margin-top: 40px;
         }
 
+        /* ==========================================================================
+           13. CSS UNTUK GALLERY SWIPE DI STORY1
+           ========================================================================== */
+        .swipe-indicator { background: var(--border-color); color: #fff; padding: 8px 15px; font-weight: 900; font-size: 0.7rem; border-radius: 20px; animation: bounceX 1.5s infinite; pointer-events: none;}
+        @keyframes bounceX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+
+        .gallery-track { 
+            display: flex; gap: 20px; padding: 10px 10px 40px; 
+            overflow-x: auto; scroll-snap-type: x mandatory; 
+            scroll-behavior: smooth; -webkit-overflow-scrolling: touch; 
+            perspective: 1000px; touch-action: pan-x; cursor: grab;
+        }
+        .gallery-track:active { cursor: grabbing; }
+        .gallery-track::-webkit-scrollbar { display: none; } 
+
+        .gallery-card {
+            flex: 0 0 85%; height: 350px; scroll-snap-align: center; border: var(--border-thick) solid var(--border-color); border-radius: 15px;
+            position: relative; background: #ddd; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.9) rotateY(10deg); opacity: 0.6; transform-style: preserve-3d;
+            pointer-events: none; overflow: hidden;
+        }
+        .gallery-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .gallery-card.is-focused { transform: scale(1) rotateY(0deg); opacity: 1; box-shadow: 8px 8px 0px var(--border-color); z-index: 10; }
+        .gallery-card.is-focused img { transform: scale(1.05); }
+        
     </style>
 </head>
 <body class="light-mode">
@@ -750,6 +775,26 @@
             <p>Kalau dua tahun lalu aku diceritain bahwa orang yang follow ig-nya sendiri pakai HP orang lain di Gallery Teater itu bakal jadi seseorang yang paling sering aku pikirin — aku mungkin nggak percaya. Tapi di sini kita. Dan <span class="highlight">cerita ini belum selesai</span>. Masih ada Chapter berikutnya. Yang lebih dalam. Yang lebih serius. Yang cuma kita berdua yang tau. 🥺❤️</p>
         </div>
 
+        <div class="divider">• • •</div>
+
+        <div class="scene-card" style="padding: 0; background: transparent; border: none; box-shadow: none; transform: none; opacity: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+                <div>
+                    <p style="font-weight: 800; color: var(--accent-pink); font-size: 0.8rem; letter-spacing: 2px;">MORE MEMORIES</p>
+                    <h2 style="font-weight: 900; font-size: 1.8rem; text-transform: uppercase;">Gallery Kita</h2>
+                </div>
+                <div class="swipe-indicator">SWIPE ➡️</div>
+            </div>
+
+            <div class="gallery-track" id="gallery-track">
+                <div class="gallery-card brutal-card"><img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/400x500/ff6b8a/fff?text=Foto+1'"></div>
+                <div class="gallery-card brutal-card"><img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/400x500/4facfe/fff?text=Foto+2'"></div>
+                <div class="gallery-card brutal-card"><img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/400x500/ccff00/111?text=Foto+3'"></div>
+                <div class="gallery-card brutal-card"><img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/400x500/ffd166/111?text=Foto+4'"></div>
+                <div class="gallery-card brutal-card"><img src="img/foto5.jpg" alt="Foto 5" onerror="this.src='https://via.placeholder.com/400x500/ff9f43/fff?text=Foto+5'"></div>
+                <div class="gallery-card brutal-card"><img src="img/foto6.jpg" alt="Foto 6" onerror="this.src='https://via.placeholder.com/400x500/111111/fff?text=Foto+6'"></div>
+            </div>
+        </div>
 
         <div class="footer-nav">
             <button id="btn-lanjut" class="next-btn ripple-btn" onclick="lanjutChapter()">Lanjut Ke Chapter 2</button>
@@ -860,6 +905,31 @@
                 btn.innerText = '📱'; // Logo HP
             }
         }
+        // 13. LOGIKA GALERI SWIPE (DRAG & ZOOM EFEK)
+        const slider = document.getElementById('gallery-track');
+        let isDown = false; let startX; let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true; slider.style.cursor = 'grabbing';
+            startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => { isDown = false; slider.style.cursor = 'grab'; });
+        slider.addEventListener('mouseup', () => { isDown = false; slider.style.cursor = 'grab'; });
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return; e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk;
+        });
+
+        const galleryCardsList = document.querySelectorAll('.gallery-card');
+        const galleryObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('is-focused');
+                else entry.target.classList.remove('is-focused');
+            });
+        }, { root: slider, rootMargin: '0px', threshold: 0.6 });
+        galleryCardsList.forEach(card => galleryObserver.observe(card));
+        
     </script>
 </body>
 </html>
