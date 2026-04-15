@@ -415,10 +415,10 @@
     <!-- BAGIAN BARU: AI ASSISTANT -->
     <section class="ai-section">
         <div class="ai-box brutal-card">
-            <h2>🤖 Tanya Asisten Aldo</h2>
-            <p>Ada kesulitan cari clue? Atau mau nanya sesuatu sebelum masuk? Ketik aja keluh kesahmu di sini, nanti dibantuin!</p>
+            <h2>Ini aku tanyakan apa saja Leo</h2>
+            <p>Ada sesuatu pertanyaan sebelum masuk? Ketik aja keluh kesahmu di sini, nanti dibantuin!</p>
             <div class="ai-input-group">
-                <input type="text" id="aiQuery" class="ai-input" placeholder="Misal: Aldo clue sandinya apaan sih? Susah amat!">
+                <input type="text" id="aiQuery" class="ai-input" placeholder="Misal: eh gombalin aku dong">
                 <button class="ai-btn ripple-btn" id="aiSubmitBtn" onclick="askAI()">Tanya Asisten 🧠</button>
             </div>
             <div id="aiLoading" class="ai-loading">Bentar ya cantik, lagi nyari jawabannya... ⏳</div>
@@ -751,8 +751,18 @@
         // =========================================================================
         // 12. LOGIKA LOGIN FORM SANGAT KETAT (SANDI: 200408!)
         // =========================================================================
+        
+        // FIX BUG: Deteksi tombol Enter biar ngga bentrok sama AI
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') processLogin();
+            if (e.key === 'Enter') {
+                // Kalau yang lagi diketik itu kotak AI, panggil fungsi AI
+                if (document.activeElement.id === 'aiQuery') {
+                    askAI();
+                } else {
+                    // Kalau di luar kotak AI (misal lagi di kotak password), panggil fungsi Login
+                    processLogin();
+                }
+            }
         });
 
         function processLogin() {
@@ -763,11 +773,11 @@
             const container = document.getElementById('login-container');
             let isSuccess = false;
 
-            if (user === "anggun dwi aprilia" || user === "anggi dwi aprilia" || user === "anggie dwi aprilia") {
+            if (user === "Anggi Dwi Aprilia" || user === "anggi dwi aprilia" || user === "anggie dwi aprilia") {
                 if (pass === "200408!") isSuccess = true;
-            } else if (user === "aldo leo saputra") {
+            } else if (user === "Aldo Leo Saputra") {
                 if (pass === "280708!") isSuccess = true;
-            } else if (user === "alief hidayat") {
+            } else if (user === "Alief Hidayat") {
                 if (pass === "200408!") isSuccess = true;
             }
 
@@ -829,7 +839,7 @@
             btn.style.opacity = '0.5';
 
             // Prompt Sistem agar AI bertingkah seperti Aldo
-            const systemPrompt = "Kamu adalah asisten AI yang dibuat oleh Aldo (atau Leo) untuk memandu pacarnya, Anggie, di website ulang tahunnya. Jawab dengan gaya bahasa gaul, santai, lucu, dan sedikit manja/gombal. PENTING: Jika Anggie bertanya tentang password, clue, atau kunci masuk, JANGAN PERNAH sebutkan password aslinya (200408!). Berikan saja petunjuk samar seperti 'coba ingat-ingat tanggal jadian kita sayang' atau suruh dia main game Flappy Bird / 2048 di atas. Jawablah maksimal 3 kalimat saja.";
+            const systemPrompt = "Kamu adalah asisten AI yang dibuat oleh Aldo (atau Leo) untuk memandu pacarnya, Anggie, di website ulang tahunnya. Jawab dengan gaya bahasa gaul, santai, lucu, dan sedikit manja/gombal. PENTING: Jika Anggie bertanya tentang password, clue, atau kunci masuk, JANGAN PERNAH sebutkan password aslinya (200408!). Berikan saja petunjuk samar seperti 'coba ingat-ingat tanggal jadian kita sayang' atau suruh dia main game Flappy Bird / 2048 di atas. Jawablah maksimal 3 kalimat saja makanan kesukaan nya aldo gacoan dan suka minum yang manis manis jikalau dia nanya yang personal dan ga ada yang nyuruh di prompt ini kalo bisa jangan di jawab khusus persol kallo dia nanya suka sama aku apa engga jelas suka.";
 
             const payload = {
                 contents: [{ parts: [{ text: query }] }],
