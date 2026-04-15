@@ -11,7 +11,7 @@
     
     <style>
         /* ==========================================================================
-           1. PENGATURAN VARIABEL WARNA (TEMA NEO-BRUTALISM WHITE)
+           1. PENGATURAN VARIABEL WARNA (TEMA NEO-BRUTALISM)
            ========================================================================== */
         :root {
             --bg-color: #fcfcfc;       
@@ -24,15 +24,11 @@
             --border-thick: 4px;
         }
 
-        /* Reset CSS agar konsisten di semua HP */
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
             background: var(--bg-color); display: flex; justify-content: center; align-items: center; 
-            height: 100vh; height: 100dvh; color: var(--border-color); overflow: hidden; 
+            height: 100vh; height: 100dvh; color: var(--border-color); overflow: hidden; position: relative;
         }
 
         /* ==========================================================================
@@ -54,69 +50,63 @@
             50% { transform: rotate(180deg) scale(1.2); background: var(--accent-blue); }
             100% { transform: rotate(360deg) scale(1); background: var(--accent-yellow); }
         }
-
         .splash-text { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; animation: pulseText 1.5s infinite alternate; }
         @keyframes pulseText { from { opacity: 0.5; transform: translateY(0); } to { opacity: 1; transform: translateY(-5px); } }
 
         /* ==========================================================================
-           3. KANVAS ANIMASI LATAR BELAKANG (EFEK SENTUHAN)
+           3. BACKGROUND CANVAS & FLOATING EMOJIS
            ========================================================================== */
         #bg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        
-        /* Pola Latar Belakang Dotted */
         .bg-pattern {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
             background-image: radial-gradient(var(--border-color) 1.5px, transparent 1.5px);
             background-size: 35px 35px; opacity: 0.08; pointer-events: none;
         }
+        #floating-emojis { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .float-emo { position: absolute; bottom: -50px; font-size: 1.5rem; opacity: 0.3; animation: floatUp linear forwards; }
+        @keyframes floatUp { to { transform: translateY(-120vh) rotate(360deg); opacity: 0; } }
 
         /* ==========================================================================
            4. WADAH UTAMA APLIKASI (UKURAN LAYAR HP)
            ========================================================================== */
         .app-container {
-            width: 100%; max-width: 480px; height: 100%; background: transparent; position: relative;
-            overflow: hidden; border-left: var(--border-thick) solid var(--border-color); border-right: var(--border-thick) solid var(--border-color);
-            display: flex; flex-direction: column; z-index: 1; background: #fff;
+            width: 100%; max-width: 480px; height: 100%; position: relative; overflow: hidden; 
+            border-left: var(--border-thick) solid var(--border-color); border-right: var(--border-thick) solid var(--border-color);
+            display: flex; flex-direction: column; z-index: 1; background: #fff; box-shadow: 0 0 50px rgba(0,0,0,0.1);
         }
 
-        /* ==========================================================================
-           5. PROGRESS BAR SAAT DI SCROLL
-           ========================================================================== */
-        .scroll-progress-container { position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: rgba(0,0,0,0.05); z-index: 1000; }
+        .scroll-progress-container { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: rgba(0,0,0,0.05); z-index: 1000; }
         .scroll-progress-bar { height: 100%; background: var(--accent-green); width: 0%; border-right: var(--border-thick) solid var(--border-color); transition: width 0.1s linear; }
 
         /* ==========================================================================
-           6. PENGATURAN AREA KONTEN (VIEWS)
+           5. PENGATURAN AREA KONTEN (VIEWS)
            ========================================================================== */
         .view-section {
             flex: 1; overflow-y: auto; padding-bottom: 120px; display: none; position: relative; z-index: 1;
-            animation: slideUpFade 0.6s cubic-bezier(0.23, 1, 0.32, 1); scroll-behavior: smooth;
+            animation: slideUpFade 0.5s cubic-bezier(0.23, 1, 0.32, 1); scroll-behavior: smooth;
         }
         .view-section.active { display: block; }
         .view-section::-webkit-scrollbar { display: none; }
-        @keyframes slideUpFade { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ==========================================================================
-           7. HEADER ATAS (NAMA & SAPAAN)
+           6. HEADER ATAS (NAMA & SAPAAN)
            ========================================================================== */
         .header { 
             padding: 35px 20px 20px; display: flex; justify-content: space-between; align-items: center; 
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
             border-bottom: var(--border-thick) solid var(--border-color); position: sticky; top: 0; z-index: 100;
         }
-        .header-text h1 { font-size: 1.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 1; }
+        .header-text h1 { font-size: 1.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: -1px; line-height: 1; cursor: pointer; transition: color 0.2s;}
+        .header-text h1:active { color: var(--accent-pink); }
         .header-text p { font-size: 0.85rem; color: #666; font-weight: 700; margin-top: 5px; }
         
-        /* Ikon Kado sebagai Tombol Cheat (Kursor Pointer agar tahu bisa diklik) */
-        .header-icon { 
-            font-size: 2.2rem; filter: drop-shadow(3px 3px 0px var(--accent-yellow)); 
-            animation: float 3s ease-in-out infinite; cursor: pointer; position: relative;
-        }
+        .header-icon { font-size: 2.2rem; filter: drop-shadow(3px 3px 0px var(--accent-yellow)); animation: float 3s ease-in-out infinite; cursor: pointer; position: relative;}
         .header-icon:active { transform: scale(0.9); }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         /* ==========================================================================
-           8. AREA KARTU CERITA (STORY LIST)
+           7. AREA KARTU CERITA (STORY LIST)
            ========================================================================== */
         .story-slider { display: flex; flex-direction: column; gap: 70px; padding: 40px 20px 80px; }
         
@@ -127,21 +117,15 @@
         }
         .story-card.active-card { opacity: 1; transform: scale(1.03) translateY(0); box-shadow: 15px 15px 0px var(--border-color); z-index: 10; }
 
-        /* ==========================================================================
-           9. EFEK FOTO TIMBUL MELEBAR (POP-OUT PNG)
-           ========================================================================== */
         .image-anchor { position: relative; width: 100%; height: 50px; margin-top: 170px; margin-bottom: 25px; background: transparent; }
-        .story-img {
-            position: absolute; bottom: 0; left: -25px; width: calc(100% + 50px); height: auto; z-index: 5;
-            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); filter: drop-shadow(0px 20px 15px rgba(0,0,0,0.3)); transform-origin: bottom center;
-        }
+        .story-img { position: absolute; bottom: 0; left: -25px; width: calc(100% + 50px); height: auto; z-index: 5; transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); filter: drop-shadow(0px 20px 15px rgba(0,0,0,0.3)); transform-origin: bottom center; }
         .story-card.active-card .story-img { transform: translateY(-20px) scale(1.05); }
 
         .story-card h3 { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; position: relative; z-index: 10; }
         .story-card p { font-size: 0.95rem; font-weight: 600; color: #333; margin-bottom: 25px; line-height: 1.6; position: relative; z-index: 10; }
         
         /* ==========================================================================
-           10. DESAIN TOMBOL INTERAKTIF
+           8. DESAIN TOMBOL INTERAKTIF
            ========================================================================== */
         .btn-action {
             display: block; padding: 16px; background: var(--accent-pink); color: var(--border-color); text-decoration: none; border-radius: 12px; 
@@ -155,33 +139,20 @@
         @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
 
         /* ==========================================================================
-           11. SISTEM KUNCI GEMBOK (LOCKED CHAPTERS) & ANIMASI GETAR
+           9. SISTEM KUNCI GEMBOK (LOCKED CHAPTERS) & ANIMASI GETAR
            ========================================================================== */
-        .locked-card { 
-            filter: grayscale(1); opacity: 0.6; cursor: not-allowed; 
-        }
-        .locked-card .btn-action {
-            pointer-events: none; background: #ddd !important; color: #888 !important; box-shadow: 0px 0px 0px transparent !important; border-color: #888 !important;
-        }
+        .locked-card { filter: grayscale(1); opacity: 0.6; cursor: not-allowed; }
+        .locked-card .btn-action { pointer-events: none; background: #ddd !important; color: #888 !important; box-shadow: 0px 0px 0px transparent !important; border-color: #888 !important; }
         
-        .lock-view { 
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
-            background: rgba(255, 255, 255, 0.4); z-index: 20; display: flex; 
-            justify-content: center; align-items: center; border-radius: 16px; cursor: pointer;
-        }
+        .lock-view { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.4); z-index: 20; display: flex; justify-content: center; align-items: center; border-radius: 16px; cursor: pointer; }
         .lock-icon-big { font-size: 5rem; animation: wobble 2.5s infinite ease-in-out; filter: drop-shadow(4px 4px 0px var(--border-color)); pointer-events: none;}
         @keyframes wobble { 0%, 100% { transform: rotate(0); } 15% { transform: rotate(-15deg); } 30% { transform: rotate(10deg); } 45% { transform: rotate(-10deg); } 60% { transform: rotate(5deg); } 75% { transform: rotate(0deg); } }
 
-        /* Animasi Error Getar (Shake) saat Gembok Diklik */
         .shake-error { animation: shakeCardAnim 0.5s cubic-bezier(.36,.07,.19,.97) both; border-color: var(--accent-pink) !important; }
-        @keyframes shakeCardAnim {
-            0%, 100% { transform: scale(1.03) translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: scale(1.03) translateX(-10px) rotate(-1deg); }
-            20%, 40%, 60%, 80% { transform: scale(1.03) translateX(10px) rotate(1deg); }
-        }
+        @keyframes shakeCardAnim { 0%, 100% { transform: scale(1.03) translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: scale(1.03) translateX(-10px) rotate(-1deg); } 20%, 40%, 60%, 80% { transform: scale(1.03) translateX(10px) rotate(1deg); } }
 
         /* ==========================================================================
-           12. TOAST NOTIFICATION (POPUP PESAN ERROR/SUKSES)
+           10. TOAST NOTIFICATION (POPUP PESAN ERROR/SUKSES)
            ========================================================================== */
         #toast-msg {
             position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px);
@@ -193,7 +164,7 @@
         #toast-msg.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
         /* ==========================================================================
-           13. HALAMAN PROFIL (PROFILE VIEW)
+           11. HALAMAN PROFIL
            ========================================================================== */
         .profile-wrap { text-align: center; padding: 50px 20px; }
         .avatar-frame { width: 150px; height: 150px; border-radius: 50%; background: #fff; margin: 0 auto 25px; display: flex; justify-content: center; align-items: center; font-size: 5rem; border: var(--border-thick) solid var(--border-color); box-shadow: 10px 10px 0px var(--accent-pink); }
@@ -203,7 +174,7 @@
         .stat-lbl { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: #666; }
 
         /* ==========================================================================
-           14. BOTTOM NAVIGATION (MENU BAWAH)
+           12. BOTTOM NAVIGATION
            ========================================================================== */
         .nav-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: 85px; background: #fff; border-top: var(--border-thick) solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
         .nav-btn { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #bbb; cursor: pointer; width: 100px; transition: 0.3s; }
@@ -212,35 +183,32 @@
         .nav-btn.active i { filter: drop-shadow(3px 3px 0px var(--accent-pink)); transform: scale(1.2); }
         .nav-label { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
 
+        /* CONFETTI CANVAS */
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999998; }
+
     </style>
 </head>
 <body>
 
-  <audio id="player-music" loop preload="auto">
-      <source src="music/hbd.mp3" type="audio/mpeg" />
-  </audio>
-
-  <div id="splash-screen">
-      <div class="loader-box"></div>
-      <div class="splash-text">Membuka Kenangan...</div>
-  </div>
-
+  <audio id="player-music" loop preload="auto"> <source src="music/hbd.mp3" type="audio/mpeg" /> </audio>
+  
+  <div id="splash-screen"><div class="loader-box"></div><div class="splash-text">Membuka Kenangan...</div></div>
+  
   <div class="bg-pattern"></div>
+  <div id="floating-emojis"></div>
   <canvas id="bg-canvas"></canvas>
-
+  <canvas id="confetti-canvas"></canvas>
+  
   <div id="toast-msg">Notif Disini</div>
 
   <div class="app-container" id="main-container">
-    
-    <div class="scroll-progress-container">
-        <div class="scroll-progress-bar" id="pBar"></div>
-    </div>
+    <div class="scroll-progress-container"><div class="scroll-progress-bar" id="pBar"></div></div>
 
     <div id="home-view" class="view-section active">
       
       <div class="header">
         <div class="header-text">
-          <h1>Halo, Sayang! 👋</h1>
+          <h1 id="halo-sayang">Halo, Sayang! 👋</h1>
           <p>Sudah siap baca ceritanya?</p>
         </div>
         <div class="header-icon" id="cheat-btn">🎁</div>
@@ -249,36 +217,28 @@
       <div class="story-slider">
         
         <div class="story-card active-card card-1" id="ch1">
-          <div class="image-anchor">
-            <img src="img/chapter1.png" class="story-img" alt="Chapter 1" onerror="this.style.display='none';">
-          </div>
+          <div class="image-anchor"><img src="img/chapter1.png" class="story-img" alt="Chapter 1" onerror="this.style.display='none';"></div>
           <h3>Chapter 1</h3>
           <p>Masa-masa kelas 1 yang random. Awal mula intel beraksi dan misi comblang dari Ayra.</p>
           <a href="story1.html" class="btn-action ripple-btn">BACA SEKARANG</a>
         </div>
 
         <div class="story-card locked-card card-2" id="ch2">
-          <div class="lock-view" onclick="handleLockedClick(this.parentElement)"><span class="lock-icon-big">🔒</span></div>
-          <div class="image-anchor">
-            <img src="img/chapter2.png" class="story-img" alt="Chapter 2" onerror="this.style.display='none';">
-          </div>
+          <div class="lock-view" id="lock-ch2" onclick="handleLockedClick(this.parentElement)"><span class="lock-icon-big">🔒</span></div>
+          <div class="image-anchor"><img src="img/chapter2.png" class="story-img" alt="Chapter 2" onerror="this.style.display='none';"></div>
           <h3>Chapter 2</h3>
           <p>Masa kelas 3 yang penuh drama, saling ngambek, dan hal-hal yang bikin makin dekat.</p>
           <a href="story2.html" class="btn-action ripple-btn">BACA SEKARANG</a>
         </div>
 
         <div class="story-card card-unknown" id="ch-hidden-hint" style="border-style: dashed; background: transparent; box-shadow: none;">
-          <div class="image-anchor" style="margin-top: 50px; height: 100px; text-align: center;">
-            <span style="font-size: 6rem; filter: grayscale(1);">❓</span>
-          </div>
+          <div class="image-anchor" style="margin-top: 50px; height: 100px; text-align: center;"><span style="font-size: 6rem; filter: grayscale(1);">❓</span></div>
           <h3 style="text-align: center;">The Unknown</h3>
           <p style="text-align: center;">Selesaikan Chapter 1 dan 2 untuk membuka kado utamamu di sini!</p>
         </div>
 
         <div class="story-card card-3" id="ch3" style="display: none;">
-          <div class="image-anchor">
-            <img src="img/chapter3.png" class="story-img" alt="Chapter 3" onerror="this.style.display='none';">
-          </div>
+          <div class="image-anchor"><img src="img/chapter3.png" class="story-img" alt="Chapter 3" onerror="this.style.display='none';"></div>
           <h3>Chapter 3: Final</h3>
           <p>Sebuah pesan tulus untuk hari ini, esok, dan selamanya. I Love You Princess.</p>
           <a href="story3.html" class="btn-action ripple-btn">BUKA KADO UTAMA</a>
@@ -288,295 +248,340 @@
     </div>
 
     <div id="profile-view" class="view-section">
-      
       <div class="profile-wrap">
         <div class="avatar-frame">👸🏻</div>
         <h2 class="profile-name-text">Anggie Dwi Aprilia</h2>
         <p style="font-weight: 700; color: #888;">The Birthday Princess ✨</p>
       </div>
-
+      
       <div class="stat-box">
-        <div style="text-align: center;">
-            <span class="stat-val">99+</span>
-            <span class="stat-lbl">Minta Maaf</span>
-        </div>
-        <div style="text-align: center;">
-            <span class="stat-val" style="color: var(--accent-blue);">~50</span>
-            <span class="stat-lbl">Ngambek</span>
-        </div>
+        <div style="text-align: center;"><span class="stat-val">99+</span><span class="stat-lbl">Minta Maaf</span></div>
+        <div style="text-align: center;"><span class="stat-val" style="color: var(--accent-blue);">~50</span><span class="stat-lbl">Ngambek</span></div>
       </div>
-
+      
       <div class="menu-list" style="padding: 0 20px;">
+        <a href="flapy.html" class="btn-action ripple-btn" style="background:#fff; margin-bottom:15px; text-align: left; display: flex; align-items: center; gap: 15px;"><span style="font-size: 1.5rem;">🐦</span> Main Flappy Bird</a>
+        <a href="200408.html" class="btn-action ripple-btn" style="background:#fff; margin-bottom:15px; text-align: left; display: flex; align-items: center; gap: 15px;"><span style="font-size: 1.5rem;">🧩</span> Main Game 2048</a>
+        <a href="index.html" class="btn-action ripple-btn" style="background:var(--accent-orange); color:#fff; margin-bottom:15px; text-align: left; display: flex; align-items: center; gap: 15px;"><span style="font-size: 1.5rem;">🚪</span> Kembali Ke Login</a>
         
-        <a href="flapy.html" class="btn-action ripple-btn" style="background:#fff; margin-bottom:15px; text-align: left; display: flex; align-items: center; gap: 15px;">
-            <span style="font-size: 1.5rem;">🐦</span> Main Flappy Bird
-        </a>
-        <a href="200408.html" class="btn-action ripple-btn" style="background:#fff; margin-bottom:15px; text-align: left; display: flex; align-items: center; gap: 15px;">
-            <span style="font-size: 1.5rem;">🧩</span> Main Game 2048
-        </a>
+        <button id="troll-btn-profile" type="button" style="width: 100%; padding: 15px; background: #fff; border: 3px solid #111; font-weight: 900; cursor: pointer; border-radius: 12px; margin-bottom: 15px; box-shadow: 4px 4px 0px #111; text-transform: uppercase; transition: transform 0.1s, top 0.1s, left 0.1s; position: relative;">Tombol Rahasia 💣</button>
         
-        <a href="index.html" class="btn-action ripple-btn" style="background:var(--accent-orange); color:#fff; margin-bottom:15px; text-align: left; display: flex; align-items: center; gap: 15px;">
-            <span style="font-size: 1.5rem;">🚪</span> Kembali Ke Login
-        </a>
-        
-        <button id="troll-btn-profile" type="button" style="width: 100%; padding: 15px; background: #fff; border: 3px solid #111; font-weight: 900; cursor: pointer; border-radius: 12px; margin-bottom: 15px; box-shadow: 4px 4px 0px #111; text-transform: uppercase; transition: transform 0.1s, top 0.1s, left 0.1s; position: relative;">
-            Tombol Rahasia 💣
-        </button>
-
-        <button onclick="resetDataCache()" class="btn-action ripple-btn" style="background: #111; color:#fff; width:100%; text-align: center; margin-top: 30px;">
-            🔄 Reset Data Gembok
-        </button>
-
+        <button onclick="resetDataCache()" class="btn-action ripple-btn" style="background: #111; color:#fff; width:100%; text-align: center; margin-top: 30px;">🔄 Reset Data Gembok</button>
       </div>
     </div>
 
     <div class="nav-bar">
-      <div class="nav-btn active" onclick="navigasiKeTab('home')">
-          <i class="nav-icon">🏠</i>
-          <span class="nav-label">Home</span>
-      </div>
-      <div class="nav-btn" onclick="navigasiKeTab('profile')">
-          <i class="nav-icon">👤</i>
-          <span class="nav-label">Profile</span>
-      </div>
+      <div class="nav-btn active" onclick="navigasiKeTab('home')"><i class="nav-icon">🏠</i><span class="nav-label">Home</span></div>
+      <div class="nav-btn" onclick="navigasiKeTab('profile')"><i class="nav-icon">👤</i><span class="nav-label">Profile</span></div>
     </div>
-
   </div>
 
   <script>
     // =========================================================================
-    // 1. FUNGSI TOAST NOTIFICATION (POPUP PESAN)
+    // TOAST NOTIFICATION LOGIC
     // =========================================================================
     let toastTimer;
     function showToast(pesan, warnaBG = "var(--accent-pink)") {
         const toast = document.getElementById('toast-msg');
-        toast.innerHTML = pesan;
-        toast.style.background = warnaBG;
-        toast.classList.add('show');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        toast.innerHTML = pesan; toast.style.background = warnaBG; toast.classList.add('show');
+        clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 4000);
     }
 
+    window.addEventListener('load', function() { setTimeout(function() { document.getElementById('splash-screen').classList.add('hidden'); }, 1500); });
+    
     // =========================================================================
-    // 2. SISTEM SPLASH SCREEN
+    // AUDIO AUTOPLAY ON FIRST CLICK
     // =========================================================================
-    window.addEventListener('load', function() {
-        setTimeout(function() { document.getElementById('splash-screen').classList.add('hidden'); }, 1500);
-    });
-
-    // =========================================================================
-    // 3. LOGIKA AUDIO BERMAIN OTOMATIS
-    // =========================================================================
-    document.addEventListener("DOMContentLoaded", () => {
-        let musicPlayer = document.getElementById("player-music");
+    document.addEventListener("DOMContentLoaded", () => { 
+        let musicPlayer = document.getElementById("player-music"); 
         musicPlayer.volume = 0.5; 
-        document.body.addEventListener('click', () => { 
-            musicPlayer.play().catch(e => console.log("Menunggu interaksi user.")); 
-        }, {once:true});
+        document.body.addEventListener('click', () => { musicPlayer.play().catch(e=>e); }, {once:true}); 
     });
 
     // =========================================================================
-    // 4. SISTEM KUNCI CHAPTER & ANIMASI GETAR ERROR (SHAKE)
+    // CACHE CHECKER UNTUK BUKA KUNCI OTOMATIS (SINKRON DENGAN STORY HTML)
     // =========================================================================
     document.addEventListener("DOMContentLoaded", () => {
-        // Cek data cache dari tombol "Selesai" di halaman Story
         let ch1Done = localStorage.getItem('chapter1_completed') === 'true';
         let ch2Done = localStorage.getItem('chapter2_completed') === 'true';
         
-        // Membuka kunci Chapter 2 jika Chapter 1 selesai
         if(ch1Done) { 
             document.getElementById('ch2').classList.remove('locked-card'); 
-            const lockView = document.getElementById('ch2').querySelector('.lock-view');
+            const lockView = document.getElementById('lock-ch2'); 
             if(lockView) lockView.style.display = 'none'; 
         }
         
-        // Membuka kunci Chapter 3 (Final) jika Chapter 2 selesai
         if(ch2Done) { 
             document.getElementById('ch-hidden-hint').style.display = 'none'; 
             document.getElementById('ch3').style.display = 'block'; 
         }
     });
 
-    // Fungsi ketika Gembok yang terkunci dipencet
+    // =========================================================================
+    // FUNGSI GETAR SAAT KARTU TERKUNCI DIKLIK (MEMUNCULKAN CLUE)
+    // =========================================================================
     function handleLockedClick(cardElement) {
-        // Hapus kelas animasi biar bisa di-trigger ulang (Reflow DOM)
-        cardElement.classList.remove('shake-error');
+        // Reset animasi biar bisa di-trigger berkali-kali
+        cardElement.classList.remove('shake-error'); 
         void cardElement.offsetWidth; 
-        
-        // Tambah animasi bergetar (Shake)
         cardElement.classList.add('shake-error');
-        
-        // Munculin Notifikasi Mengejek
-        showToast("Selesaikan chapter sebelumnya dulu wleee 😜", "#ff4757");
-    }
-
-    // Reset Data (Khusus buat ngetes ulang)
-    function resetDataCache() {
-        localStorage.removeItem('chapter1_completed');
-        localStorage.removeItem('chapter2_completed');
-        showToast("🔄 Data direset. Mengulang web...", "var(--border-color)");
-        setTimeout(() => location.reload(), 1000);
+        // Panggil Toast Clue Rahasia
+        showToast("Selesaikan Chapter sebelumnya dulu! Atau tap tulisan 'Halo, Sayang!' 5x buat buka paksa 🤫", "#ff4757");
     }
 
     // =========================================================================
-    // 5. THE TROLL BUTTON DI PROFIL (TOMBOL KABUR)
+    // FUNGSI PINTU DARURAT (TAP 'HALO SAYANG' 5X)
+    // =========================================================================
+    let haloClicks = 0;
+    let haloTimeout;
+    document.getElementById('halo-sayang').addEventListener('click', () => {
+        haloClicks++;
+        clearTimeout(haloTimeout);
+        haloTimeout = setTimeout(() => { haloClicks = 0; }, 2000);
+        if(haloClicks === 5) {
+            localStorage.setItem('chapter1_completed', 'true');
+            showToast("🔓 Pintu Darurat Chapter 2 Terbuka!", "var(--accent-green)");
+            setTimeout(() => location.reload(), 1500);
+        }
+    });
+
+    // =========================================================================
+    // CHEAT CODE VIP (TAP 'KADO' 7X) + CONFETTI EXPLOSION
+    // =========================================================================
+    const giftBtn = document.getElementById('cheat-btn'); 
+    let cheatClicks = 0; 
+    let cheatTimeout;
+    giftBtn.addEventListener('click', () => {
+        cheatClicks++; 
+        clearTimeout(cheatTimeout); 
+        cheatTimeout = setTimeout(() => { cheatClicks = 0; }, 1500);
+        
+        if(cheatClicks === 7) { 
+            document.body.style.background = '#fff'; 
+            setTimeout(() => document.body.style.background = 'var(--bg-color)', 200); 
+            
+            localStorage.setItem('chapter1_completed', 'true'); 
+            localStorage.setItem('chapter2_completed', 'true'); 
+            
+            showToast("👑 VIP CHEAT ACTIVATED! SEMUA CHAPTER TERBUKA! 👑", "var(--accent-green)"); 
+            fireConfetti(); // Tembakkan confetti
+            
+            setTimeout(() => { location.reload(); }, 3000); // Reload agak lama biar puas liat confetti
+            cheatClicks = 0; 
+        }
+    });
+
+    // =========================================================================
+    // TROLL BUTTON DI PROFIL (BOM)
     // =========================================================================
     const trollBtn = document.getElementById('troll-btn-profile');
-    function moveTrollBtn() {
-        const x = (Math.random() - 0.5) * 250;
-        const y = (Math.random() - 0.5) * 300;
-        trollBtn.style.transform = `translate(${x}px, ${y}px)`;
-        const bgColors = ['#ff6b8a', '#4facfe', '#ccff00', '#ffd166'];
-        trollBtn.style.background = bgColors[Math.floor(Math.random() * bgColors.length)];
+    function moveTrollBtn() { 
+        const x = (Math.random() - 0.5) * 250; 
+        const y = (Math.random() - 0.5) * 300; 
+        trollBtn.style.transform = `translate(${x}px, ${y}px)`; 
+        const bgColors = ['#ff6b8a', '#4facfe', '#ccff00', '#ffd166']; 
+        trollBtn.style.background = bgColors[Math.floor(Math.random() * bgColors.length)]; 
     }
-    trollBtn.addEventListener('mouseenter', moveTrollBtn);
+    trollBtn.addEventListener('mouseenter', moveTrollBtn); 
     trollBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveTrollBtn(); });
 
     // =========================================================================
-    // 6. CHEAT CODE (TAP KADO 7 KALI BUAT BUKA SEMUA)
+    // RESET CACHE BUTTON DENGAN KONFIRMASI
     // =========================================================================
-    const giftBtn = document.getElementById('cheat-btn');
-    let cheatClicks = 0;
-    let cheatTimeout;
-
-    giftBtn.addEventListener('click', () => {
-        cheatClicks++;
-        clearTimeout(cheatTimeout);
-        
-        // Reset hitungan jika jeda lebih dari 1.5 detik
-        cheatTimeout = setTimeout(() => { cheatClicks = 0; }, 1500);
-
-        if(cheatClicks === 7) {
-            // Efek kedip putih seluruh layar
-            document.body.style.background = '#fff';
-            setTimeout(() => document.body.style.background = 'var(--bg-color)', 200);
-
-            // Buka semua gembok secara instan lewat Cache
-            localStorage.setItem('chapter1_completed', 'true');
-            localStorage.setItem('chapter2_completed', 'true');
-            
-            showToast("👑 VIP CHEAT ACTIVATED! SEMUA CHAPTER TERBUKA! 👑", "var(--accent-green)");
-            
-            // Muat ulang halaman agar gembok hilang
-            setTimeout(() => { location.reload(); }, 1500);
-            cheatClicks = 0;
+    function resetDataCache() { 
+        if(confirm("Yakin mau kunci gemboknya lagi?")) {
+            localStorage.removeItem('chapter1_completed'); 
+            localStorage.removeItem('chapter2_completed'); 
+            showToast("🔄 Data direset...", "var(--border-color)"); 
+            setTimeout(() => location.reload(), 1000); 
         }
-    });
-
-    // =========================================================================
-    // 7. EFEK TOMBOL RIPPLE
-    // =========================================================================
-    document.addEventListener('click', function(e) {
-        let target = e.target.closest('.ripple-btn');
-        if (!target) return;
-        let rect = target.getBoundingClientRect();
-        let x = e.clientX - rect.left; let y = e.clientY - rect.top;
-        let ripple = document.createElement('span'); ripple.classList.add('ripple');
-        ripple.style.left = `${x}px`; ripple.style.top = `${y}px`;
-        try { target.appendChild(ripple); setTimeout(() => { ripple.remove(); }, 600); } catch(err){}
-    });
-
-    // =========================================================================
-    // 8. NAVIGASI PINDAH TAB (HOME / PROFILE)
-    // =========================================================================
-    function navigasiKeTab(namaTab) {
-        document.getElementById('home-view').classList.remove('active'); document.getElementById('profile-view').classList.remove('active');
-        document.querySelectorAll('.nav-btn').forEach(btn => { btn.classList.remove('active'); });
-        document.getElementById(namaTab + '-view').classList.add('active'); event.currentTarget.classList.add('active');
     }
 
     // =========================================================================
-    // 9. PROGRESS BAR SCROLL BAR & HIGHLIGHT KARTU DI TENGAH
+    // EFEK RIPPLE BUTTON
     // =========================================================================
-    const homeArea = document.getElementById('home-view');
-    const pBar = document.getElementById("pBar");
-    
-    homeArea.addEventListener('scroll', () => {
-        let posisiScroll = homeArea.scrollTop; let totalTinggi = homeArea.scrollHeight - homeArea.clientHeight;
-        let persentase = (posisiScroll / totalTinggi) * 100; pBar.style.width = persentase + "%";
+    document.addEventListener('click', function(e) { 
+        let target = e.target.closest('.ripple-btn'); 
+        if (!target) return; 
+        let rect = target.getBoundingClientRect(); 
+        let x = e.clientX - rect.left; let y = e.clientY - rect.top; 
+        let ripple = document.createElement('span'); 
+        ripple.classList.add('ripple'); ripple.style.left = `${x}px`; ripple.style.top = `${y}px`; 
+        try { target.appendChild(ripple); setTimeout(() => { ripple.remove(); }, 600); } catch(err){} 
     });
-
-    const semuaKartu = document.querySelectorAll('.story-card');
+    
+    // =========================================================================
+    // NAVIGASI MENU BAWAH
+    // =========================================================================
+    function navigasiKeTab(namaTab) { 
+        document.getElementById('home-view').classList.remove('active'); 
+        document.getElementById('profile-view').classList.remove('active'); 
+        document.querySelectorAll('.nav-btn').forEach(btn => { btn.classList.remove('active'); }); 
+        document.getElementById(namaTab + '-view').classList.add('active'); 
+        event.currentTarget.classList.add('active'); 
+    }
+    
+    // =========================================================================
+    // PROGRESS BAR & INTERSECTION OBSERVER (HIGHLIGHT KARTU DI TENGAH)
+    // =========================================================================
+    const homeArea = document.getElementById('home-view'); 
+    const pBar = document.getElementById("pBar");
+    homeArea.addEventListener('scroll', () => { 
+        let posisiScroll = homeArea.scrollTop; 
+        let totalTinggi = homeArea.scrollHeight - homeArea.clientHeight; 
+        let persentase = (posisiScroll / totalTinggi) * 100; pBar.style.width = persentase + "%"; 
+    });
+    
+    const semuaKartu = document.querySelectorAll('.story-card'); 
     const konfigurasiSensor = { root: homeArea, rootMargin: '-25% 0px -25% 0px', threshold: 0.5 };
-
-    const sensorKartu = new IntersectionObserver((daftarElemen) => {
-        daftarElemen.forEach(elemenMasuk => {
+    const sensorKartu = new IntersectionObserver((daftarElemen) => { 
+        daftarElemen.forEach(elemenMasuk => { 
             if(elemenMasuk.isIntersecting) { 
                 semuaKartu.forEach(k => k.classList.remove('active-card')); 
                 elemenMasuk.target.classList.add('active-card'); 
-            }
-        });
-    }, konfigurasiSensor);
+            } 
+        }); 
+    }, konfigurasiSensor); 
     semuaKartu.forEach(kartu => sensorKartu.observe(kartu));
 
     // =========================================================================
-    // 10. SISTEM PARTIKEL CANVAS INTERAKTIF
+    // FLOATING EMOJIS BACKGROUND
     // =========================================================================
-    const kanvasLatar = document.getElementById('bg-canvas');
+    const floatingBg = document.getElementById('floating-emojis');
+    const emos = ['❤️', '✨', '🌸', '🎈'];
+    function createFloatingEmoji() {
+        const el = document.createElement('div');
+        el.classList.add('float-emo');
+        el.innerText = emos[Math.floor(Math.random() * emos.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = Math.random() * 5 + 5 + 's';
+        floatingBg.appendChild(el);
+        setTimeout(() => { el.remove(); }, 10000);
+    }
+    setInterval(createFloatingEmoji, 1000);
+
+    // =========================================================================
+    // CANVAS PARTICLES (BACKGROUND & CLICK EXPLOSION)
+    // =========================================================================
+    const kanvasLatar = document.getElementById('bg-canvas'); 
     const konteks = kanvasLatar.getContext('2d');
     let daftarPartikelNgambang = []; let daftarPartikelLedakan = []; 
     const paletWarna = ['#ff6b8a', '#4facfe', '#ffd166', '#ccff00'];
-
-    function inisialisasiKanvas() {
-        kanvasLatar.width = window.innerWidth; kanvasLatar.height = window.innerHeight; daftarPartikelNgambang = [];
-        let jumlahPartikel = (window.innerWidth < 500) ? 6 : 12; 
-        for(let i = 0; i < jumlahPartikel; i++) { daftarPartikelNgambang.push(new PartikelMengambang()); }
-    }
-
-    class PartikelMengambang {
-        constructor() {
-            this.x = Math.random() * kanvasLatar.width; this.y = Math.random() * kanvasLatar.height; this.ukuran = Math.random() * 12 + 6;
-            this.kecepatanX = (Math.random() - 0.5) * 1; this.kecepatanY = (Math.random() - 0.5) * 1;
-            this.warna = paletWarna[Math.floor(Math.random() * paletWarna.length)]; this.sudutPutar = Math.random() * 360;
-        }
-        perbaruiPosisi() {
-            this.x += this.kecepatanX; this.y += this.kecepatanY; this.sudutPutar += 0.5; 
-            if(this.x < -20) this.x = kanvasLatar.width + 20; if(this.x > kanvasLatar.width + 20) this.x = -20;
-            if(this.y < -20) this.y = kanvasLatar.height + 20; if(this.y > kanvasLatar.height + 20) this.y = -20;
-        }
-        gambarKeLayar() {
-            konteks.save(); konteks.translate(this.x, this.y); konteks.rotate(this.sudutPutar * Math.PI / 180);
-            konteks.fillStyle = this.warna; konteks.globalAlpha = 0.6; konteks.beginPath();
-            konteks.arc(0, 0, this.ukuran, 0, Math.PI * 2); konteks.fill(); konteks.restore();
-        }
-    }
-
-    class PartikelLedakan {
-        constructor(titikX, titikY) {
-            this.x = titikX; this.y = titikY; this.ukuran = Math.random() * 8 + 4;
-            this.kecepatanX = (Math.random() - 0.5) * 8; this.kecepatanY = (Math.random() - 0.5) * 8;
-            this.warna = paletWarna[Math.floor(Math.random() * paletWarna.length)];
-            this.nyawa = 1.0; this.kecepatanPudar = Math.random() * 0.03 + 0.02; 
-        }
-        perbaruiPosisi() { this.x += this.kecepatanX; this.y += this.kecepatanY; this.nyawa -= this.kecepatanPudar; }
-        gambarKeLayar() {
-            konteks.save(); konteks.globalAlpha = Math.max(0, this.nyawa); konteks.fillStyle = this.warna;
-            konteks.strokeStyle = '#111'; konteks.lineWidth = 2; konteks.beginPath();
-            konteks.rect(this.x, this.y, this.ukuran, this.ukuran); konteks.fill(); konteks.stroke(); konteks.restore();
-        }
-    }
-
-    document.getElementById('main-container').addEventListener('pointerdown', function(eventSentuhan) {
-        if(eventSentuhan.target.tagName === 'A' || eventSentuhan.target.tagName === 'BUTTON') return;
-        let titikX = eventSentuhan.clientX || (eventSentuhan.touches && eventSentuhan.touches[0].clientX);
-        let titikY = eventSentuhan.clientY || (eventSentuhan.touches && eventSentuhan.touches[0].clientY);
-        if (titikX && titikY) {
-            let jumlahLedakan = Math.floor(Math.random() * 4) + 5;
-            for(let i = 0; i < jumlahLedakan; i++) { daftarPartikelLedakan.push(new PartikelLedakan(titikX, titikY)); }
-        }
-    });
-
-    function putarAnimasi() {
-        konteks.clearRect(0, 0, kanvasLatar.width, kanvasLatar.height);
-        daftarPartikelNgambang.forEach(partikel => { partikel.perbaruiPosisi(); partikel.gambarKeLayar(); });
-        for (let i = daftarPartikelLedakan.length - 1; i >= 0; i--) {
-            daftarPartikelLedakan[i].perbaruiPosisi(); daftarPartikelLedakan[i].gambarKeLayar();
-            if (daftarPartikelLedakan[i].nyawa <= 0) { daftarPartikelLedakan.splice(i, 1); }
-        }
-        requestAnimationFrame(putarAnimasi);
+    
+    function inisialisasiKanvas() { 
+        kanvasLatar.width = window.innerWidth; kanvasLatar.height = window.innerHeight; 
+        daftarPartikelNgambang = []; let jumlahPartikel = (window.innerWidth < 500) ? 6 : 12; 
+        for(let i = 0; i < jumlahPartikel; i++) { daftarPartikelNgambang.push(new PartikelMengambang()); } 
     }
     
+    class PartikelMengambang { 
+        constructor() { 
+            this.x = Math.random() * kanvasLatar.width; this.y = Math.random() * kanvasLatar.height; 
+            this.ukuran = Math.random() * 12 + 6; this.kecepatanX = (Math.random() - 0.5) * 1; 
+            this.kecepatanY = (Math.random() - 0.5) * 1; this.warna = paletWarna[Math.floor(Math.random() * paletWarna.length)]; 
+            this.sudutPutar = Math.random() * 360; 
+        } 
+        perbaruiPosisi() { 
+            this.x += this.kecepatanX; this.y += this.kecepatanY; this.sudutPutar += 0.5; 
+            if(this.x < -20) this.x = kanvasLatar.width + 20; if(this.x > kanvasLatar.width + 20) this.x = -20; 
+            if(this.y < -20) this.y = kanvasLatar.height + 20; if(this.y > kanvasLatar.height + 20) this.y = -20; 
+        } 
+        gambarKeLayar() { 
+            konteks.save(); konteks.translate(this.x, this.y); konteks.rotate(this.sudutPutar * Math.PI / 180); 
+            konteks.fillStyle = this.warna; konteks.globalAlpha = 0.6; konteks.beginPath(); 
+            konteks.arc(0, 0, this.ukuran, 0, Math.PI * 2); konteks.fill(); konteks.restore(); 
+        } 
+    }
+    
+    class PartikelLedakan { 
+        constructor(titikX, titikY) { 
+            this.x = titikX; this.y = titikY; this.ukuran = Math.random() * 8 + 4; 
+            this.kecepatanX = (Math.random() - 0.5) * 8; this.kecepatanY = (Math.random() - 0.5) * 8; 
+            this.warna = paletWarna[Math.floor(Math.random() * paletWarna.length)]; 
+            this.nyawa = 1.0; this.kecepatanPudar = Math.random() * 0.03 + 0.02; 
+        } 
+        perbaruiPosisi() { this.x += this.kecepatanX; this.y += this.kecepatanY; this.nyawa -= this.kecepatanPudar; } 
+        gambarKeLayar() { 
+            konteks.save(); konteks.globalAlpha = Math.max(0, this.nyawa); konteks.fillStyle = this.warna; 
+            konteks.strokeStyle = '#111'; konteks.lineWidth = 2; konteks.beginPath(); 
+            konteks.rect(this.x, this.y, this.ukuran, this.ukuran); konteks.fill(); konteks.stroke(); konteks.restore(); 
+        } 
+    }
+    
+    document.getElementById('main-container').addEventListener('pointerdown', function(eventSentuhan) { 
+        if(eventSentuhan.target.tagName === 'A' || eventSentuhan.target.tagName === 'BUTTON' || eventSentuhan.target.id === 'cheat-btn' || eventSentuhan.target.id === 'halo-sayang') return; 
+        let titikX = eventSentuhan.clientX || (eventSentuhan.touches && eventSentuhan.touches[0].clientX); let titikY = eventSentuhan.clientY || (eventSentuhan.touches && eventSentuhan.touches[0].clientY); 
+        if (titikX && titikY) { let jumlahLedakan = Math.floor(Math.random() * 4) + 5; for(let i = 0; i < jumlahLedakan; i++) { daftarPartikelLedakan.push(new PartikelLedakan(titikX, titikY)); } } 
+    });
+    
+    function putarAnimasi() { 
+        konteks.clearRect(0, 0, kanvasLatar.width, kanvasLatar.height); 
+        daftarPartikelNgambang.forEach(partikel => { partikel.perbaruiPosisi(); partikel.gambarKeLayar(); }); 
+        for (let i = daftarPartikelLedakan.length - 1; i >= 0; i--) { 
+            daftarPartikelLedakan[i].perbaruiPosisi(); daftarPartikelLedakan[i].gambarKeLayar(); 
+            if (daftarPartikelLedakan[i].nyawa <= 0) { daftarPartikelLedakan.splice(i, 1); } 
+        } 
+        requestAnimationFrame(putarAnimasi); 
+    }
     window.addEventListener('resize', inisialisasiKanvas); inisialisasiKanvas(); putarAnimasi();
+
+    // =========================================================================
+    // CONFETTI ENGINE (KHUSUS CHEAT CODE VIP)
+    // =========================================================================
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const ctxConfetti = confettiCanvas.getContext('2d');
+    let confettis = [];
+    
+    function resizeConfetti() { confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeConfetti); resizeConfetti();
+
+    class ConfettiPaper {
+        constructor() {
+            this.x = confettiCanvas.width / 2;
+            this.y = confettiCanvas.height / 2;
+            this.size = Math.random() * 15 + 5;
+            this.speedX = (Math.random() - 0.5) * 40;
+            this.speedY = (Math.random() * -30) - 10;
+            this.gravity = 0.8;
+            this.color = paletWarna[Math.floor(Math.random() * paletWarna.length)];
+            this.angle = Math.random() * 360;
+            this.spin = (Math.random() - 0.5) * 20;
+        }
+        update() {
+            this.speedY += this.gravity;
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.angle += this.spin;
+        }
+        draw() {
+            ctxConfetti.save();
+            ctxConfetti.translate(this.x, this.y);
+            ctxConfetti.rotate(this.angle * Math.PI / 180);
+            ctxConfetti.fillStyle = this.color;
+            ctxConfetti.strokeStyle = '#111';
+            ctxConfetti.lineWidth = 2;
+            ctxConfetti.beginPath();
+            ctxConfetti.rect(-this.size/2, -this.size/2, this.size, this.size);
+            ctxConfetti.fill();
+            ctxConfetti.stroke();
+            ctxConfetti.restore();
+        }
+    }
+
+    function fireConfetti() {
+        for(let i=0; i<200; i++) confettis.push(new ConfettiPaper());
+        animateConfetti();
+    }
+
+    function animateConfetti() {
+        ctxConfetti.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        for (let i = confettis.length - 1; i >= 0; i--) {
+            confettis[i].update();
+            confettis[i].draw();
+            if (confettis[i].y > confettiCanvas.height + 100) { confettis.splice(i, 1); }
+        }
+        if(confettis.length > 0) requestAnimationFrame(animateConfetti);
+    }
   </script>
 </body>
 </html>
