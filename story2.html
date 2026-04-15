@@ -3,615 +3,806 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chapter 2: Semakin Dekat 💫</title>
-
+    <title>Chapter 2: Drama & Cinta Kelas 3</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
-
+    
     <style>
         /* ==========================================================================
            1. CSS VARIABLES & THEMES (NEO-BRUTALISM)
            ========================================================================== */
         :root {
-            --bg-color: #f8f9fa; --text-color: #111111; --card-bg: #ffffff;
-            --border-color: #111111; --accent-pink: #ff6b8a; --accent-blue: #4facfe;
-            --accent-green: #ccff00; --accent-yellow: #ffd166; --border-thick: 4px;
+            --bg-color: #f4f0ec; 
+            --text-color: #111111; 
+            --card-bg: #ffffff;
+            --border-color: #111111; 
+            --accent-pink: #ff6b8a; 
+            --accent-blue: #4facfe;    
+            --accent-green: #ccff00; 
+            --accent-yellow: #ffd166; 
+            --accent-purple: #c299fc;
+            --border-thick: 4px;       
         }
-        body.dark-mode { --bg-color: #1a1a1a; --text-color: #f8f9fa; --card-bg: #2d2d2d; --border-color: #ffffff; }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; line-height: 1.6; transition: background 0.3s, color 0.3s; }
-
-        /* ==========================================================================
-           2. SPLASH SCREEN
-           ========================================================================== */
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--bg-color); z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease-out; }
-        #splash-screen.hidden { opacity: 0; pointer-events: none; }
-        .loader-box { width: 70px; height: 70px; border: var(--border-thick) solid var(--border-color); background: var(--accent-blue); animation: spin 2s infinite cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 6px 6px 0px var(--border-color); margin-bottom: 25px; }
-        @keyframes spin { 0% { transform: rotate(0deg); background: var(--accent-blue); } 50% { transform: rotate(180deg); background: var(--accent-pink); } 100% { transform: rotate(360deg); background: var(--accent-yellow); } }
-        .splash-text { font-weight: 900; font-size: 1rem; text-transform: uppercase; letter-spacing: 3px; }
-
-        /* ==========================================================================
-           3. READING PROGRESS BAR
-           ========================================================================== */
-        .progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 6px; background: rgba(0,0,0,0.1); z-index: 10000; }
-        .progress-bar { height: 100%; background: var(--accent-blue); width: 0%; border-right: var(--border-thick) solid var(--border-color); transition: width 0.1s; }
-
-        /* ==========================================================================
-           4. HEADER
-           ========================================================================== */
-        header { padding: 20px; margin-top: 6px; text-align: center; background: var(--card-bg); border-bottom: var(--border-thick) solid var(--border-color); position: sticky; top: 6px; z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
-        .header-title { font-weight: 900; font-size: 0.95rem; text-transform: uppercase; flex-grow: 1; text-align: center; white-space: nowrap; overflow: hidden; border-right: 3px solid var(--border-color); animation: blinkCursor .75s step-end infinite; }
-        @keyframes blinkCursor { from, to { border-color: transparent } 50% { border-color: var(--border-color); } }
-        .control-btns { display: flex; gap: 10px; }
-        .ui-btn { background: #fff; border: 3px solid #111; padding: 8px; border-radius: 10px; cursor: pointer; box-shadow: 3px 3px 0px #111; transition: 0.1s; font-size: 1.1rem; }
-        .ui-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px; }
-        .dark-mode .ui-btn { background: #444; border-color: #fff; box-shadow: 3px 3px 0px #fff; color: #fff; }
-        .back-btn { background: var(--accent-blue); color: #fff; padding: 8px 12px; border: 3px solid #111; border-radius: 10px; font-weight: 900; text-decoration: none; box-shadow: 3px 3px 0px #111; }
-
-        /* ==========================================================================
-           5. BACKGROUND & FLOATING EMOJI
-           ========================================================================== */
-        .bg-pattern { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; background-image: radial-gradient(var(--border-color) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.15; }
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
-        #floating-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
-        .float-emoji { position: absolute; bottom: -50px; font-size: 1.5rem; opacity: 0.4; animation: floatUp linear forwards; }
-        @keyframes floatUp { to { transform: translateY(-120vh) rotate(360deg); opacity: 0; } }
-
-        /* ==========================================================================
-           6. CHAT BUBBLE STYLE
-           ========================================================================== */
-        .chat-preview {
-            background: #f0f0f0; border: 3px solid var(--border-color); border-radius: 12px;
-            padding: 12px; margin-top: 12px; font-size: 0.78rem; font-style: normal;
-        }
-        .dark-mode .chat-preview { background: #3a3a3a; }
-        .chat-line { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-        .chat-line:last-child { margin-bottom: 0; }
-        .bubble { padding: 6px 10px; border-radius: 12px; max-width: 80%; border: 2px solid var(--border-color); font-weight: 500; line-height: 1.4; }
-        .bubble-aldo { background: var(--accent-blue); color: #fff; border-color: #3a8fd4; border-bottom-left-radius: 4px; }
-        .bubble-anggie { background: #fff; color: #111; border-bottom-right-radius: 4px; }
-        .dark-mode .bubble-anggie { background: #555; color: #fff; }
-        .chat-name { font-size: 0.65rem; font-weight: 700; opacity: 0.7; margin-bottom: 2px; }
-
-        /* ==========================================================================
-           7. KARTU CERITA
-           ========================================================================== */
-        .story-container { max-width: 500px; margin: 0 auto; padding: 30px 15px 100px; perspective: 1000px; }
-
-        .chapter-badge {
-            display: inline-block; background: var(--accent-blue); color: #fff;
-            border: var(--border-thick) solid var(--border-color); padding: 6px 18px;
-            font-weight: 900; font-size: 0.85rem; text-transform: uppercase;
-            letter-spacing: 2px; margin: 20px 0 10px; box-shadow: 4px 4px 0 var(--border-color);
-            border-radius: 6px;
-        }
-        .chapter-intro {
-            font-size: 0.85rem; font-weight: 600; opacity: 0.75; margin-bottom: 30px;
-            border-left: 4px solid var(--accent-blue); padding-left: 12px;
+        body.dark-mode { 
+            --bg-color: #1a1a1a; 
+            --text-color: #f8f9fa; 
+            --card-bg: #2d2d2d; 
+            --border-color: #ffffff; 
         }
 
-        .scene-card {
-            background: var(--card-bg); border: var(--border-thick) solid var(--border-color); border-radius: 20px; padding: 20px;
-            margin-bottom: 50px; position: relative;
-            opacity: 0; transform: translateY(80px) rotateX(-10deg) scale(0.9);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0px 0px 0px transparent; transform-style: preserve-3d;
+        /* ==========================================================================
+           2. GLOBAL STYLES
+           ========================================================================== */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-        .scene-card.pop-up {
-            opacity: 1; transform: translateY(0) rotateX(0deg) scale(1);
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            position: relative;
+        }
+
+        /* ==========================================================================
+           3. NEO-BRUTALISM COMPONENTS & EFFECTS
+           ========================================================================== */
+        .brutal-box {
+            background: var(--card-bg);
+            border: var(--border-thick) solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 8px 8px 0px var(--border-color);
+            padding: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .brutal-box:hover {
+            transform: translate(-4px, -4px);
             box-shadow: 12px 12px 0px var(--border-color);
         }
-        .scene-num { position: absolute; top: -10px; right: -10px; background: var(--border-color); color: var(--bg-color); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; border-radius: 0 0 0 15px; z-index: 10;}
-        .illustration-box { width: 100%; height: 230px; background: #eee; border: 3px solid var(--border-color); border-radius: 12px; margin-bottom: 15px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 15px; }
-        .dark-mode .illustration-box { background: #333; }
-        .illustration-box svg { width: 100%; height: 100%; }
 
-        .visual-placeholder { font-style: italic; font-weight: 600; color: #777; font-size: 0.8rem; }
-        .visual-placeholder b { color: var(--text-color); display: block; font-size: 1.3rem; margin-bottom: 5px; }
-        .scene-card h2 { font-weight: 900; text-transform: uppercase; font-size: 1.3rem; margin-bottom: 12px; color: var(--text-color); }
-        .scene-card p { font-size: 0.9rem; font-weight: 500; color: var(--text-color); opacity: 0.9; }
-        .scene-card .highlight { background: var(--accent-yellow); color: #111; padding: 0 4px; font-weight: 700; border-radius: 4px; }
+        .brutal-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--accent-yellow);
+            color: #111;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 15px 30px;
+            border: var(--border-thick) solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 6px 6px 0px var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            width: 100%;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .brutal-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0px var(--border-color);
+        }
 
-        .photo-card { border-color: var(--accent-pink); }
-        .photo-card.pop-up { box-shadow: 12px 12px 0px var(--accent-pink); }
-        .photo-card .illustration-box { background: #ddd; padding: 0; }
-        .photo-card img { width: 100%; height: 100%; object-fit: cover; }
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            transform: scale(0);
+            animation: ripple-anim 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple-anim {
+            to { transform: scale(4); opacity: 0; }
+        }
 
-        .date-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; background: var(--accent-green); color: #111; border: 2px solid var(--border-color); border-radius: 30px; padding: 2px 10px; margin-bottom: 10px; }
+        /* Rain Effect Container */
+        #rain-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        .rain-drop {
+            position: absolute;
+            top: -50px;
+            font-size: 2rem;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh); }
+        }
 
         /* ==========================================================================
-           8. FOOTER & BUTTONS
+           4. LAYOUT & SECTIONS
            ========================================================================== */
-        .footer-nav { text-align: center; padding: 30px 0; border-top: 4px dashed var(--border-color); position: relative;}
-        .next-btn { display: inline-block; width: 100%; padding: 18px; background: var(--accent-pink); border: var(--border-thick) solid var(--border-color); border-radius: 15px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; text-decoration: none; color: #fff; box-shadow: 6px 6px 0px var(--border-color); transition: 0.2s; position: relative; overflow: hidden;}
-        .next-btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px; }
-
-        span.ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: rippleAnim .6s linear; background-color: rgba(0,0,0,0.15); width: 100px; height: 100px; margin-top: -50px; margin-left: -50px; pointer-events: none; }
-        @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
-
-        #secret-heart { font-size: 2rem; cursor: pointer; display: inline-block; margin-top: 20px; transition: transform 0.2s; filter: drop-shadow(2px 2px 0px var(--border-color));}
-        #secret-heart:active { transform: scale(1.5); }
-
-        #rain-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; pointer-events: none; z-index: 999999; overflow: hidden;}
-        .rain-drop { position: absolute; font-size: 2rem; animation: fallDown linear forwards; }
-        @keyframes fallDown { 0% { transform: translateY(-50px) rotate(0deg); } 100% { transform: translateY(110vh) rotate(360deg); } }
-
-        .divider { text-align: center; margin: -20px 0 30px; font-size: 1.2rem; opacity: 0.4; letter-spacing: 8px; }
-
-        /* Pulse badge khusus chapter 2 */
-        .new-badge {
-            display: inline-block; background: var(--accent-pink); color: #fff;
-            font-size: 0.65rem; font-weight: 900; padding: 2px 8px;
-            border: 2px solid var(--border-color); border-radius: 20px;
-            text-transform: uppercase; letter-spacing: 1px; margin-left: 6px;
-            animation: pulseBadge 1.5s infinite;
+        header {
+            padding: 50px 20px;
+            text-align: center;
+            background: var(--accent-purple);
+            border-bottom: var(--border-thick) solid var(--border-color);
+            position: relative;
         }
-        @keyframes pulseBadge { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.1); } }
+        header h1 {
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: #111;
+            text-shadow: 3px 3px 0px #fff;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-weight: 600;
+            color: #111;
+        }
 
-    </style>
-</head>
-<body class="light-mode">
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
 
-    <div class="progress-container"><div class="progress-bar" id="myBar"></div></div>
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: -25px;
+            position: relative;
+            z-index: 10;
+        }
+        .control-btn {
+            background: var(--card-bg);
+            border: var(--border-thick) solid var(--border-color);
+            border-radius: 50%;
+            width: 50px; height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    <audio id="bg-audio" loop><source src="music/opening.mp3" type="audio/mpeg"></audio>
+        /* Story Timeline */
+        .story-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 40px;
+        }
 
-    <div id="splash-screen"><div class="loader-box"></div><div class="splash-text">LANJUT LAGI...</div></div>
+        /* Scene Cards */
+        .scene-card {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .scene-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    <div class="bg-pattern"></div>
-    <div id="floating-bg"></div>
-    <canvas id="bg-canvas"></canvas>
+        .scene-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--border-color);
+        }
+        .scene-num {
+            background: var(--accent-pink);
+            color: #111;
+            font-weight: 900;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            border: 3px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .scene-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+            line-height: 1.3;
+        }
+        .scene-card p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
 
-    <header>
-        <a href="happybirthday.html" class="back-btn">🏠</a>
-        <div class="header-title" id="typewriter-title"></div>
-        <div class="control-btns">
-            <button class="ui-btn" onclick="toggleMusic()" id="music-btn">🎵</button>
-            <button class="ui-btn" onclick="toggleDarkMode()">🌓</button>
-        </div>
-    </header>
+        .chat-bubble {
+            background: #f0f0f0;
+            border: 3px solid var(--border-color);
+            padding: 12px 18px;
+            border-radius: 15px;
+            border-bottom-left-radius: 0;
+            margin-bottom: 10px;
+            display: inline-block;
+            font-weight: 600;
+            color: #111;
+            max-width: 85%;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        .chat-bubble.right {
+            background: var(--accent-green);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 0;
+            float: right;
+            clear: both;
+        }
+        .chat-bubble.left {
+            background: var(--accent-blue);
+            clear: both;
+        }
+        .chat-bubble.alert {
+            background: var(--accent-pink);
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .chat-container {
+            overflow: hidden; /* Clearfix */
+            margin-top: 15px;
+            background: rgba(0,0,0,0.03);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px dashed #ccc;
+        }
 
-    <div class="story-container">
+        /* Gallery Section (Swipe & Zoom Logic from Story 1) */
+        .gallery-section {
+            margin-top: 60px;
+        }
+        .gallery-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .gallery-track {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 30px 10px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox */
+            cursor: grab;
+        }
+        .gallery-track::-webkit-scrollbar { display: none; } /* Chrome */
+        .gallery-track:active { cursor: grabbing; }
+        
+        .gallery-item {
+            min-width: 280px;
+            height: 320px;
+            background: var(--card-bg);
+            border: var(--border-thick) solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 6px 6px 0px var(--border-color);
+            scroll-snap-align: center;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .gallery-item.is-focused {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 12px 12px 0px var(--border-color);
+            z-index: 2;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: #ddd;
+            pointer-events: none; /* Prevent drag image issues */
+        }
+        .gallery-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            color: #111;
+            font-weight: 800;
+            padding: 15px;
+            text-align: center;
+            border-top: var(--border-thick) solid var(--border-color);
+        }
 
-        <div class="chapter-badge">📖 Chapter 2 <span class="new-badge">NEW</span></div>
-        <p class="chapter-intro">Pasca bioskop sampai sekarang. Dari canggung biasa jadi nggak bisa pura-pura biasa lagi. "Jika ada Yang Di Lebihkan Mohon Maaf Yah Sayang 🥺".</p>
+        /* Portal / Lock Section */
+        .portal-section {
+            margin-top: 60px;
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--accent-yellow);
+            border: var(--border-thick) solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 8px 8px 0px var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        .portal-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
 
-        <!-- SCENE 01 -->
-        <div class="scene-card">
-            <div class="scene-num">01</div>
-            <div class="illustration-box" style="background: #fff3cd;">
-                <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="320" height="200" fill="#fff3cd"/>
-                    <!-- Kelas SMA -->
-                    <rect x="10" y="40" width="300" height="140" rx="6" fill="#fff" stroke="#111" stroke-width="2.5"/>
-                    <text x="160" y="28" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="900" font-size="11" fill="#111">🏫 DI KELAS</text>
-                    <!-- Papan tulis -->
-                    <rect x="20" y="50" width="280" height="50" rx="4" fill="#2d6a4f" stroke="#111" stroke-width="2"/>
-                    <text x="160" y="78" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">"Katanya narik-narik tangan..." 😏</text>
-                    <!-- Figur Raina -->
-                    <circle cx="80" cy="140" r="18" fill="#ffd166" stroke="#111" stroke-width="2"/>
-                    <rect x="66" y="158" width="28" height="32" rx="5" fill="#4facfe" stroke="#111" stroke-width="2"/>
-                    <text x="80" y="195" text-anchor="middle" font-size="8" font-weight="700" fill="#111">Raina 😏</text>
-                    <!-- Speech bubble Raina -->
-                    <rect x="100" y="122" width="130" height="26" rx="8" fill="#ff6b8a" stroke="#111" stroke-width="2"/>
-                    <polygon points="100,132 92,140 108,140" fill="#ff6b8a" stroke="#111" stroke-width="1.5"/>
-                    <text x="165" y="135" text-anchor="middle" font-size="7.5" fill="#fff" font-weight="700">"kamu kemarin nonton yah~ 👀"</text>
-                    <!-- Figur Aldo malu -->
-                    <circle cx="240" cy="140" r="18" fill="#ffd166" stroke="#111" stroke-width="2"/>
-                    <rect x="226" y="158" width="28" height="32" rx="5" fill="#ccff00" stroke="#111" stroke-width="2"/>
-                    <text x="240" y="130" text-anchor="middle" font-size="14">😳</text>
-                    <text x="240" y="195" text-anchor="middle" font-size="8" font-weight="700" fill="#111">Aldo 😶</text>
-                </svg>
-            </div>
-            <h2>Gosip Pagi di Kelas</h2>
-            <p>Besok paginya, belum sempet naruh tas, <span class="highlight">Raina</span> udah langsung nyamperin. <em>"Kamu kemarin nonton yah sama Anggie~ narik-narik katanya!"</em> Aku langsung diem terdiam, speechless total. Ternyata <span class="highlight">kamu yang cerita ke Raina</span> soal tangan itu. Malu. Parah. Tapi juga bingung napa aku malah senyum sendiri di bangku. 😳</p>
-        </div>
-
-        <div class="divider">• • •</div>
-
-        <!-- SCENE 02 -->
-        <div class="scene-card">
-            <div class="scene-num">02</div>
-            <div class="date-tag">📅 Semester 2 Kelas 2</div>
-            <div class="illustration-box" style="background: #e8f4fd;">
-                <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="320" height="200" fill="#e8f4fd"/>
-                    <!-- Layar proyektor kelas -->
-                    <rect x="20" y="15" width="280" height="90" rx="6" fill="#1a1a2e" stroke="#111" stroke-width="2.5"/>
-                    <rect x="30" y="23" width="260" height="74" rx="4" fill="#0d0d0d"/>
-                    <text x="160" y="60" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">🎬 FILM KELAS</text>
-                    <text x="160" y="76" text-anchor="middle" font-size="8" fill="#aaa">Nobar bareng...</text>
-                    <!-- Kursi kelas -->
-                    <rect x="40" y="120" width="35" height="25" rx="4" fill="#ffd166" stroke="#111" stroke-width="1.5"/>
-                    <rect x="90" y="120" width="35" height="25" rx="4" fill="#ff6b8a" stroke="#111" stroke-width="1.5"/>
-                    <rect x="140" y="120" width="35" height="25" rx="4" fill="#ccc" stroke="#111" stroke-width="1.5"/>
-                    <rect x="190" y="120" width="35" height="25" rx="4" fill="#ccc" stroke="#111" stroke-width="1.5"/>
-                    <rect x="240" y="120" width="35" height="25" rx="4" fill="#ccff00" stroke="#111" stroke-width="1.5"/>
-                    <!-- Figur Aldo -->
-                    <circle cx="57" cy="117" r="14" fill="#ffd166" stroke="#111" stroke-width="1.5"/>
-                    <!-- Figur Anggie -->
-                    <circle cx="107" cy="117" r="14" fill="#ffb6c1" stroke="#111" stroke-width="1.5"/>
-                    <!-- Zaky di belakang -->
-                    <circle cx="257" cy="117" r="14" fill="#ccff00" stroke="#111" stroke-width="1.5"/>
-                    <text x="257" y="160" text-anchor="middle" font-size="7" fill="#111" font-weight="700">Zaky 👀</text>
-                    <!-- Speech bubble Zaky -->
-                    <rect x="175" y="90" width="125" height="22" rx="8" fill="#ccff00" stroke="#111" stroke-width="2"/>
-                    <polygon points="257,112 250,112 263,112" fill="#ccff00"/>
-                    <text x="237" y="104" text-anchor="middle" font-size="7" fill="#111" font-weight="700">"kamu sama anggie deket yah?" 👁️</text>
-                    <!-- Arrow -->
-                    <line x1="200" y1="112" x2="170" y2="112" stroke="#111" stroke-width="1.5" stroke-dasharray="3,2"/>
-                </svg>
-            </div>
-            <h2>Nobar & Kena Tegur Zaky</h2>
-            <p>Waktu ada <span class="highlight">nobar film kelas</span>, kamu duduk di sebelahku. Nggak ada yang ngatur, tapi ya udah di situ aja gitu. Di tengah film, <span class="highlight">Zaky</span> tiba-tiba nunduk ke belakang dan bisik: <em>"Kamu sama Anggie deket yah?"</em> Spontan aku bilang nggak ada — padahal dalam hati udah panik sendiri. Kamu kayak pura-pura fokus ke layar, tapi aku yakin kamu senyum-senyum juga. 😅</p>
-        </div>
-
-        <div class="divider">• • •</div>
-
-        <!-- SCENE 03 -->
-        <div class="scene-card photo-card">
-            <div class="scene-num">03</div>
-            <div class="illustration-box">
-                <img src="img/foto_chat.jpg" alt="Chat WA" onerror="this.parentElement.innerHTML='<div class=\'visual-placeholder\'><b>💬 CHAT YANG NAMBAH INTENS</b>Dari tugas-tugasan ke ngobrol nggak jelas sampai lupa waktu.</div>'">
-            </div>
-            <h2>Chat Nggak Ada Matinya</h2>
-            <p>Sebelumnya WA kita cuma soal tugas dan proyek. Tapi sejak nonton bareng, makin hari makin random. Dari nanya absen, nitip pesan ke guru, sampai tiba-tiba kirim hal nggak penting dan nunggu respons satu sama lain. Aku sadar kamu <span class="highlight">simpen chat-chat lama itu</span> — bahkan foto kamera random yang aku kirim buat izin dispen pun kamu koleksi. Fans emang susah tobat. 😌</p>
-            <div class="chat-preview">
-                <div class="chat-line" style="justify-content:flex-end">
-                    <div style="text-align:right">
-                        <div class="chat-name" style="text-align:right">Aldo</div>
-                        <div class="bubble bubble-aldo">Dimana kamu gi 😐</div>
-                    </div>
-                </div>
-                <div class="chat-line">
-                    <div>
-                        <div class="chat-name">Gigiek</div>
-                        <div class="bubble bubble-anggie">sekolah, buka bazar aku. kenapa? 🙂</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="divider">• • •</div>
-
-        <!-- SCENE 04 -->
-        <div class="scene-card">
-            <div class="scene-num">04</div>
-            <div class="illustration-box" style="background: #ffe5ec;">
-                <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="320" height="200" fill="#ffe5ec"/>
-                    <!-- Rumah Aci -->
-                    <rect x="70" y="30" width="180" height="130" rx="8" fill="#fff" stroke="#111" stroke-width="2.5"/>
-                    <polygon points="70,30 160,5 250,30" fill="#ff6b8a" stroke="#111" stroke-width="2.5"/>
-                    <rect x="130" y="110" width="60" height="50" rx="4" fill="#8B7355" stroke="#111" stroke-width="2"/>
-                    <text x="160" y="8" text-anchor="middle" font-size="9" font-weight="900" fill="#111">🏠 RUMAH ACI</text>
-                    <!-- Aci & Ayra pergi -->
-                    <circle cx="30" cy="130" r="13" fill="#ffd166" stroke="#111" stroke-width="1.5"/>
-                    <circle cx="55" cy="130" r="13" fill="#ffb6c1" stroke="#111" stroke-width="1.5"/>
-                    <text x="42" y="155" text-anchor="middle" font-size="7" fill="#111" font-weight="700">Aci & Ayra 🏃</text>
-                    <text x="42" y="120" text-anchor="middle" font-size="11">→→</text>
-                    <!-- Aldo & Anggie duduk awkward -->
-                    <circle cx="110" cy="100" r="17" fill="#ffd166" stroke="#111" stroke-width="2"/>
-                    <rect x="97" y="117" width="26" height="30" rx="5" fill="#ccff00" stroke="#111" stroke-width="2"/>
-                    <circle cx="195" cy="100" r="17" fill="#ffb6c1" stroke="#111" stroke-width="2"/>
-                    <rect x="182" y="117" width="26" height="30" rx="5" fill="#ff6b8a" stroke="#111" stroke-width="2"/>
-                    <!-- Awkward silence -->
-                    <text x="152" y="95" text-anchor="middle" font-size="18">😶</text>
-                    <text x="110" y="88" font-size="10">💭</text>
-                    <text x="190" y="88" font-size="10">💭</text>
-                    <text x="160" y="175" text-anchor="middle" font-size="9" font-weight="900" fill="#111">diem-dieman parah ✨</text>
-                </svg>
-            </div>
-            <h2>Duo Awkward di Rumah Aci</h2>
-            <p>Pas di ajak ke <span class="highlight">rumah Aci</span>, aku langsung paham ini bukan kebetulan. Aci sama Ayra pergi duluan — ngedate — ninggalin kita <span class="highlight">berduaan</span>. Dua manusia itu duduk di ruang yang sama, diem-dieman, canggung luar biasa. Nggak ada yang mulai ngomong. Nggak ada yang mau ngakui situasinya juga. Paling absurd yang pernah aku rasain. 😶</p>
-        </div>
-
-        <div class="divider">• • •</div>
-
-        <!-- SCENE 05 -->
-        <div class="scene-card">
-            <div class="scene-num">05</div>
-            <div class="illustration-box" style="background: #b8e0ff;">
-                <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="320" height="200" fill="#b8e0ff"/>
-                    <text x="160" y="18" text-anchor="middle" font-size="10" font-weight="900" fill="#111">🌶️ MIE GACOAN</text>
-                    <!-- Konter pesan mie -->
-                    <rect x="80" y="30" width="160" height="80" rx="6" fill="#fff" stroke="#111" stroke-width="2.5"/>
-                    <text x="160" y="65" text-anchor="middle" font-size="9" fill="#111" font-weight="700">Level 5 🔥 + Es Teh</text>
-                    <text x="160" y="80" text-anchor="middle" font-size="8" fill="#888">(mesen bareng gegara disuruh ke depan)</text>
-                    <!-- Aldo + Anggie baris di konter -->
-                    <circle cx="130" cy="135" r="17" fill="#ffd166" stroke="#111" stroke-width="2"/>
-                    <rect x="117" y="152" width="26" height="30" rx="5" fill="#ccff00" stroke="#111" stroke-width="2"/>
-                    <text x="130" y="190" text-anchor="middle" font-size="8" font-weight="700" fill="#111">Aldo 😶</text>
-                    <circle cx="190" cy="135" r="17" fill="#ffb6c1" stroke="#111" stroke-width="2"/>
-                    <rect x="177" y="152" width="26" height="30" rx="5" fill="#ff6b8a" stroke="#111" stroke-width="2"/>
-                    <text x="190" y="190" text-anchor="middle" font-size="8" font-weight="700" fill="#111">Anggie 😶</text>
-                    <!-- Di belakang: Aci Ayra -->
-                    <circle cx="35" cy="155" r="12" fill="#ffd166" stroke="#111" stroke-width="1.5" opacity="0.5"/>
-                    <circle cx="58" cy="155" r="12" fill="#ffb6c1" stroke="#111" stroke-width="1.5" opacity="0.5"/>
-                    <text x="46" y="176" text-anchor="middle" font-size="7" fill="#888">Aci & Ayra</text>
-                    <!-- Arrow mereka di depan -->
-                    <text x="46" y="145" text-anchor="middle" font-size="10">→</text>
-                </svg>
-            </div>
-            <h2>Mesen Gacoan Berduaan</h2>
-            <p>Aci suruh kita berdua yang maju ke konter pesan makanan. Literally <span class="highlight">berduaan di depan kasir Gacoan</span>, berdiri awkward, sama-sama pura-pura sibuk lihat menu. Nggak tau siapa yang mulai ngomong duluan, tapi akhirnya pesan juga. Momen se-simple itu terasa luar biasa beda — dan aku cuma bisa pura-pura biasa aja. 🌶️</p>
-            <div class="chat-preview">
-                <div class="chat-line">
-                    <div>
-                        <div class="chat-name">Gigiek</div>
-                        <div class="bubble bubble-anggie">do, ada ibra? 👀</div>
-                    </div>
-                </div>
-                <div class="chat-line" style="justify-content:flex-end">
-                    <div style="text-align:right">
-                        <div class="chat-name" style="text-align:right">Aldo</div>
-                        <div class="bubble bubble-aldo">Sekarang ga ekstra 🗿</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="divider">• • •</div>
-
-        <!-- SCENE 06 -->
-        <div class="scene-card photo-card">
-            <div class="scene-num">06</div>
-            <div class="illustration-box">
-                <img src="img/foto_makan.jpg" alt="Foto di Rumah Aci" onerror="this.parentElement.innerHTML='<div class=\'visual-placeholder\'><b>🍜 MAKAN BARENG DI RUMAH ACI</b>Duduk di meja yang sama, dua orang yang sama-sama pura-pura nggak ada apa-apa.</div>'">
-            </div>
-            <h2>Makan Bareng (Paling Canggung)</h2>
-            <p>Balik ke rumah Aci, makan bareng di meja yang sama. Empat orang — Aci, Ayra, aku, dan kamu. Kelihatannya biasa. Tapi aku tau kita sama-sama lagi <span class="highlight">pura-pura santai</span> padahal isi kepala masing-masing kacau. Sampai aku yang usul: <em>"Ci, nonton yuk — Tak Ingin Usai."</em> Dan Aci langsung setuju. Karena Aci tau kita jarang ketemu berduaan. 😌</p>
-        </div>
-
-        <div class="divider">• • •</div>
-
-        <!-- SCENE 07 -->
-        <div class="scene-card">
-            <div class="scene-num">07</div>
-            <div class="illustration-box" style="background: #f0e6ff;">
-                <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="320" height="200" fill="#f0e6ff"/>
-                    <!-- HP layar IG -->
-                    <rect x="100" y="20" width="120" height="160" rx="15" fill="#fff" stroke="#111" stroke-width="2.5"/>
-                    <rect x="108" y="35" width="104" height="130" rx="8" fill="#f5f5f5" stroke="#111" stroke-width="1.5"/>
-                    <!-- IG story preview -->
-                    <rect x="115" y="42" width="90" height="50" rx="5" fill="#4facfe"/>
-                    <text x="160" y="63" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">🎬 Tak Ingin Usai</text>
-                    <text x="160" y="75" text-anchor="middle" font-size="7" fill="#ffe">besok. mau? 👀</text>
-                    <!-- Ketik pesan -->
-                    <rect x="115" y="100" width="90" height="22" rx="10" fill="#eee" stroke="#111" stroke-width="1.5"/>
-                    <text x="160" y="113" text-anchor="middle" font-size="7" fill="#111">Nonton yuk! 🎬</text>
-                    <!-- Send btn -->
-                    <circle cx="214" cy="111" r="10" fill="#4facfe" stroke="#111" stroke-width="1.5"/>
-                    <text x="214" y="114" text-anchor="middle" font-size="8" fill="#fff">→</text>
-                    <!-- Stars -->
-                    <text x="60" y="60" font-size="22">✨</text>
-                    <text x="255" y="80" font-size="20">💫</text>
-                    <text x="55" y="150" font-size="18">🎬</text>
-                    <text x="255" y="155" font-size="18">💕</text>
-                    <text x="160" y="192" text-anchor="middle" font-size="8" font-weight="900" fill="#111">DM yang jadi kenyataan ✨</text>
-                </svg>
-            </div>
-            <h2>WA IG yang Jadi Nyata</h2>
-            <p>Waktu Aci sama Ayra udah putus, kamu langsung bilang ke aku. Dan di momen itulah aku nekat — ngirim pesan ke <span class="highlight">IG kamu</span>: <em>"Nonton yuk!"</em>. Expecting satu atau dua hari dipikir-pikir dulu. Tapi ternyata besoknya <span class="highlight">langsung berangkat</span>. First time berdua ke kota. Kamu mungkin nggak tau, tapi aku udah deg-degan sejak malemnya. 🫣</p>
-        </div>
-
-        <div class="divider">• • •</div>
-
-        <!-- SCENE 08 -->
-        <div class="scene-card" style="border-color: var(--accent-pink); border-style: dashed;">
-            <div class="scene-num">08</div>
-            <div class="illustration-box" style="background: #0f0f1a;">
-                <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="320" height="200" fill="#0f0f1a"/>
-                    <!-- Bioskop layar -->
-                    <rect x="30" y="15" width="260" height="105" rx="6" fill="#1a1a2e" stroke="#ffd166" stroke-width="3"/>
-                    <rect x="40" y="23" width="240" height="89" rx="4" fill="#0d0d0d"/>
-                    <text x="160" y="68" text-anchor="middle" font-size="14" fill="#fff" font-weight="900">TAK INGIN USAI</text>
-                    <text x="160" y="85" text-anchor="middle" font-size="9" fill="#ffd166" font-weight="700">🎬 Besok langsung berangkat</text>
-                    <!-- Kursi bioskop -->
-                    <rect x="55" y="143" width="42" height="32" rx="5" fill="#333" stroke="#ffd166" stroke-width="2.5"/>
-                    <rect x="215" y="143" width="42" height="32" rx="5" fill="#333" stroke="#ff6b8a" stroke-width="2.5"/>
-                    <!-- Figur di kursi -->
-                    <circle cx="76" cy="140" r="14" fill="#ffd166" stroke="#ffd166" stroke-width="2"/>
-                    <circle cx="236" cy="140" r="14" fill="#ffb6c1" stroke="#ff6b8a" stroke-width="2"/>
-                    <!-- Tangan narik — kenangan chapter 1 hadir lagi -->
-                    <path d="M89 153 Q158 130 222 153" fill="none" stroke="#ccff00" stroke-width="3" stroke-dasharray="5,3"/>
-                    <text x="158" y="127" text-anchor="middle" font-size="9" fill="#ccff00" font-weight="700">🤝 "narik tangan lagi..."</text>
-                    <!-- Stars -->
-                    <text x="28" y="18" font-size="10">✨</text>
-                    <text x="288" y="18" font-size="10">✨</text>
-                    <text x="28" y="195" font-size="10">💫</text>
-                    <text x="288" y="195" font-size="10">💫</text>
-                </svg>
-            </div>
-            <h2>Bioskop Round 2 — Masih Narik Tangan</h2>
-            <p>Nonton <span class="highlight">Tak Ingin Usai</span> — dan sejarah terulang. Aku canggung total, kamu kayak biasa aja, tapi di ujung film tangan itu lagi-lagi bergerak sendiri. Kali ini aku lebih sadar. Dan kali ini, <span class="highlight">kamu nggak nolak</span>. Pulang tanpa banyak kata, tapi rasanya beda dari semua pulang yang sebelum-sebelumnya. Nggak perlu diucapin untuk dirasain. 🥺</p>
-        </div>
-
-        <div class="divider">• • •</div>
-
-        <!-- SCENE 09 -->
-        <div class="scene-card">
-            <div class="scene-num">09</div>
-            <div class="date-tag">📅 Sudah Lama Ditunggu</div>
-            <div class="illustration-box" style="background: #e8ffd6;">
-                <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="320" height="200" fill="#e8ffd6"/>
-                    <!-- Kalender semester 2 -->
-                    <rect x="40" y="20" width="110" height="90" rx="8" fill="#fff" stroke="#111" stroke-width="2.5"/>
-                    <rect x="40" y="20" width="110" height="25" rx="8" fill="#4facfe" stroke="#111" stroke-width="2.5"/>
-                    <rect x="40" y="32" width="110" height="13" fill="#4facfe"/>
-                    <text x="95" y="37" text-anchor="middle" font-size="9" fill="#fff" font-weight="900">SEMESTER 2 KLS 1</text>
-                    <text x="95" y="72" text-anchor="middle" font-size="8" fill="#111">🗓️ "sudah nunggu</text>
-                    <text x="95" y="84" text-anchor="middle" font-size="8" fill="#111">sejak semester 2"</text>
-                    <text x="95" y="98" text-anchor="middle" font-size="8" fill="#111">— Anggie 🥺</text>
-                    <!-- Arrow ke kanan -->
-                    <text x="160" y="80" text-anchor="middle" font-size="22" fill="#111">→</text>
-                    <!-- Bintang / perasaan -->
-                    <rect x="175" y="25" width="110" height="90" rx="8" fill="#fff" stroke="#111" stroke-width="2.5"/>
-                    <rect x="175" y="25" width="110" height="25" rx="8" fill="#ff6b8a" stroke="#111" stroke-width="2.5"/>
-                    <rect x="175" y="37" width="110" height="13" fill="#ff6b8a"/>
-                    <text x="230" y="37" text-anchor="middle" font-size="9" fill="#fff" font-weight="900">SEKARANG</text>
-                    <text x="230" y="68" text-anchor="middle" font-size="20">❤️</text>
-                    <text x="230" y="95" text-anchor="middle" font-size="8" fill="#111" font-weight="700">Dua orang yang sama-sama</text>
-                    <!-- Footer teks -->
-                    <text x="160" y="140" text-anchor="middle" font-size="9" fill="#111" font-weight="700">Ternyata kamu nungguin aku duluan 🥲</text>
-                    <text x="160" y="158" text-anchor="middle" font-size="8" fill="#555">dari sebelum aku sadar sendiri.</text>
-                    <!-- Garis waktu -->
-                    <line x1="40" y1="175" x2="280" y2="175" stroke="#111" stroke-width="2.5" stroke-dasharray="5,3"/>
-                    <circle cx="95" cy="175" r="5" fill="#4facfe" stroke="#111" stroke-width="2"/>
-                    <circle cx="230" cy="175" r="5" fill="#ff6b8a" stroke="#111" stroke-width="2"/>
-                </svg>
-            </div>
-            <h2>Rahasia Semester 2 Terbongkar</h2>
-            <p>Yang bikin aku nggak bisa move-on dari momen ini: kamu sendiri yang akhirnya ngomong — bahwa kamu udah <span class="highlight">nunggu aku sejak semester 2 kelas 1</span>. Jauh sebelum wawancara, PDD, traktiran, rumah Aci, bioskop. Kamu udah nunggu duluan. Sementara aku masih nggak nyadar. Betapa telat-nya aku. 🥺</p>
-        </div>
-
-        <div class="divider">• • •</div>
-
-        <!-- SCENE 10 -->
-        <div class="scene-card" style="border-color: var(--accent-blue); border-style: double; border-width: 6px;">
-            <div class="scene-num">10</div>
-            <div class="illustration-box" style="background: linear-gradient(135deg, #ff6b8a, #4facfe);">
-                <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Gradient background -->
-                    <defs>
-                        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ff6b8a;stop-opacity:1"/>
-                            <stop offset="100%" style="stop-color:#4facfe;stop-opacity:1"/>
-                        </linearGradient>
-                    </defs>
-                    <rect width="320" height="200" fill="url(#bgGrad)"/>
-                    <!-- Bintang banyak -->
-                    <text x="30" y="35" font-size="14">⭐</text>
-                    <text x="270" y="30" font-size="14">⭐</text>
-                    <text x="150" y="25" font-size="16">✨</text>
-                    <text x="60" y="80" font-size="10">💫</text>
-                    <text x="250" y="85" font-size="10">💫</text>
-                    <text x="30" y="160" font-size="12">🌸</text>
-                    <text x="280" y="165" font-size="12">🌸</text>
-                    <!-- Figur Aldo -->
-                    <circle cx="110" cy="115" r="28" fill="#ffd166" stroke="#fff" stroke-width="3"/>
-                    <rect x="90" y="143" width="40" height="45" rx="8" fill="#ccff00" stroke="#fff" stroke-width="2.5"/>
-                    <text x="110" y="200" text-anchor="middle" font-size="9" fill="#fff" font-weight="900">Aldo</text>
-                    <!-- Figur Anggie -->
-                    <circle cx="210" cy="115" r="28" fill="#ffb6c1" stroke="#fff" stroke-width="3"/>
-                    <rect x="190" y="143" width="40" height="45" rx="8" fill="#ff6b8a" stroke="#fff" stroke-width="2.5"/>
-                    <text x="210" y="200" text-anchor="middle" font-size="9" fill="#fff" font-weight="900">Anggie</text>
-                    <!-- Hati di tengah -->
-                    <text x="160" y="125" text-anchor="middle" font-size="32">❤️</text>
-                    <!-- Border dekoratif -->
-                    <rect x="5" y="5" width="310" height="190" rx="12" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
-                    <!-- Teks -->
-                    <text x="160" y="55" text-anchor="middle" font-size="11" fill="#fff" font-weight="900">DARI ORANG ASING</text>
-                    <text x="160" y="70" text-anchor="middle" font-size="11" fill="#fff" font-weight="900">JADI NGGAK BISA BIASA AJA</text>
-                </svg>
-            </div>
-            <h2>Dari Orang Asing ke Ini</h2>
-            <p>Kalau dua tahun lalu aku diceritain bahwa orang yang follow ig-nya sendiri pakai HP orang lain di Gallery Teater itu bakal jadi seseorang yang paling sering aku pikirin — aku mungkin nggak percaya. Tapi di sini kita. Dan <span class="highlight">cerita ini belum selesai</span>. Masih ada Chapter berikutnya. Yang lebih dalam. Yang lebih serius. Yang cuma kita berdua yang tau. 🥺❤️</p>
-        </div>
-
-        <div class="footer-nav">
-            <button id="btn-lanjut" class="next-btn ripple-btn" onclick="lanjutChapter()">🔒 LANJUT KE CHAPTER RAHASIA</button>
-            <br>
-            <div id="secret-heart" onclick="makeItRain()">💖</div>
-        </div>
-    </div>
-
-    <div id="rain-container"></div>
-
-    <script>
-        // 1. SPLASH SCREEN
-        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 1200); typeWriter(); });
-
-        // 2. DARK MODE
-        function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode')); }
-        if(localStorage.getItem('dark-mode') === 'true') document.body.classList.add('dark-mode');
-
-        // 3. BGM
-        const audio = document.getElementById('bg-audio'); let isPlaying = false;
-        function toggleMusic() { if (isPlaying) { audio.pause(); } else { audio.play().catch(e => alert("Klik layar dulu!")); } isPlaying = !isPlaying; }
-
-        // 4. READING PROGRESS BAR
-        window.onscroll = function() {
-            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            var scrolled = (winScroll / height) * 100;
-            document.getElementById("myBar").style.width = scrolled + "%";
-        };
-
-        // 5. TYPEWRITER
-        const titleText = "Chapter 2: Semakin Dekat";
-        let typeIndex = 0;
-        function typeWriter() {
-            if (typeIndex < titleText.length) {
-                document.getElementById("typewriter-title").innerHTML += titleText.charAt(typeIndex);
-                typeIndex++; setTimeout(typeWriter, 80);
+        /* Navigation Bottom */
+        .nav-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        @media (min-width: 600px) {
+            .nav-bottom {
+                flex-direction: row;
             }
         }
 
-        // 6. KARTU POP-UP OBSERVER
-        const cards = document.querySelectorAll('.scene-card');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) { entry.target.classList.add('pop-up'); }
-                else { entry.target.classList.remove('pop-up'); }
-            });
-        }, { threshold: 0.12 });
-        cards.forEach(card => observer.observe(card));
-
-        // 7. FLOATING EMOJI
-        const floatingBg = document.getElementById('floating-bg');
-        const emos = ['❤️', '✨', '🌸', '💫', '💖', '🎬', '😶', '💕'];
-        function createFloatingEmoji() {
-            const el = document.createElement('div');
-            el.classList.add('float-emoji');
-            el.innerText = emos[Math.floor(Math.random() * emos.length)];
-            el.style.left = Math.random() * 100 + 'vw';
-            el.style.animationDuration = Math.random() * 5 + 5 + 's';
-            floatingBg.appendChild(el);
-            setTimeout(() => { el.remove(); }, 10000);
+        /* Message Box */
+        #msg-box {
+            position: fixed;
+            top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-150px);
+            background: var(--accent-green);
+            color: #111;
+            padding: 15px 25px;
+            border: 3px solid #111;
+            border-radius: 8px;
+            font-weight: 800;
+            box-shadow: 4px 4px 0px #111;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            min-width: 250px;
         }
-        setInterval(createFloatingEmoji, 800);
+        #msg-box.show {
+            transform: translateX(-50%) translateY(0);
+        }
 
-        // 8. CANVAS SPARKS
-        const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d');
-        let sparks = []; const colors = ['#ff6b8a', '#4facfe', '#ffd166', '#ccff00'];
-        function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        class Spark { constructor(x, y) { this.x = x; this.y = y; this.size = Math.random() * 10 + 5; this.speedX = (Math.random() - 0.5) * 15; this.speedY = (Math.random() - 0.5) * 15; this.life = 1.0; this.decay = Math.random() * 0.03 + 0.02; this.color = colors[Math.floor(Math.random() * colors.length)]; } update() { this.x += this.speedX; this.y += this.speedY; this.life -= this.decay; } draw() { ctx.save(); ctx.globalAlpha = Math.max(0, this.life); ctx.fillStyle = this.color; ctx.beginPath(); ctx.rect(this.x, this.y, this.size, this.size); ctx.fill(); ctx.restore(); } }
-        window.addEventListener('pointerdown', (e) => { if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.id === 'secret-heart') return; for(let i=0; i<8; i++) sparks.push(new Spark(e.clientX, e.clientY)); });
-        function animate() { ctx.clearRect(0,0,canvas.width, canvas.height); for (let i = sparks.length - 1; i >= 0; i--) { sparks[i].update(); sparks[i].draw(); if (sparks[i].life <= 0) sparks.splice(i, 1); } requestAnimationFrame(animate); } window.addEventListener('resize', initCanvas); initCanvas(); animate();
+    </style>
+</head>
+<body>
 
-        // 9. RIPPLE
-        document.addEventListener('click', function(e) { let target = e.target.closest('.ripple-btn'); if (!target) return; let rect = target.getBoundingClientRect(); let x = e.clientX - rect.left; let y = e.clientY - rect.top; let ripple = document.createElement('span'); ripple.classList.add('ripple'); ripple.style.left = `${x}px`; ripple.style.top = `${y}px`; target.appendChild(ripple); setTimeout(() => ripple.remove(), 600); });
+    <!-- Audio Element -->
+    <audio id="bgMusic" loop>
+        <source src="lagu_chapter2.mp3" type="audio/mpeg">
+    </audio>
 
-        // 10. HUJAN CINTA
+    <div id="rain-container"></div>
+    <div id="msg-box">Notifikasi</div>
+
+    <header>
+        <h1>CHAPTER 2</h1>
+        <p>Masa Kelas 3: Sibuk, Ngambek, & Makin Sayang 😤💖</p>
+    </header>
+
+    <div class="controls">
+        <button class="control-btn ripple-btn" onclick="toggleMusic()" id="musicBtn">🎵</button>
+        <button class="control-btn ripple-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <button class="control-btn ripple-btn" onclick="makeItRain()">✨</button>
+    </div>
+
+    <div class="container">
+        
+        <div class="story-timeline">
+            <!-- SCENE 1 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-blue);">1</div>
+                    <div class="scene-title">Awal Kelas 3 yang Tiba-tiba Sibuk 🏃‍♂️</div>
+                </div>
+                <p>Waktu kerasa cepet banget ya? Tahu-tahu kita udah naik ke kelas 3 aja. Di fase ini, beban sekolah mulai berasa lumayan berat. Tugas numpuk, ujian mulai deket, dan banyak banget urusan kelompok yang harus diselesaiin. Kadang sampai bingung harus bagi waktu gimana antara nugas, kumpul bareng temen kelompok, dan ngabarin kamu. Contohnya nih, pas aku harus wawancara bareng Adven sama Alip pulang sekolah. Rasanya badan udah capek dan pengen cepet-cepet kelar biar bisa istirahat, tapi hal ini malah bikin waktu ngobrol kita berkurang drastis.</p>
+                <div class="chat-container">
+                    <div class="chat-bubble left">"Aku sama Adven hari jumat pulsek wawancara"</div>
+                    <div class="chat-bubble right">"Ini mau bareng gimana?"</div>
+                </div>
+            </div>
+
+            <!-- SCENE 2 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-pink);">2</div>
+                    <div class="scene-title">Mulai Muncul Bibit-bibit Ngambek 🙎‍♀️</div>
+                </div>
+                <p>Nah, gara-gara kesibukanku yang kadang bikin lupa waktu ini, petaka mulai datang meronta-ronta. Chat yang biasanya aku bales secepat kilat, sekarang jadi agak *delay*. Dari yang awalnya kamu nanya dengan nada santai, perlahan tapi pasti hawanya mulai berubah jadi dingin sedingin es kutub utara. Tiba-tiba kamu ngetik pesan yang bikin jantungan, bawa-bawa fisik dan ngerasa insecure sendiri. Pokoknya kalau udah ngetik pakai *capslock* semua, itu tandanya sirine bahaya udah bunyi. Siaga satu!</p>
+                <div class="chat-container">
+                    <div class="chat-bubble right alert">"Pilih aja. AKUNYA YG JELEK"</div>
+                </div>
+            </div>
+
+            <!-- SCENE 3 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-yellow);">3</div>
+                    <div class="scene-title">Jurus Kepanikan Aldo Tingkat Dewa 🚨</div>
+                </div>
+                <p>Pas kamu udah bilang "Pilih aja. AKUNYA YG JELEK", sumpah di situ aku panik banget. Keringat dingin mulai ngucur. Aku mikir keras, bingung mau bales apa biar kamu nggak makin marah dan mikir yang macam-macam. Akhirnya, keluar deh jurus andalan maut yang paling instan: langsung puji kamu habis-habisan! Kalimat "Cantikkk sayabgggg 😍" itu bukan sekadar gombalan murahan lho, tapi emang beneran tulus dari hati, walau jujur aja aku ngetiknya sambil deg-degan takut malah dibilang buaya darat.</p>
+                <div class="chat-container">
+                    <div class="chat-bubble left">"Kalo kado nya emang jelek jangan ngejek gitu mu"</div>
+                    <div class="chat-bubble right alert">"AKUNYA YG JELEK"</div>
+                    <div class="chat-bubble left" style="background: var(--accent-pink); color: #fff;">"Cantikkk sayabgggg 😍"</div>
+                </div>
+            </div>
+
+            <!-- SCENE 4 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-green);">4</div>
+                    <div class="scene-title">Pelarian Andalan ke TikTok 📱</div>
+                </div>
+                <p>Namanya juga cewek kalau lagi ngambek, chat panjang-panjang dari aku cuma dibales dengan dua kata super singkat, padat, dan menohok. "Sudah tuh," balasmu cuek banget. Padahal ya, aku hafal betul kelakuanmu kalau lagi bete tingkat dewa gini. Pasti pelariannya ujung-ujungnya langsung buka aplikasi TikTok. Scroll-scroll FYP sendirian sampai lupa daratan dan lupa kalau ada cowoknya yang lagi nungguin balasan. Kalau udah aku goda "Lagi nonton tiktok?", pasti gengsimu selangit buat ngakuinya.</p>
+                <div class="chat-container">
+                    <div class="chat-bubble left">"Huuuu... Kamu lagi nonton tiktok? Apie"</div>
+                    <div class="chat-bubble right">"Sudah tuh"</div>
+                </div>
+            </div>
+
+            <!-- SCENE 5 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-purple);">5</div>
+                    <div class="scene-title">Kalau Kepala Udah Panas 🔥</div>
+                </div>
+                <p>Momen-momen ngambek kayak gini tuh bikin aku sadar satu hal penting tentang kamu. Kamu tuh kalau lagi kesel, emosi, atau bete, emang susah banget dibujuk pakai kalimat rasional atau diajak debat. Makanya aku nemuin trik baru yang cukup ampuh. Pokoknya kalau lagi panas kepalanya, nggak usah banyak cingcong, mending langsung panggil "sayanggg" aja terus-terusan. Tujuannya simpel, minimal bikin kamu salting dikit, walau di luarnya wajahmu masih sok jual mahal dan cemberut maksimal.</p>
+                <div class="chat-container">
+                    <div class="chat-bubble left">"Kalo lagi panas kepalanya bilang sayanggg"</div>
+                </div>
+            </div>
+
+            <!-- SCENE 6 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-blue);">6</div>
+                    <div class="scene-title">Tragedi Ditinggal Tidur 😴</div>
+                </div>
+                <p>Ini nih yang paling bikin pasrah. Udah capek-capek ngerangkai kata demi kata buat ngerayu, udah nungguin di depan layar HP sampai mata sepet, eh taunya pesanku cuma berakhir centang dua abu-abu. Jam di dinding udah nunjukin lewat dari tengah malam, dan aku baru sadar kalau orang yang lagi ngambek ini ternyata udah pules banget di alam mimpi. Ya udahlah ya, mau gimana lagi. HP aku taruh, dan aku siap-siap buat nyambung perang rayuan besok paginya di sekolah.</p>
+                <div class="chat-container">
+                    <div class="chat-bubble left">"Udah tidur ituu orang..."</div>
+                </div>
+            </div>
+
+            <!-- SCENE 7 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-pink);">7</div>
+                    <div class="scene-title">Pagi yang Terasa Canggung 🌅</div>
+                </div>
+                <p>Besok paginya pas ketemu di lorong sekolah, hawanya beneran kerasa canggung abis. Kayak ada awan mendung di atas kepalamu. Sisa-sisa amarah dan bete semalam masih kelihatan jelas tercetak di mukamu. Kamu jalan ngelewatin aku sambil agak buang muka dikit, pura-pura nggak liat. Tapi lucunya, biarpun kamu lagi mode maung dan cemberut gitu, di mataku kamu malah keliatan makin gemesin. Aku mau ketawa ngakak takut diamuk massa, jadi akhirnya cuma bisa senyum-senyum sendiri nahan gemes.</p>
+            </div>
+
+            <!-- SCENE 8 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-yellow);">8</div>
+                    <div class="scene-title">Gengsi Tinggi Tapi Senang Disogok Jajan 🙈</div>
+                </div>
+                <p>Biar amarahmu cepet reda dan status darurat bisa dicabut, aku harus nyiapin sogokan andalan. Waktu jam istirahat tiba, aku diam-diam beliin jajan atau minuman kesukaanmu. Waktu aku kasihin ke mejamu, mukamu masih sok ditekuk sedemikian rupa, nada bicaranya juga masih agak ketus pas bilang, "Apaan sih, males ah." Tapi anehnya, secepat kilat tanganmu tetep aja nyamber jajan itu buat dimakan. Dasar gengsi aja digedein, padahal di dalam hati aslinya girang banget kan disogok makanan kesukaan?</p>
+            </div>
+
+            <!-- SCENE 9 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-green);">9</div>
+                    <div class="scene-title">Drama Akibat Circle Kelas 👥</div>
+                </div>
+                <p>Selain perkara chat dibales kelamaan, kadang akar permasalahan drama juga muncul kalau aku lagi asik ngumpul sama temen-temen circle kelasku. Pas aku lagi heboh-hebohnya ngobrol atau ngakak bareng Mas Nanda, Alif, Ibra, atau Jio, kadang kamu ngeliatin dari jauh dan ngerasa dikacangin. Ujung-ujungnya, mode ngambek otomatis aktif lagi. Padahal sumpah demi apapun, meskipun raga dan suaraku asik ngumpul sama anak-anak cowok itu, tapi isi kepalaku dari tadi tetep mikirin kamu kok!</p>
+            </div>
+
+            <!-- SCENE 10 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-purple);">10</div>
+                    <div class="scene-title">Candaan Bapak-bapak Sebagai Penyelamat 🤡</div>
+                </div>
+                <p>Kalau sogokan makanan aja ternyata masih kurang mempan buat balikin mood-mu, berarti ini saatnya aku ngeluarin jurus pamungkas. Aku mulai ngeluarin jokes bapak-bapak atau pelesetan kata super jayus yang sebenernya sama sekali nggak lucu. Awalnya kamu cuma narik napas panjang, merotasikan bola matamu dengan tatapan super males ngeliat tingkah absurdku. Tapi pelan tapi pasti, pertahananmu runtuh juga. Ketawamu akhirnya lepas, dan seketika awan mendung ngambekmu sirna berganti pelangi.</p>
+            </div>
+
+            <!-- SCENE 11 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-blue);">11</div>
+                    <div class="scene-title">Diskusi Serius Mikirin Masa Depan 🎓</div>
+                </div>
+                <p>Di balik banyaknya rentetan drama kecil dan ngambek-ngambekan nggak jelas, masa kelas 3 ini juga jadi turning point di mana kita mulai memikirkan hal-hal serius. Kadang, di sela-sela istirahat atau nunggu bel pulang, kita duduk bareng buat ngobrolin soal masa depan. Kita bahas mau lanjut kuliah jurusan apa, ke kampus mana, atau rencana panjang setelah lulus nanti. Di momen-momen inilah aku ngerasa banget kalau hubungan kita ini bukan sekadar buat haha-hihi doang, tapi kita beneran bisa jadi partner yang saling support buat maju bareng.</p>
+            </div>
+
+            <!-- SCENE 12 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-pink);">12</div>
+                    <div class="scene-title">Alasan Ngambek Paling Random 🎲</div>
+                </div>
+                <p>Biarpun kita udah ngobrolin hal serius, tetep aja yang namanya Gigiek pasti ada-ada aja alasannya buat ngambek yang kadang out of the box alias di luar nalar. Pernah suatu hari kamu tiba-tiba berubah jutek cuma gara-gara aku lupa ngirim stiker balesan langganan kita di WhatsApp. Atau hal-sepele lainnya yang bikin aku mikir keras merenungi nasib, "Ya Tuhan, ini hambamu salah di mana lagi ya?". Tapi anehnya, justru hal-hal random dan absurd inilah yang bikin cerita kita jadi seru dan berwarna banget tiap harinya.</p>
+            </div>
+
+            <!-- SCENE 13 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-yellow);">13</div>
+                    <div class="scene-title">Sadar Satu Hal Tentangmu 💡</div>
+                </div>
+                <p>Dari sekian banyak momen ngambekmu, dari setiap kali aku harus putar otak buat susah payah ngebujuk kamu, ada satu kesadaran manis yang akhirnya muncul di kepalaku. Aku sadar, kamu itu ngambek bukan karena kamu benci atau pengen nyari ribut. Kamu bertingkah gitu karena kamu peduli, dan kamu pengen dapet validasi serta perhatian penuh dari aku. Dan jujur aja, aku menikmati proses merhatiin kamu. Ngambekmu itu ibarat bumbu rahasia yang bukannya bikin repot, malah bikin rasa sayangku ke kamu makin menguat setiap harinya.</p>
+            </div>
+
+            <!-- SCENE 14 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-green);">14</div>
+                    <div class="scene-title">Menghitung Hari ke 21 Juli 2025 🗓️</div>
+                </div>
+                <p>Waktu terus bergulir tanpa kerasa. Ujian demi ujian di kelas 3 pelan-pelan kita hadapi dan kita lewati bareng-bareng. Stresnya tugas dan belajar emang kadang bikin emosi kita berdua naik turun nggak karuan, tapi syukurnya kita tetep memilih buat saling menemani. Semua kejadian itu, dari momen yang super manis sampai yang penuh perdebatan sengit, perlahan-lahan mengantarkan kita mendekati satu tanggal yang bakal jadi salah satu momen paling spesial buat kita. Ya, langkah kita semakin dekat menuju tanggal 21 Juli 2025.</p>
+            </div>
+
+            <!-- SCENE 15 -->
+            <div class="scene-header brutal-box scene-card">
+                <div class="scene-header" style="border:none; margin:0; padding:0;">
+                    <div class="scene-num" style="background: var(--accent-purple);">15</div>
+                    <div class="scene-title">Tibalah Hari Bersejarah Itu ✨</div>
+                </div>
+                <p style="margin-top: 15px;">Dan akhirnya, sampailah kita tepat di tanggal 21 Juli 2025. Di hari yang penting ini, entah kenapa auramu terasa beda banget, jauh lebih bersinar dari biasanya. Semua sisa-sisa capek, ngambek, dan drama kelas 3 rasanya langsung lunas terbayar lunas tanpa sisa pas aku ngelihat senyum manismu hari itu. Kita duduk berdua, ngobrol dari hati ke hati, saling *flashback* dan ngetawain betapa konyol dan kekanak-kanakannya tingkah laku kita selama masa-masa kelas 3 ini.</p>
+            </div>
+
+            <!-- SCENE 16 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-blue);">16</div>
+                    <div class="scene-title">Sesi Maaf dan Terima Kasih 🙏</div>
+                </div>
+                <p>Di momen berharga itu, aku bener-bener nyempetin waktu buat minta maaf ke kamu secara serius dan dari lubuk hati paling dalam. Maaf banget kalau selama ini aku sering sibuk sendiri sama urusanku, sering bikin kamu nunggu balasan chat kelamaan, atau ngelakuin hal-hal kecil ngeselin yang bikin mood kamu hancur. Kamu cuma dengerin penjelasanku dengan tatapan lembut, terus sesekali tersenyum sambil nahan malu, karena kamu juga akhirnya sadar dan ngaku kalau selama ini kamu itu emang hobi banget ngambekan perkara hal kecil.</p>
+            </div>
+
+            <!-- SCENE 17 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-pink);">17</div>
+                    <div class="scene-title">Janji Kecil Untuk Kedepannya 🤝</div>
+                </div>
+                <p>Hari itu, kita sepakat buat bikin sebuah janji kecil tapi bermakna. Kita berjanji, apapun rintangan yang terjadi ke depannya, kalau emang ada kelakuan yang bikin kesel, kita bakal usaha buat ngobrolin baik-baik tanpa harus diem-dieman. Dan ada satu janji wajib: ngambeknya nggak boleh lama-lama lagi ya! Kalau emang beneran lagi kerasa panas kepalanya, kamu tinggal tagih aja aku buat manggil kamu "sayang", biar amarah yang menggebu-gebu itu bisa langsung meleleh detik itu juga.</p>
+            </div>
+
+            <!-- SCENE 18 -->
+            <div class="scene-card brutal-box">
+                <div class="scene-header">
+                    <div class="scene-num" style="background: var(--accent-yellow);">18</div>
+                    <div class="scene-title">Bersambung ke Sesuatu yang Spesial... 🎁</div>
+                </div>
+                <p>Cerita panjang yang penuh dengan lika-liku drama, ngambek-ngambek lucu, kejengkelan, sampai tawa bahagia di masa kelas 3 ini akhirnya berhasil ngebentuk fondasi yang kuat banget buat hubungan kita. Tapi eits, tunggu dulu, perjalanan dan kejutan ini belum bener-bener berakhir di sini lho. Karena persis di ujung semua keributan manis yang udah kita lewati bareng ini, ada satu hadiah rahasia yang udah aku persiapkan khusus buat kamu. Sebuah kejutan spesial menunggumu di balik portal di bawah ini. Yuk, coba buka gemboknya sekarang!</p>
+            </div>
+        </div>
+
+        <!-- GALLERY SECTION (Swipe & Drag logic active) -->
+        <div class="gallery-section">
+            <h2 class="gallery-title">Memori Kelas 3 📸</h2>
+            <div class="gallery-track" id="gallery-track">
+                <div class="gallery-item">
+                    <img src="satu.jpg" alt="Momen 1" onerror="this.src='https://via.placeholder.com/280x320/ff6b8a/111111?text=Muka+Bete'">
+                    <div class="gallery-caption">Muka Bete 😒</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="dua.jpg" alt="Momen 2" onerror="this.src='https://via.placeholder.com/280x320/4facfe/111111?text=Aldo+Panik'">
+                    <div class="gallery-caption">Aldo Panik 🏃</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="tiga.jpg" alt="Momen 3" onerror="this.src='https://via.placeholder.com/280x320/ccff00/111111?text=Tugas+Sekolah'">
+                    <div class="gallery-caption">Tugas Numumpuk 📚</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="empat.jpg" alt="Momen 4" onerror="this.src='https://via.placeholder.com/280x320/ffd166/111111?text=Sogokan+Jajan'">
+                    <div class="gallery-caption">Sogokan Jajan 🍔</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="lima.jpg" alt="Momen 5" onerror="this.src='https://via.placeholder.com/280x320/c299fc/111111?text=TikTok+Terus'">
+                    <div class="gallery-caption">Scroll TikTok Terus 📱</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="enam.jpg" alt="Momen 6" onerror="this.src='https://via.placeholder.com/280x320/f8f9fa/111111?text=21+Juli+2025'">
+                    <div class="gallery-caption">21 Juli 2025 ✨</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PORTAL / LOCK CACHE HBD -->
+        <div class="portal-section brutal-box" id="portalHBD">
+            <div class="portal-icon">🔒</div>
+            <h2 style="font-weight: 900; margin-bottom: 10px;">PORTAL RAHASIA</h2>
+            <p style="margin-bottom: 20px; font-weight: 600;">Menuju file HBD. Selesaikan cerita panjang ini untuk membuka gembok!</p>
+            <button class="brutal-btn ripple-btn" style="background: var(--card-bg);" onclick="unlockPortal()">
+                BUKA GEMBOK (CACHE) 🔑
+            </button>
+        </div>
+
+        <!-- NAV BOTTOM -->
+        <div class="nav-bottom">
+            <a href="story1 (1).html" class="brutal-btn ripple-btn" style="background: var(--accent-pink);">
+                ⬅️ KEMBALI
+            </a>
+            <button class="brutal-btn ripple-btn" id="btnLanjut" style="background: #ccc; cursor: not-allowed;" onclick="goNext()">
+                LANJUT ➡️
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Notifikasi Custom (Pengganti Alert)
+        function showMsg(text) {
+            const msgBox = document.getElementById('msg-box');
+            msgBox.innerText = text;
+            msgBox.classList.add('show');
+            setTimeout(() => {
+                msgBox.classList.remove('show');
+            }, 3000);
+        }
+
+        // 2. Ripple Effect Button
+        document.querySelectorAll('.ripple-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                let x = e.clientX - e.target.getBoundingClientRect().left;
+                let y = e.clientY - e.target.getBoundingClientRect().top;
+                let ripples = document.createElement('span');
+                ripples.style.left = x + 'px';
+                ripples.style.top = y + 'px';
+                ripples.classList.add('ripple');
+                this.appendChild(ripples);
+                setTimeout(() => { ripples.remove() }, 600);
+            });
+        });
+
+        // 3. Musik Logic
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.innerText = '🎵';
+                showMsg('Musik dijeda');
+            } else {
+                music.play().catch(() => showMsg('Interaksi dulu untuk putar musik'));
+                musicBtn.innerText = '⏸️';
+                showMsg('Musik dimainkan');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // 4. Dark Mode
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const themeBtn = document.getElementById('themeBtn');
+            if (document.body.classList.contains('dark-mode')) {
+                themeBtn.innerText = '☀️';
+            } else {
+                themeBtn.innerText = '🌙';
+            }
+        }
+
+        // 5. Rain Effect Cinta
         function makeItRain() {
             const rainContainer = document.getElementById('rain-container');
-            for(let i = 0; i < 40; i++) {
+            const emojis = ['💖', '💕', '🥰', '😍', '✨', '💫', '❤️', '😡'];
+            for(let i = 0; i < 35; i++) {
                 setTimeout(() => {
                     const drop = document.createElement('div');
                     drop.classList.add('rain-drop');
-                    drop.innerText = ['💖', '💕', '🥰', '😍', '✨', '💫', '❤️'][Math.floor(Math.random() * 7)];
+                    drop.innerText = emojis[Math.floor(Math.random() * emojis.length)];
                     drop.style.left = Math.random() * 100 + 'vw';
                     drop.style.animationDuration = Math.random() * 2 + 2 + 's';
                     rainContainer.appendChild(drop);
                     setTimeout(() => { drop.remove(); }, 4000);
-                }, i * 100);
+                }, i * 120);
             }
         }
 
-        // 11. LANJUT CHAPTER
-        function lanjutChapter() {
-            localStorage.setItem('chapter2_completed', 'true');
-            const btn = document.getElementById('btn-lanjut');
-            btn.innerHTML = '🔓 MEMBUKA CHAPTER RAHASIA...'; btn.style.background = 'var(--accent-blue)';
-            setTimeout(() => { window.location.href = 'story3.html'; }, 900);
+        // 6. Scroll Animation (Intersection Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.scene-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // 7. Gallery Swipe Logic (Drag & Zoom Effect)
+        const slider = document.getElementById('gallery-track');
+        let isDown = false; let startX; let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true; slider.style.cursor = 'grabbing';
+            startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => { isDown = false; slider.style.cursor = 'grab'; });
+        slider.addEventListener('mouseup', () => { isDown = false; slider.style.cursor = 'grab'; });
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return; e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk;
+        });
+
+        const galleryCardsList = document.querySelectorAll('.gallery-item');
+        const galleryObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('is-focused');
+                else entry.target.classList.remove('is-focused');
+            });
+        }, { root: slider, rootMargin: '0px', threshold: 0.6 });
+        galleryCardsList.forEach(card => galleryObserver.observe(card));
+
+        // 8. Portal Cache Logic (HBD File)
+        function checkCache() {
+            const isUnlocked = localStorage.getItem('hbd_unlocked');
+            const btnLanjut = document.getElementById('btnLanjut');
+            const portalIcon = document.querySelector('.portal-icon');
+            
+            if (isUnlocked === 'true') {
+                portalIcon.innerText = '🔓';
+                btnLanjut.style.background = 'var(--accent-blue)';
+                btnLanjut.style.cursor = 'pointer';
+                btnLanjut.innerText = 'LANJUT KE HBD ➡️';
+            }
         }
+
+        function unlockPortal() {
+            localStorage.setItem('hbd_unlocked', 'true');
+            makeItRain(); // Kasih hujan pas berhasil unlock
+            showMsg('Cache Tersimpan! Gembok Terbuka 🔓');
+            
+            document.querySelector('.portal-icon').innerText = '🔓';
+            document.querySelector('.portal-section').style.background = 'var(--accent-green)';
+            
+            const btnLanjut = document.getElementById('btnLanjut');
+            btnLanjut.style.background = 'var(--accent-blue)';
+            btnLanjut.style.cursor = 'pointer';
+            btnLanjut.innerText = 'LANJUT KE HBD ➡️';
+        }
+
+        function goNext() {
+            const isUnlocked = localStorage.getItem('hbd_unlocked');
+            if (isUnlocked === 'true') {
+                showMsg('Mengarahkan ke file HBD...');
+                // window.location.href = 'hbd_file.html'; // Nanti sesuaikan nama filenya
+            } else {
+                showMsg('Buka gembok portal dulu ya!');
+                // scroll ke portal
+                document.getElementById('portalHBD').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Init
+        window.onload = () => {
+            checkCache();
+            setTimeout(() => {
+                const firstCard = document.querySelector('.scene-card');
+                if(firstCard) firstCard.classList.add('visible');
+            }, 300);
+        };
     </script>
 </body>
 </html>
