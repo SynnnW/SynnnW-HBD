@@ -1,11 +1,11 @@
 /* =========================================================================================
-   👑 KING VEO V4 - ULTIMATE FLAPPY BIRD ENGINE (GOD MODE + TROLL EDITION)
+   👑 KING VEO V4.5 - ULTIMATE FLAPPY BIRD ENGINE (WIDESCREEN + GOD MODE)
    =========================================================================================
    - Fake WhatsApp Notification Injector
    - Sistem Partikel Asap & Teks Melayang
    - Day/Night Cycle & Screen Shake (FIXED BUGS)
    - BGM Auto-Play Manager (MIGRATED TO HTML)
-   - Desktop vs Mobile Responsive Support
+   - TRUE WIDESCREEN PC SUPPORT (Layar ngelebar, pipa spawn dinamis dari ujung layar!)
    ========================================================================================= */
 
 var debugmode = false;
@@ -38,32 +38,71 @@ var replayclickable = false;
 var loopGameloop;
 var loopPipeloop;
 
-// --- SCALING (BIAR PAS DI SEMUA HP & PC) ---
+// --- SCALING & WIDESCREEN ENGINE ---
 var gameScale = 1;
+var gameW = 320; // Lebar standar HP
+var gameH = 568; // Tinggi standar HP
+
 function scaleGame() {
-   var gameW = 320;
-   var gameH = 568;
+   var baseW = 320;
+   var baseH = 568;
    
-   var scaleX = window.innerWidth  / gameW;
-   var scaleY = window.innerHeight / gameH;
+   var scaleX = window.innerWidth  / baseW;
+   var scaleY = window.innerHeight / baseH;
    
-   // LOGIKA BARU UNTUK MODE DESKTOP/PC
+   // LOGIKA BARU UNTUK MODE DESKTOP/PC (WIDESCREEN)
    if (document.body.classList.contains('desktop-mode')) {
-       // Kunci tinggi layar maksimal 85% dari tinggi monitor biar gak kepotong
-       var wrapperH = window.innerHeight * 0.85; 
-       if (wrapperH > 800) wrapperH = 800; // Batas maksimal tinggi
-       if (wrapperH < 400) wrapperH = 400; // Batas minimal tinggi
-       
-       scaleY = wrapperH / gameH;
-       scaleX = scaleY; // Samakan skala X dan Y biar bentuknya tetap HP (Portrait)
+       // Kunci tinggi layar, lebarkan (stretch) sampingnya full window laptop
+       gameScale = scaleY;
+       gameW = window.innerWidth / gameScale; 
+   } else {
+       // MODE HP / PORTRAIT: Sesuaikan skala terkecil biar gak kepotong
+       gameScale = Math.min(scaleX, scaleY);
+       gameW = baseW;
    }
-   
-   gameScale = Math.min(scaleX, scaleY);
    
    var container = document.getElementById('gamecontainer');
    if (container) {
        container.style.transform = 'scale(' + gameScale + ')';
+       container.style.width = gameW + 'px';
+       container.style.height = gameH + 'px';
    }
+
+   // Pusat-kan UI (Splash, Scoreboard, Replay) otomatis ke tengah layar
+   $("#splash").css("left", (gameW / 2 - 94) + "px"); 
+   $("#scoreboard").css("left", (gameW / 2 - 118) + "px"); 
+   $("#replay").css("left", (gameW / 2 - 35) + "px"); 
+
+   // Geser Burung agak maju ke tengah kalau layarnya lebar banget di PC
+   var pLeft = document.body.classList.contains('desktop-mode') ? Math.max(60, gameW * 0.2) : 60;
+   $("#player").css("left", pLeft + "px");
+
+   // Update logika CSS Pipa biar spawn beneran dari ujung paling kanan layar laptop!
+   updatePipeCSS();
+}
+
+function updatePipeCSS() {
+   var style = document.getElementById('dynamic-pipe-css');
+   if (!style) {
+       style = document.createElement('style');
+       style.id = 'dynamic-pipe-css';
+       document.head.appendChild(style);
+   }
+   
+   // Kalkulasi durasi animasi biar kecepatan pipanya SAMA PERSIS meski layarnya ngelebar!
+   // Standar kecepatan Flappy Bird: Jarak 500px ditempuh dalam 4000ms. (8ms per piksel)
+   var distance = gameW + 100; // Bergerak dari ujung layar kanan (gameW) sampai -100px (luar layar kiri)
+   var duration = distance * 8; 
+   
+   // Inject CSS Dinamis untuk mengganti default animPipe di main.css
+   style.innerHTML = `
+       @-webkit-keyframes animPipe { 0% { left: ${gameW}px; } 100% { left: -100px; } }
+       @keyframes animPipe { 0% { left: ${gameW}px; } 100% { left: -100px; } }
+       .pipe {
+           -webkit-animation: animPipe ${duration}ms linear;
+           animation: animPipe ${duration}ms linear;
+       }
+   `;
 }
 
 // --- AUDIO MANAGER ---
@@ -77,12 +116,11 @@ var soundSwoosh = new buzz.sound("assets/sounds/sfx_swooshing.ogg");
 buzz.all().setVolume(volume);
 
 function playBGM() {
-    // FIX BUG LAGU DOUBLE: 
-    // Dikosongin karena pemutar musik udah ditangani secara penuh oleh HTML
+    // KOSONG - DIMATIKAN! 
+    // Biar gak double karena lagu udah diputar sama HTML
 }
 function stopBGM() {
-    // FIX BUG LAGU DOUBLE:
-    // Dikosongin karena pemutar musik udah ditangani secara penuh oleh HTML
+    // KOSONG - DIMATIKAN!
 }
 
 // =========================================================================================
@@ -104,18 +142,16 @@ function injectFakeWA() {
 }
 
 function showFakeWA() {
-    // Turunkan notif dari atas layar
     $("#fake-wa").css("top", "20px");
-    soundScore.play(); // Mainkan suara koin biar dia sadar ada notif
+    soundScore.play(); // Efek suara biar kaget
     
-    // Sembunyikan lagi setelah 4 detik
     setTimeout(function() {
        $("#fake-wa").css("top", "-120px");
     }, 4000);
 }
 
 // =========================================================================================
-// EFEK VISUAL GELO (ASAP, GETAR, SIANG-MALAM)
+// EFEK VISUAL GELO (ASAP, GETAR)
 // =========================================================================================
 function spawnPuff() {
     var player = $("#player");
@@ -129,8 +165,11 @@ function spawnPuff() {
 }
 
 function spawnFloatingScore() {
+    // Sesuaikan posisi skor ngambang biar ngikutin posisi burung
+    var pLeft = parseInt($("#player").css('left')) || 60;
+    
     var floatText = $('<div class="float-score">+1</div>').css({
-        position: 'absolute', top: '200px', left: '50%', transform: 'translateX(-50%)',
+        position: 'absolute', top: '200px', left: (pLeft + 30) + 'px', transform: 'translateX(-50%)',
         color: '#ffc107', fontSize: '28px', fontWeight: '900', textShadow: '2px 2px 0px #000',
         pointerEvents: 'none', zIndex: 100
     });
@@ -140,7 +179,7 @@ function spawnFloatingScore() {
 
 function shakeScreen() {
     // FIX BUG LAYAR MENGECIL PAS MATI:
-    // Diganti menjadi $("#gamescreen") biar efek getar ga numpuk dan ngerusak ukuran scaleGame()
+    // Pindah target transisi ke "#gamescreen" bukan "#gamecontainer", biar scale asli gak kerusak!
     $("#gamescreen").transition({ x: '-10px', y: '5px' }, 50)
            .transition({ x: '10px', y: '-5px' }, 50)
            .transition({ x: '-10px', y: '5px' }, 50)
@@ -149,8 +188,8 @@ function shakeScreen() {
 }
 
 function updateSkyColor() {
-    // FIX BUG WARNA LANGIT NUMPUK:
-    // Dikosongin supaya warna langit stabil ngikutin CSS Dark Mode / Light Mode di flapy.html
+    // KOSONG - DIMATIKAN!
+    // Biar warna background stabil ngikut CSS tema siang/malam di HTML
 }
 
 // =========================================================================================
@@ -166,7 +205,7 @@ $(document).ready(function() {
    var savedscore = getCookie("highscore");
    if (savedscore != "") highscore = parseInt(savedscore);
 
-   injectFakeWA(); // Pasang kode Fake WA ke dalam HTML
+   injectFakeWA(); 
    showWelcome();
 });
 
@@ -219,7 +258,7 @@ function startGame() {
    $("#splash").stop(); $("#splash").transition({ opacity: 0 }, 500, 'ease');
    setBigScore();
    
-   playBGM(); // Kosong (Aman gak numpuk)
+   playBGM(); // Aman karena sudah dinonaktifkan di fungsi atas
 
    if (debugmode) $(".boundingbox").show();
 
@@ -236,7 +275,7 @@ function updatePlayer(player) {
 }
 
 // =========================================================================================
-// ENGINE FISIKA INTI & HITBOX
+// ENGINE FISIKA INTI & HITBOX (Disesuaikan Widescreen)
 // =========================================================================================
 function gameloop() {
    var player = $("#player");
@@ -248,7 +287,8 @@ function gameloop() {
    var origWidth = 34.0; var origHeight = 24.0;
    var boxWidth = origWidth - (Math.sin(Math.abs(rotation) / 90) * 8); var boxHeight = origHeight;
 
-   var playerLeft = 60;
+   // Deteksi posisi asli player untuk tabrakan biar akurat pas mode PC
+   var playerLeft = parseInt($("#player").css('left')) || 60;
    var boxLeft = playerLeft + (origWidth - boxWidth) / 2;
    var boxTop = position + (origHeight - boxHeight) / 2;
    var boxRight = boxLeft + boxWidth;
