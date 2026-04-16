@@ -1,4 +1,5 @@
 # 🎂 HappyBirthday-AnggiDwiAprilia
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **"A special birthday gift, built with love and code."**
 > 
