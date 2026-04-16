@@ -120,7 +120,13 @@
         .story-card.active-card { opacity: 1; transform: scale(1.03) translateY(0); box-shadow: 15px 15px 0px var(--border-color); z-index: 10; }
 
         .image-anchor { position: relative; width: 100%; height: 50px; margin-top: 170px; margin-bottom: 25px; background: transparent; }
-        .story-img { position: absolute; bottom: 0; left: -25px; width: calc(100% + 50px); height: auto; z-index: 5; transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); filter: drop-shadow(0px 20px 15px rgba(0,0,0,0.3)); transform-origin: bottom center; }
+        
+        .story-img { 
+            position: absolute; bottom: 0; left: -25px; width: calc(100% + 50px); height: auto; 
+            z-index: 5; transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            filter: drop-shadow(0px 20px 15px rgba(0,0,0,0.3)); transform-origin: bottom center; 
+            pointer-events: none; /* FIX BUG: Biar gambar nggak menutupi tombol untuk di-klik */
+        }
         .story-card.active-card .story-img { transform: translateY(-20px) scale(1.05); }
 
         .story-card h3 { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; position: relative; z-index: 10; }
@@ -228,6 +234,22 @@
                 align-items: center; 
                 justify-content: center;
             }
+
+            /* FIX BUG: Tampilan kartu di PC selalu aktif dan tidak pudar! */
+            .story-card {
+                opacity: 1 !important;
+                transform: scale(1) translateY(0) !important;
+                box-shadow: 12px 12px 0px var(--border-color) !important;
+                z-index: 5;
+            }
+            .story-card:hover {
+                transform: scale(1.02) translateY(-5px) !important;
+                box-shadow: 16px 16px 0px var(--border-color) !important;
+                z-index: 15;
+            }
+            .story-card .story-img {
+                transform: translateY(-10px) scale(1.05) !important;
+            }
         }
     </style>
 </head>
@@ -255,7 +277,6 @@
           <p>Sudah siap baca ceritanya?</p>
         </div>
         <div style="display: flex; gap: 15px; align-items: center;">
-            <!-- Tombol Ubah Tampilan HP/PC Sengaja Dihapus Sesuai Request -->
             <div class="header-icon" id="cheat-btn">🎁</div>
         </div>
       </div>
@@ -344,10 +365,6 @@
     }
     window.addEventListener('load', () => { setTimeout(hideSplashScreen, 1500); });
     setTimeout(hideSplashScreen, 5000); // Pasti hilang max 5 detik walaupun file belum kelar
-
-    // =========================================================================
-    // FUNGSI TOGGLE MANUAL DIHAPUS (Sekarang pakai media queries otomatis)
-    // =========================================================================
     
     // =========================================================================
     // AUDIO AUTOPLAY ON FIRST CLICK
@@ -496,10 +513,13 @@
     const konfigurasiSensor = { root: homeArea, rootMargin: '-25% 0px -25% 0px', threshold: 0.5 };
     const sensorKartu = new IntersectionObserver((daftarElemen) => { 
         daftarElemen.forEach(elemenMasuk => { 
+            // FIX BUG: Nggak usah hapus paksa class active dari semua kartu,
+            // Biar di Desktop (kartu jejer 2) bisa sama-sama nyala tanpa bentrok!
             if(elemenMasuk.isIntersecting) { 
-                semuaKartu.forEach(k => k.classList.remove('active-card')); 
                 elemenMasuk.target.classList.add('active-card'); 
-            } 
+            } else {
+                elemenMasuk.target.classList.remove('active-card');
+            }
         }); 
     }, konfigurasiSensor); 
     semuaKartu.forEach(kartu => sensorKartu.observe(kartu));
