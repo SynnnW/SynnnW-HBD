@@ -27,7 +27,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent;}
 
-        /* Background Full Screen (Gelap Estetik + Pattern) */
+        /* Background Full Screen (Gelap Estetik + Pattern) - TIDAK DIUBAH */
         body {
             background-color: #E5EEE4; 
             display: flex; justify-content: center; align-items: center;
@@ -62,31 +62,36 @@
            4. WADAH UTAMA (AUTO-SCALE UNTUK IPHONE & LAPTOP)
            ========================================================================== */
         .story-container {
-            width: 100%; max-width: 450px; height: 100vh; height: 100dvh;
+            /* Diberi sedikit kelebaran di HP biar gak terlalu sempit */
+            width: 100%; max-width: 480px; height: 100vh; height: 100dvh;
             position: relative; z-index: 10;
             display: flex; flex-direction: column; overflow: hidden;
             margin: 0 auto;
         }
 
-        /* WIDESCREEN MAGIC: Kunci proporsi HP iPhone pas dibuka di Windows/Laptop */
+        /* WIDESCREEN MAGIC: Di Laptop dibikin lebih lebar & proporsional */
         @media screen and (min-width: 768px) {
             .story-container {
                 height: 90vh; 
-                width: calc(90vh * (9/16)); /* Rasio 9:16 persis layar HP */
-                max-width: none;
+                width: 550px; /* FITUR OTOMATIS: Dibuat lebih lebar khusus laptop */
+                max-width: 90vw;
                 border-radius: 20px;
-                /* Background transparan biar tetep nyatu sama partikel belakang */
+                box-shadow: 0 0 30px rgba(0,0,0,0.1);
             }
             .music-btn {
                 top: 5vh; right: 5vw; /* Tombol musik pindah ke ujung layar laptop */
             }
+            /* Menyesuaikan ukuran card di laptop biar lega & rapi */
+            .card-polaroid, .card-polaroid-2 { width: 35% !important; }
+            .card-flappy, .card-2048, .card-chapters { width: 40% !important; }
+            .card-chat { width: 60% !important; }
         }
 
         /* ==========================================================================
            5. SELOTIP MARQUEE
            ========================================================================== */
         .tape-marquee {
-            position: absolute; top: 15%; left: -20%; width: 150%;
+            position: absolute; top: 13%; left: -20%; width: 150%;
             background: var(--accent-yellow); color: var(--border-color);
             border-top: 4px solid var(--border-color); border-bottom: 4px solid var(--border-color);
             font-weight: 900; font-size: 1.5rem; text-transform: uppercase;
@@ -118,7 +123,7 @@
             100% { margin-top: -15px; }
         }
 
-        /* 1. KARTU LOGIN HERO (Tengah Atas) -> index.html */
+        /* 1. KARTU LOGIN HERO (Tengah Atas) */
         .card-login {
             top: 5%; left: 5%; width: 75%; background: var(--accent-pink);
             --rot: -4deg; --float-dur: 3s; z-index: 10; animation-delay: 0.1s; text-align: center;
@@ -126,52 +131,60 @@
         .card-login h1 { font-size: 1.4rem; font-weight: 900; line-height: 1.2; text-transform: uppercase; text-shadow: 2px 2px 0px #fff;}
         .card-login p { font-size: 0.7rem; font-weight: 800; color: #111; margin-top: 5px; background: #fff; border: 2px solid #111; border-radius: 5px; display: inline-block; padding: 2px 10px;}
 
-        /* 2. KARTU FLAPPY (Kiri Tengah) -> flapy.html */
+        /* 2. POLAROID 1 (Kanan Atas) -> foto2.jpg */
+        .card-polaroid {
+            top: 18%; right: -2%; width: 42%; background: #fff; padding: 10px 10px 30px 10px;
+            --rot: 12deg; --float-dur: 3.2s; z-index: 15; animation-delay: 0.4s;
+        }
+        .card-polaroid img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border: 3px solid var(--border-color); border-radius: 6px; background: #ddd;}
+        
+        /* POLAROID 2 BARU (Kiri Bawah) -> ayam.jpg */
+        .card-polaroid-2 {
+            top: 58%; left: -2%; width: 42%; background: #fff; padding: 10px 10px 30px 10px;
+            --rot: -8deg; --float-dur: 3.6s; z-index: 19; animation-delay: 0.7s;
+        }
+        .card-polaroid-2 img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border: 3px solid var(--border-color); border-radius: 6px; background: #ddd;}
+
+        .polaroid-text { position: absolute; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 0.8rem; font-weight: 900; font-family: monospace; text-transform: uppercase;}
+        .mini-tape { position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-8deg); width: 60px; height: 20px; background: rgba(255, 255, 255, 0.8); border: 2px solid #ccc; z-index: 20; backdrop-filter: blur(2px); box-shadow: 2px 2px 5px rgba(0,0,0,0.1);}
+
+        /* 3. KARTU FLAPPY (Kiri Tengah) */
         .card-flappy {
-            top: 25%; left: -2%; width: 55%; background: var(--accent-blue);
+            top: 25%; left: 2%; width: 50%; background: var(--accent-blue);
             --rot: 6deg; --float-dur: 3.5s; z-index: 12; animation-delay: 0.2s; display: flex; align-items: center; gap: 10px;
         }
         .card-flappy .icon { font-size: 2.5rem; filter: drop-shadow(2px 2px 0px #000); }
         .card-flappy h3 { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; line-height: 1.1;}
 
-        /* 3. KARTU 2048 (Bawah Flappy) -> 200408.html */
+        /* 4. KARTU 2048 (Bawah Flappy) */
         .card-2048 {
-            top: 38%; left: 5%; width: 55%; background: var(--accent-green);
+            top: 36%; left: 5%; width: 50%; background: var(--accent-green);
             --rot: -5deg; --float-dur: 4s; z-index: 11; animation-delay: 0.3s; display: flex; align-items: center; gap: 10px;
         }
         .card-2048 .icon { font-size: 2.5rem; filter: drop-shadow(2px 2px 0px #000); }
         .card-2048 h3 { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; line-height: 1.1;}
 
-        /* 4. POLAROID BONCENGAN (Kanan) -> story1.html */
-        .card-polaroid {
-            top: 20%; right: -5%; width: 45%; background: #fff; padding: 10px 10px 30px 10px;
-            --rot: 12deg; --float-dur: 3.2s; z-index: 15; animation-delay: 0.4s;
-        }
-        .card-polaroid img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border: 3px solid var(--border-color); border-radius: 6px; background: #ddd;}
-        .polaroid-text { position: absolute; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 0.8rem; font-weight: 900; font-family: monospace; text-transform: uppercase;}
-        .mini-tape { position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-8deg); width: 60px; height: 20px; background: rgba(255, 255, 255, 0.8); border: 2px solid #ccc; z-index: 20; backdrop-filter: blur(2px); box-shadow: 2px 2px 5px rgba(0,0,0,0.1);}
-
-        /* 5. CHAT RECEH BUBBLE (Tengah Overlap) -> happybirthday.html */
+        /* 5. CHAT RECEH BUBBLE (Tengah Overlap ke Kanan) */
         .card-chat {
-            top: 52%; right: 5%; width: 75%; background: #f0f0f0;
-            --rot: -2deg; --float-dur: 3.8s; z-index: 20; animation-delay: 0.5s; padding: 15px;
+            top: 48%; right: 2%; width: 68%; background: #f0f0f0;
+            --rot: 3deg; --float-dur: 3.8s; z-index: 20; animation-delay: 0.5s; padding: 15px;
         }
         .card-chat h3 { font-size: 0.8rem; font-weight: 900; color: var(--accent-purple); margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px dashed #ccc; padding-bottom: 5px;}
         .chat-bubble { padding: 8px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; border: 3px solid var(--border-color); margin-bottom: 8px; width: fit-content; max-width: 90%; line-height: 1.3;}
         .chat-left { background: var(--accent-yellow); color: #111; border-bottom-left-radius: 0; box-shadow: 2px 2px 0px #111;}
         .chat-right { background: #fff; align-self: flex-end; margin-left: auto; border-bottom-right-radius: 0; box-shadow: 2px 2px 0px #111;}
 
-        /* 6. LIST CHAPTER (Kiri Bawah) */
+        /* 6. LIST CHAPTER (Kanan Bawah biar balance sama Polaroid 2) */
         .card-chapters {
-            top: 70%; left: 2%; width: 50%; background: var(--accent-purple);
+            top: 72%; right: 2%; left: auto; width: 48%; background: var(--accent-purple);
             --rot: 4deg; --float-dur: 4.2s; z-index: 18; animation-delay: 0.6s; text-align: center;
         }
         .ch-box { background: #fff; border: 3px solid #111; padding: 8px; font-size: 0.75rem; font-weight: 900; border-radius: 8px; margin-bottom: 8px; box-shadow: 3px 3px 0 #111; transition: 0.2s;}
         .ch-box:hover { background: var(--accent-yellow); transform: scale(1.05);}
 
-        /* 7. NFC TAG (Tengah Paling Bawah) -> suprise.html */
+        /* 7. NFC TAG (Tengah Paling Bawah) */
         .card-nfc {
-            bottom: 3%; left: 50%; transform: translateX(-50%) rotate(0deg);
+            bottom: 2%; left: 50%; transform: translateX(-50%) rotate(0deg);
             width: 85%; background: #111; color: #fff;
             --rot: 0deg; --float-dur: 2.8s; z-index: 30; animation-delay: 0.8s; 
             display: flex; align-items: center; justify-content: space-between;
@@ -182,10 +195,10 @@
         .nfc-icon { color: var(--accent-green); font-size: 1.8rem; animation: pulse 1s infinite;}
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
 
-        /* Stiker Hiasan (Bintang, Lope, Boom) */
+        /* Stiker Hiasan (Bintang, Lope, Boom) - Posisi disesuaikan ulang */
         .sticker { position: absolute; font-size: 3rem; z-index: 25; filter: drop-shadow(3px 3px 0px #000); animation: popIn 0.5s forwards, floatAnim 3s ease-in-out infinite alternate; opacity: 0; pointer-events: none;}
         .st-1 { top: 18%; left: 45%; animation-delay: 1s; --rot: 15deg; --float-dur: 2.5s;}
-        .st-2 { top: 48%; left: -2%; animation-delay: 1.1s; --rot: -20deg; font-size: 3.5rem; --float-dur: 3.1s;}
+        .st-2 { top: 46%; left: 2%; animation-delay: 1.1s; --rot: -20deg; font-size: 3.5rem; --float-dur: 3.1s;}
         .st-3 { top: 62%; right: 35%; animation-delay: 1.2s; --rot: 10deg; font-size: 2.5rem; --float-dur: 2.9s;}
 
         /* Tulisan "Klik Apapun" di atas layar HP */
@@ -200,7 +213,7 @@
 </head>
 <body>
 
-    <!-- AUDIO UTAMA (Ambil dari kado HBD) -->
+    <!-- AUDIO UTAMA -->
     <audio id="bg-audio" loop preload="auto">
         <source src="music/hbd.mp3" type="audio/mpeg" />
     </audio>
@@ -214,7 +227,7 @@
     <!-- EMOJI MELAYANG -->
     <div class="floating-emojis" id="floating-emojis"></div>
 
-    <!-- CONTAINER UTAMA (AUTO SCALE UKURAN HP) -->
+    <!-- CONTAINER UTAMA (AUTO SCALE UKURAN HP & LAPTOP) -->
     <div class="story-container">
         
         <div class="hint-text">✨ PENCET DIMANAPUN UNTUK KE WEB TERSEBUT ✨</div>
@@ -232,7 +245,7 @@
             <p>🌐 Buka Website Utama</p>
         </a>
 
-        <!-- 2. POLAROID -> story1.html -->
+        <!-- 2. POLAROID 1 (FOTO PERTAMA) -> story1.html -->
         <a href="story1.html" class="s-card card-polaroid">
             <div class="mini-tape"></div>
             <!-- Menggunakan foto dari memori -->
@@ -260,7 +273,14 @@
             <div class="chat-bubble chat-left">Makasih.</div>
         </a>
 
-        <!-- 6. CHAPTERS -> story3.html -->
+        <!-- 6. POLAROID 2 (FOTO KEDUA) -> BARU DITAMBAHKAN -->
+        <a href="#" class="s-card card-polaroid-2">
+            <div class="mini-tape" style="transform: translateX(-50%) rotate(5deg);"></div>
+            <img src="img/ayam.jpg" alt="Memori 2" onerror="this.outerHTML='<div style=\'width:100%; aspect-ratio:4/5; background:var(--accent-pink); border:3px solid #111; display:flex; justify-content:center; align-items:center; font-size:3rem;\'>📸</div>'">
+            <div class="polaroid-text">Memori 2</div>
+        </a>
+
+        <!-- 7. CHAPTERS -> story3.html -->
         <div class="s-card card-chapters">
             <a href="story1.html" style="text-decoration:none; color:inherit;"><div class="ch-box">📖 CH 1: Awal</div></a>
             <a href="story2.html" style="text-decoration:none; color:inherit;"><div class="ch-box">📖 CH 2: Tengah</div></a>
@@ -272,7 +292,7 @@
         <div class="sticker st-2">🎁</div>
         <div class="sticker st-3">🤫</div>
 
-        <!-- 7. NFC -> suprise.html -->
+        <!-- 8. NFC -> suprise.html -->
         <a href="suprise.html" class="s-card card-nfc">
             <span>HAY</span>
             <div class="nfc-icon">📲</div>
