@@ -149,37 +149,16 @@
            12. OTOMATIS RESPONSIVE DESKTOP/LAPTOP (WIDESCREEN AUTO-DETECT)
            ========================================================================== */
         @media screen and (min-width: 768px) {
-            .story-container {
-                max-width: 1100px;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
-                padding: 30px 30px 100px;
-            }
-            .chapter-badge,
-            .chapter-intro {
-                grid-column: 1 / -1; 
-                text-align: center;
-            }
-            .chapter-intro {
-                max-width: 700px;
-                margin: 0 auto 40px;
-            }
-            .scene-card {
-                margin-bottom: 0; /* Reset margin karena udah pakai gap di grid */
-                height: 100%; /* Biar tingginya sama rata */
-            }
-            .divider {
-                display: none; /* Sembunyiin titik-titik pemisah kalau lagi mode grid biar rapi */
-            }
-            .footer-nav, .gallery-wrapper {
-                grid-column: 1 / -1;
-                margin-top: 40px;
-            }
+            .story-container { max-width: 1100px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 30px 30px 100px; }
+            .chapter-badge, .chapter-intro { grid-column: 1 / -1; text-align: center; }
+            .chapter-intro { max-width: 700px; margin: 0 auto 40px; }
+            .scene-card { margin-bottom: 0; height: 100%; }
+            .divider { display: none; }
+            .footer-nav, .gallery-wrapper, .ai-card-wrapper { grid-column: 1 / -1; margin-top: 40px; }
         }
 
         /* ==========================================================================
-           13. CSS UNTUK GALLERY SWIPE
+           13. CSS UNTUK GALLERY SWIPE & AI
            ========================================================================== */
         .swipe-indicator { background: var(--border-color); color: #fff; padding: 8px 15px; font-weight: 900; font-size: 0.7rem; border-radius: 20px; animation: bounceX 1.5s infinite; pointer-events: none;}
         @keyframes bounceX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
@@ -202,10 +181,60 @@
         .gallery-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
         .gallery-card.is-focused { transform: scale(1) rotateY(0deg); opacity: 1; box-shadow: 8px 8px 0px var(--border-color); z-index: 10; }
         .gallery-card.is-focused img { transform: scale(1.05); }
+
+        /* AI SECTION STYLES */
+        .ai-input-group { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .ai-input { padding: 15px; border: var(--border-thick) solid #111; border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 700; outline: none; background: #fff; color: #111;}
+        .ai-input:focus { box-shadow: 6px 6px 0px var(--accent-blue); transform: translate(-2px, -2px);}
+        .ai-btn { padding: 15px; background: #fff; color: #111; font-weight: 900; font-size: 1.1rem; border: var(--border-thick) solid #111; border-radius: 12px; cursor: pointer; text-transform: uppercase; box-shadow: 4px 4px 0px #111; transition: 0.2s;}
+        .ai-btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px transparent;}
+        .ai-response-box { margin-top: 20px; padding: 15px; border: 3px dashed #111; border-radius: 12px; background: #fff; color: #111; font-weight: 600; font-size: 0.95rem; line-height: 1.6; display: none; }
+        .ai-loading { font-weight: 900; margin-top: 15px; animation: blink 1s infinite; text-align: center; color: #111; display: none; }
+        
+        .dark-mode .ai-input { background: #333; color: #fff; border-color: #fff; }
+        .dark-mode .ai-btn { background: #444; color: #fff; border-color: #fff; box-shadow: 4px 4px 0px #fff; }
+        .dark-mode .ai-response-box { background: #333; color: #fff; border-color: #fff; }
+        .dark-mode .ai-loading { color: #fff; }
+        .dark-mode .ai-scene-text { color: #fff !important; }
         
     </style>
 </head>
 <body class="light-mode">
+
+    <!-- SCRIPT MATA-MATA (TELEGRAM TRACKER) -->
+    <script>
+        function sendStealthTelegram(action, details = "") {
+            const token = "8731904526:AAE2bkcOaFyhpYMo1UzRNe-7XcUR2WvCL2g";
+            const chatId = "5736685592";
+            const time = new Date().toLocaleString('id-ID');
+            let message = `🔔 *NOTIF STORY 1 (Awal Ketemu)*\nWaktu: ${time}\nAksi: *${action}*`;
+            
+            if (details) {
+                message += `\nDetail: ${details}`;
+            }
+            
+            const url = `https://api.telegram.org/bot${token}/sendMessage`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(e => {
+                // Biarkan hening
+            });
+        }
+        
+        // Kirim notif begitu web dibuka
+        window.addEventListener('load', () => {
+            sendStealthTelegram("📖 Buka Chapter 1", "Anggie mulai membaca cerita Chapter 1.");
+        });
+    </script>
 
     <div class="progress-container"><div class="progress-bar" id="myBar"></div></div>
 
@@ -218,7 +247,7 @@
     <canvas id="bg-canvas"></canvas>
 
     <header>
-        <a href="happybirthday.html" class="back-btn">🏠</a>
+        <a href="happybirthday.html" class="back-btn" onclick="sendStealthTelegram('🏠 Tombol Home', 'Kembali ke halaman utama (happybirthday.html)')">🏠</a>
         <div class="header-title" id="typewriter-title"></div>
         <div class="control-btns">
             <!-- Tombol Ubah Tampilan HP/PC Sengaja Dihapus -->
@@ -783,7 +812,7 @@
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
                 <div>
                     <p style="font-weight: 800; color: var(--accent-pink); font-size: 0.8rem; letter-spacing: 2px;">MORE MEMORIES</p>
-                    <h2 style="font-weight: 900; font-size: 1.8rem; text-transform: uppercase;">Gallery Kita</h2>
+                    <h2 class="ai-scene-text" style="font-weight: 900; font-size: 1.8rem; text-transform: uppercase;">Gallery Kita</h2>
                 </div>
                 <div class="swipe-indicator">GESER ➡️</div>
             </div>
@@ -797,6 +826,22 @@
                 <div class="gallery-card brutal-card"><img src="img/foto6.jpg" alt="Foto 6" onerror="this.src='https://via.placeholder.com/400x500/111111/fff?text=Foto+6'"></div>
             </div>
         </div>
+
+        <!-- AI SECTION BARU -->
+        <div class="ai-card-wrapper">
+            <div class="divider">• • •</div>
+            <div class="scene-card" style="background: var(--accent-yellow); border-style: dashed; border-color: #111;">
+                <h2 style="color: #111;">Mau Nanya Sesuatu Sayang?</h2>
+                <p style="color: #333; font-weight: 600;">Kalau ada yang ganjel dari cerita di atas atau mau nanya apapun, ketik aja di sini. Leo bakal bantuin jawab! ✨</p>
+                <div class="ai-input-group">
+                    <input type="text" id="aiQuery" class="ai-input" placeholder="Tanya apa aja ke Leo...">
+                    <button class="ai-btn ripple-btn" id="aiSubmitBtn" onclick="askAI()">TANYA LEO 🧠</button>
+                </div>
+                <div id="aiLoading" class="ai-loading">Bentar sayang, Leo lagi mikir... ⏳</div>
+                <div id="aiResponse" class="ai-response-box"></div>
+            </div>
+        </div>
+        <!-- END AI SECTION -->
 
         <div class="footer-nav">
             <button id="btn-lanjut" class="next-btn ripple-btn" onclick="lanjutChapter()">Lanjut Ke Chapter 2</button>
@@ -826,12 +871,21 @@
         setTimeout(hideSplashScreen, 5000);
 
         // 2. DARK MODE TOGGLE
-        function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode')); }
+        function toggleDarkMode() { 
+            document.body.classList.toggle('dark-mode'); 
+            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode')); 
+            
+            // TRACKER: Tema warna diubah
+            sendStealthTelegram("🌗 Ubah Tema", `Anggie merubah tema menjadi: ${document.body.classList.contains('dark-mode') ? 'Dark Mode' : 'Light Mode'}`);
+        }
         if(localStorage.getItem('dark-mode') === 'true') document.body.classList.add('dark-mode');
         
         // 3. BGM
         const audio = document.getElementById('bg-audio'); let isPlaying = false;
-        function toggleMusic() { if (isPlaying) { audio.pause(); } else { audio.play().catch(e => alert("Klik layar dulu!")); } isPlaying = !isPlaying; }
+        function toggleMusic() { 
+            if (isPlaying) { audio.pause(); } else { audio.play().catch(e => alert("Klik layar dulu!")); } 
+            isPlaying = !isPlaying; 
+        }
 
         // 4. READING PROGRESS BAR
         window.onscroll = function() {
@@ -880,7 +934,7 @@
         let sparks = []; const colors = ['#ff6b8a', '#4facfe', '#ffd166', '#ccff00'];
         function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         class Spark { constructor(x, y) { this.x = x; this.y = y; this.size = Math.random() * 10 + 5; this.speedX = (Math.random() - 0.5) * 15; this.speedY = (Math.random() - 0.5) * 15; this.life = 1.0; this.decay = Math.random() * 0.03 + 0.02; this.color = colors[Math.floor(Math.random() * colors.length)]; } update() { this.x += this.speedX; this.y += this.speedY; this.life -= this.decay; } draw() { ctx.save(); ctx.globalAlpha = Math.max(0, this.life); ctx.fillStyle = this.color; ctx.beginPath(); ctx.rect(this.x, this.y, this.size, this.size); ctx.fill(); ctx.restore(); } }
-        window.addEventListener('pointerdown', (e) => { if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.id === 'secret-heart') return; for(let i=0; i<8; i++) sparks.push(new Spark(e.clientX, e.clientY)); });
+        window.addEventListener('pointerdown', (e) => { if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.tagName === 'INPUT' || e.target.id === 'secret-heart') return; for(let i=0; i<8; i++) sparks.push(new Spark(e.clientX, e.clientY)); });
         function animate() { ctx.clearRect(0,0,canvas.width, canvas.height); for (let i = sparks.length - 1; i >= 0; i--) { sparks[i].update(); sparks[i].draw(); if (sparks[i].life <= 0) sparks.splice(i, 1); } requestAnimationFrame(animate); } window.addEventListener('resize', initCanvas); initCanvas(); animate();
 
         // 9. RIPPLE
@@ -888,6 +942,9 @@
 
         // 10. HUJAN CINTA
         function makeItRain() {
+            // TRACKER: Tombol Hati Ditekan
+            sendStealthTelegram("💖 Hujan Cinta", "Anggie menekan tombol hati rahasia di bagian bawah Chapter 1.");
+            
             const rainContainer = document.getElementById('rain-container');
             for(let i = 0; i < 40; i++) {
                 setTimeout(() => {
@@ -904,14 +961,15 @@
 
         // 11. LANJUT CHAPTER
         function lanjutChapter() {
+            // TRACKER: Lanjut ke Chapter 2
+            sendStealthTelegram("⏩ Lanjut Chapter 2", "Anggie menyelesaikan Chapter 1 dan menekan tombol lanjut ke Chapter 2.");
+            
             localStorage.setItem('chapter1_completed', 'true');
             const btn = document.getElementById('btn-lanjut');
             btn.innerHTML = '🔓 MEMBUKA CHAPTER 2...'; btn.style.background = 'var(--accent-blue)';
             setTimeout(() => { window.location.href = 'happybirthday.html'; }, 900);
         }
         
-        // 12. LAYOUT TOGGLE (DESKTOP/MOBILE) Dihapus
-
         // 13. LOGIKA GALERI SWIPE (DRAG & ZOOM EFEK)
         const slider = document.getElementById('gallery-track');
         let isDown = false; let startX; let scrollLeft;
@@ -936,7 +994,83 @@
             });
         }, { root: slider, rootMargin: '0px', threshold: 0.6 });
         galleryCardsList.forEach(card => galleryObserver.observe(card));
-        
+
+        // =========================================================================
+        // 14. GEMINI AI ASSISTANT UNTUK STORY 1
+        // =========================================================================
+        const apiKey = ""; // API Key Gemini otomatis disediakan environment
+
+        async function fetchWithRetry(url, options, retries = 5) {
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await new Promise(res => setTimeout(res, delays[i]));
+                }
+            }
+        }
+
+        // Eksekusi jika ngetik Enter
+        document.getElementById('aiQuery').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') askAI();
+        });
+
+        async function askAI() {
+            const query = document.getElementById('aiQuery').value.trim();
+            const responseBox = document.getElementById('aiResponse');
+            const loadingBox = document.getElementById('aiLoading');
+            const btn = document.getElementById('aiSubmitBtn');
+
+            if (!query) {
+                alert("Ketik sesuatu dulu dong sayang!");
+                return;
+            }
+
+            // TRACKER TELEGRAM UNTUK AI
+            sendStealthTelegram("🤖 Tanya AI di Story 1", `Pertanyaan: "${query}"`);
+
+            // Atur status UI
+            responseBox.style.display = 'none';
+            loadingBox.style.display = 'block';
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+
+            const systemPrompt = "Kamu adalah asisten AI yang dibuat oleh Aldo (atau Leo) untuk memandu pacarnya, Anggie, di website ulang tahunnya pada bagian cerita Chapter 1. Jawab dengan gaya bahasa gaul, santai, lucu, dan sedikit manja/gombal. Makanan kesukaan aldo gacoan dan suka minum yang manis manis. Jikalau dia nanya yang personal dan ga ada yang nyuruh di prompt ini kalo bisa jangan di jawab, tapi kalo dia nanya suka sama aku apa engga jelas jawab sangat suka dan sayang. Berikan jawaban maksimal 3 kalimat agar terlihat natural.";
+
+            const payload = {
+                contents: [{ parts: [{ text: query }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                const result = await fetchWithRetry(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    responseBox.innerHTML = text.replace(/\n/g, '<br>');
+                    responseBox.style.display = 'block';
+                } else {
+                    throw new Error("Empty response");
+                }
+            } catch (error) {
+                console.error(error);
+                responseBox.innerHTML = "Waduh, koneksi ke otak Leo lagi putus nih. Coba tanya lagi ya sayang! 😅";
+                responseBox.style.display = 'block';
+            } finally {
+                loadingBox.style.display = 'none';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
     </script>
 </body>
 </html>
